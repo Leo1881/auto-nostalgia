@@ -1,61 +1,58 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  Image,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet, Animated, Platform } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
+import LottieView from "lottie-react-native";
+import { Player as LottiePlayer } from "@lottiefiles/react-lottie-player";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [isReady, setIsReady] = useState(false);
-  const fadeAnim = new Animated.Value(0);
+  const [showSplash, setShowSplash] = useState(true);
+  const fadeAnim = new Animated.Value(1);
 
   useEffect(() => {
     async function prepare() {
       try {
-        // Fade in animation
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 1500,
-          useNativeDriver: Platform.OS !== "web",
-        }).start();
+        // Wait for Lottie animation and display time
+        await new Promise((resolve) => setTimeout(resolve, 2500));
 
-        // Wait for 2 seconds with full opacity
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        // Fade out animation
+        // Fade out splash screen
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration: 1500,
+          duration: 1000,
           useNativeDriver: Platform.OS !== "web",
         }).start();
 
-        // Wait for fade out to complete
+        // Wait for fade out to complete before hiding splash
         await new Promise((resolve) => setTimeout(resolve, 1000));
+        setShowSplash(false);
+        await SplashScreen.hideAsync();
       } catch (e) {
         console.warn(e);
-      } finally {
-        setIsReady(true);
-        await SplashScreen.hideAsync();
       }
     }
 
     prepare();
   }, []);
 
-  if (!isReady) {
+  if (showSplash) {
     return (
       <Animated.View style={[styles.splashContainer, { opacity: fadeAnim }]}>
-        <Image
-          source={require("./assets/logo.png")}
-          style={styles.splashImage}
-          resizeMode="contain"
-        />
+        {Platform.OS === "web" ? (
+          <LottiePlayer
+            autoplay
+            loop={false}
+            src={require("./assets/splash.json")}
+            style={styles.lottieAnimation}
+          />
+        ) : (
+          <LottieView
+            source={require("./assets/splash.json")}
+            autoPlay
+            loop={false}
+            style={styles.lottieAnimation}
+          />
+        )}
       </Animated.View>
     );
   }
@@ -71,19 +68,17 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#fff",
   },
   splashContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff", // Match your splash background color
+    backgroundColor: "#fff",
   },
-  splashImage: {
-    width: "80%", // Adjust this value based on your logo size
-    height: "80%", // Adjust this value based on your logo size
+  lottieAnimation: {
+    width: 400,
+    height: 400,
   },
   title: {
     fontSize: 24,
