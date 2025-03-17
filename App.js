@@ -5,8 +5,6 @@ import {
   StyleSheet,
   Animated,
   Platform,
-  TouchableOpacity,
-  Image,
 } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import LottieView from "lottie-react-native";
@@ -119,9 +117,8 @@ const styles = StyleSheet.create({
   },
   splashContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#fff",
+    padding: 20,
   },
   lottieAnimation: {
     width: 200,
@@ -140,47 +137,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#fff", // Match your splash background color
+  },
+  splashImage: {
+    width: "80%", // Adjust this value based on your logo size
+    height: "80%", // Adjust this value based on your logo size
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#515151",
   },
   subtitle: {
-    fontSize: 32,
-    fontFamily: "Poppins-Bold",
+    fontSize: 16,
     color: "#666",
-    textAlign: "center",
-    lineHeight: 38,
-  },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginBottom: 40,
-    gap: 15,
-  },
-  button: {
-    paddingVertical: 15,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  signInButton: {
-    backgroundColor: "#d90429",
-  },
-  registerButton: {
-    backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: "#d90429",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontFamily: "Poppins-SemiBold",
-  },
-  registerButtonText: {
-    color: "#d90429",
-    fontFamily: "Poppins-SemiBold",
   },
 });
