@@ -7,11 +7,13 @@ import {
   Platform,
   TouchableOpacity,
   Pressable,
+  Image,
 } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import LottieView from "lottie-react-native";
 import { Player as LottiePlayer } from "@lottiefiles/react-lottie-player";
 import * as Font from "expo-font";
+import logoImage from "./assets/logo.png";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -79,25 +81,11 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        {Platform.OS === "web" ? (
-          <img
-            src="/assets/logo.png"
-            style={{
-              width: 300,
-              height: 300,
-              objectFit: "contain",
-              display: "block",
-              margin: "auto",
-            }}
-            alt="Logo"
-          />
-        ) : (
-          <Image
-            source={require("./assets/logo.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        )}
+        <Image
+          source={require("./assets/logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
 
       <View style={styles.contentContainer}>
