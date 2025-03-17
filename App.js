@@ -5,6 +5,8 @@ import {
   StyleSheet,
   Animated,
   Platform,
+  TouchableOpacity,
+  Pressable,
 } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import LottieView from "lottie-react-native";
@@ -77,11 +79,25 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image
-          source={require("./assets/logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        {Platform.OS === "web" ? (
+          <img
+            src="/assets/logo.png"
+            style={{
+              width: 300,
+              height: 300,
+              objectFit: "contain",
+              display: "block",
+              margin: "auto",
+            }}
+            alt="Logo"
+          />
+        ) : (
+          <Image
+            source={require("./assets/logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        )}
       </View>
 
       <View style={styles.contentContainer}>
@@ -89,21 +105,41 @@ export default function App() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.signInButton]}
-          onPress={() => console.log("Sign In pressed")}
-        >
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
+        {Platform.OS === "web" ? (
+          <Pressable
+            style={[styles.button, styles.signInButton]}
+            onPress={() => console.log("Sign In pressed")}
+          >
+            <Text style={styles.buttonText}>Sign In</Text>
+          </Pressable>
+        ) : (
+          <TouchableOpacity
+            style={[styles.button, styles.signInButton]}
+            onPress={() => console.log("Sign In pressed")}
+          >
+            <Text style={styles.buttonText}>Sign In</Text>
+          </TouchableOpacity>
+        )}
 
-        <TouchableOpacity
-          style={[styles.button, styles.registerButton]}
-          onPress={() => console.log("Register pressed")}
-        >
-          <Text style={[styles.buttonText, styles.registerButtonText]}>
-            Register
-          </Text>
-        </TouchableOpacity>
+        {Platform.OS === "web" ? (
+          <Pressable
+            style={[styles.button, styles.registerButton]}
+            onPress={() => console.log("Register pressed")}
+          >
+            <Text style={[styles.buttonText, styles.registerButtonText]}>
+              Register
+            </Text>
+          </Pressable>
+        ) : (
+          <TouchableOpacity
+            style={[styles.button, styles.registerButton]}
+            onPress={() => console.log("Register pressed")}
+          >
+            <Text style={[styles.buttonText, styles.registerButtonText]}>
+              Register
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -117,12 +153,13 @@ const styles = StyleSheet.create({
   },
   splashContainer: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#fff",
-    padding: 20,
   },
   lottieAnimation: {
-    width: 200,
-    height: 200,
+    width: 300,
+    height: 300,
   },
   logoContainer: {
     flex: 2,
@@ -137,19 +174,41 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff", // Match your splash background color
-  },
-  splashImage: {
-    width: "80%", // Adjust this value based on your logo size
-    height: "80%", // Adjust this value based on your logo size
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 32,
+    fontFamily: "Poppins-Bold",
     color: "#666",
+    textAlign: "center",
+    lineHeight: 38,
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 40,
+    gap: 15,
+  },
+  button: {
+    paddingVertical: 15,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  signInButton: {
+    backgroundColor: "#d90429",
+  },
+  registerButton: {
+    backgroundColor: "transparent",
+    borderWidth: 2,
+    borderColor: "#d90429",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontFamily: "Poppins-SemiBold",
+  },
+  registerButtonText: {
+    color: "#d90429",
+    fontFamily: "Poppins-SemiBold",
   },
 });
