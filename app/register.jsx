@@ -8,7 +8,8 @@ import { register, loginWithGoogle } from "../services/auth";
 export default function RegisterScreen() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -22,8 +23,12 @@ export default function RegisterScreen() {
     const newErrors = {};
     setApiError("");
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Full name is required";
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
     }
 
     if (!formData.email.trim()) {
@@ -56,7 +61,9 @@ export default function RegisterScreen() {
 
     try {
       const { confirmPassword, ...registrationData } = formData;
-      const { data, error } = await register(registrationData);
+      // Combine first and last name for registration
+      const fullName = `${registrationData.firstName} ${registrationData.lastName}`;
+      const { data, error } = await register({ ...registrationData, fullName });
 
       if (error) throw error;
 
@@ -135,12 +142,22 @@ export default function RegisterScreen() {
       </View>
 
       <FormField
-        label="Full Name"
-        placeholder="Enter your full name"
+        label="First Name"
+        placeholder="Enter your first name"
         autoCapitalize="words"
-        value={formData.fullName}
-        onChangeText={(text) => setFormData({ ...formData, fullName: text })}
-        error={errors.fullName}
+        value={formData.firstName}
+        onChangeText={(text) => setFormData({ ...formData, firstName: text })}
+        error={errors.firstName}
+        editable={!isLoading}
+      />
+
+      <FormField
+        label="Last Name"
+        placeholder="Enter your last name"
+        autoCapitalize="words"
+        value={formData.lastName}
+        onChangeText={(text) => setFormData({ ...formData, lastName: text })}
+        error={errors.lastName}
         editable={!isLoading}
       />
 
@@ -248,13 +265,11 @@ const styles = StyleSheet.create({
   errorText: {
     color: "#d90429",
     fontFamily: "Poppins-Regular",
-    textAlign: "center",
     marginBottom: 16,
   },
   successText: {
     color: "#4CAF50",
     fontFamily: "Poppins-Regular",
-    textAlign: "center",
     marginBottom: 16,
   },
 });
