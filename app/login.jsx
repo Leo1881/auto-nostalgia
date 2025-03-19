@@ -48,7 +48,7 @@ export default function LoginScreen() {
       if (error) throw error;
 
       // Successful login
-      router.replace("/");
+      router.replace("/dashboard");
     } catch (error) {
       setApiError(error.message || "Login failed. Please try again.");
       Alert.alert("Login Error", error.message || "Please try again later.");
@@ -62,15 +62,25 @@ export default function LoginScreen() {
     setApiError("");
 
     try {
+      console.log("Starting Google login...");
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
       });
+
+      console.log("OAuth response:", { data, error });
 
       if (error) throw error;
 
-      // Google OAuth will handle the redirect
-      // The user will be redirected back to the app after successful authentication
+      // The redirect will be handled automatically by Supabase
     } catch (error) {
+      console.error("Google login error:", error);
       setApiError(error.message || "Google login failed. Please try again.");
       Alert.alert(
         "Google Login Error",
