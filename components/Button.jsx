@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Platform,
   Pressable,
+  Image,
 } from "react-native";
 
 export default function RootLayout() {
@@ -45,31 +46,33 @@ export function Button({
   onPress,
   variant = "primary",
   style,
-  disabled,
+  disabled = false,
+  icon,
 }) {
-  const Component = Platform.OS === "web" ? Pressable : TouchableOpacity;
-
   return (
-    <Component
+    <Pressable
       style={[
         styles.button,
         variant === "secondary" && styles.secondaryButton,
+        variant === "text" && styles.textButton,
         disabled && styles.disabledButton,
         style,
       ]}
       onPress={onPress}
       disabled={disabled}
     >
+      {icon && <Image source={icon} style={styles.icon} />}
       <Text
         style={[
           styles.text,
           variant === "secondary" && styles.secondaryText,
+          variant === "text" && styles.textButtonText,
           disabled && styles.disabledText,
         ]}
       >
         {title}
       </Text>
-    </Component>
+    </Pressable>
   );
 }
 
@@ -81,25 +84,38 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
   },
   secondaryButton: {
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+  },
+  textButton: {
     backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: "#d90429",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   disabledButton: {
-    backgroundColor: "#cccccc",
-    borderColor: "#cccccc",
+    opacity: 0.6,
   },
   text: {
-    color: "#ffffff",
+    color: "#FFFFFF",
     fontSize: 16,
     fontFamily: "Poppins-SemiBold",
   },
   secondaryText: {
+    color: "#000000",
+  },
+  textButtonText: {
     color: "#d90429",
   },
   disabledText: {
-    color: "#ffffff",
+    opacity: 0.6,
+  },
+  icon: {
+    width: 20,
+    height: 20,
   },
 });

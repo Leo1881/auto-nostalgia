@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { Button } from "../components/Button";
 import { FormField } from "../components/FormField";
 import { useState } from "react";
+import { register, loginWithGoogle } from "../services/auth";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -14,9 +15,12 @@ export default function RegisterScreen() {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
+    setApiError("");
 
     if (!formData.fullName.trim()) {
       newErrors.fullName = "Full name is required";
@@ -48,13 +52,32 @@ export default function RegisterScreen() {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setApiError("");
+
     try {
-      // TODO: Implement actual registration logic here
-      // For now, we'll just simulate a successful registration
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      router.replace("/");
+      const { confirmPassword, ...registrationData } = formData;
+      const { data, error } = await register(registrationData);
+
+      if (error) throw error;
+
+      // Show verification message
+      setVerificationSent(true);
+      Alert.alert(
+        "Verification Email Sent",
+        "Please check your email to verify your account.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.replace("/login"),
+          },
+        ]
+      );
     } catch (error) {
-      console.error("Registration failed:", error);
+      setApiError(error.message || "Registration failed. Please try again.");
+      Alert.alert(
+        "Registration Error",
+        error.message || "Please try again later."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -62,11 +85,20 @@ export default function RegisterScreen() {
 
   const handleGoogleSignup = async () => {
     setIsLoading(true);
+    setApiError("");
+
     try {
-      // TODO: Implement Google signup
-      console.log("Google signup pressed");
+      const { data, error } = await loginWithGoogle();
+      if (error) throw error;
+
+      // Google OAuth will handle the redirect
+      // The user will be redirected back to the app after successful authentication
     } catch (error) {
-      console.error("Google signup failed:", error);
+      setApiError(error.message || "Google signup failed. Please try again.");
+      Alert.alert(
+        "Google Signup Error",
+        error.message || "Please try again later."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -82,12 +114,20 @@ export default function RegisterScreen() {
         <Text style={styles.subtitle}>Sign up to get started</Text>
       </View>
 
+      {apiError ? <Text style={styles.errorText}>{apiError}</Text> : null}
+      {verificationSent ? (
+        <Text style={styles.successText}>
+          Please check your email to verify your account.
+        </Text>
+      ) : null}
+
       <Button
         title="Continue with Google"
         onPress={handleGoogleSignup}
         variant="secondary"
         style={styles.button}
         disabled={isLoading}
+        icon={require("../assets/google_logo.png")}
       />
 
       <View style={styles.divider}>
@@ -101,6 +141,7 @@ export default function RegisterScreen() {
         value={formData.fullName}
         onChangeText={(text) => setFormData({ ...formData, fullName: text })}
         error={errors.fullName}
+        editable={!isLoading}
       />
 
       <FormField
@@ -111,6 +152,7 @@ export default function RegisterScreen() {
         value={formData.email}
         onChangeText={(text) => setFormData({ ...formData, email: text })}
         error={errors.email}
+        editable={!isLoading}
       />
 
       <FormField
@@ -120,6 +162,7 @@ export default function RegisterScreen() {
         value={formData.password}
         onChangeText={(text) => setFormData({ ...formData, password: text })}
         error={errors.password}
+        editable={!isLoading}
       />
 
       <FormField
@@ -131,10 +174,11 @@ export default function RegisterScreen() {
           setFormData({ ...formData, confirmPassword: text })
         }
         error={errors.confirmPassword}
+        editable={!isLoading}
       />
 
       <Button
-        title="Create Account"
+        title={isLoading ? "Creating Account..." : "Create Account"}
         onPress={handleRegister}
         style={styles.button}
         disabled={isLoading}
@@ -200,5 +244,17 @@ const styles = StyleSheet.create({
   link: {
     color: "#d90429",
     fontFamily: "Poppins-SemiBold",
+  },
+  errorText: {
+    color: "#d90429",
+    fontFamily: "Poppins-Regular",
+    textAlign: "center",
+    marginBottom: 16,
+  },
+  successText: {
+    color: "#4CAF50",
+    fontFamily: "Poppins-Regular",
+    textAlign: "center",
+    marginBottom: 16,
   },
 });
