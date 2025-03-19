@@ -2,10 +2,13 @@
   "name": "auto-nostalgia",
   "version": "1.0.0",
   "main": "index.web.js",
+  "homepage": "https://Leo1881.github.io/auto-nostalgia",
   "scripts": {
     "start": "expo start --web",
     "build": "expo export:web",
-    "clean": "rm -rf node_modules/.cache && watchman watch-del-all"
+    "clean": "rm -rf node_modules/.cache && watchman watch-del-all",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.1.1",
@@ -27,7 +30,8 @@
     "react-native-web": "~0.19.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "gh-pages": "^6.3.0"
   },
   "private": true
 }
