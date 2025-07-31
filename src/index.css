@@ -1,17 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Poppins", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  --primary-red: #d90429ff;
+  --primary-grey: #19323c;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Custom animations for loading screen */
@@ -44,4 +49,113 @@ body {
 .animate-fade-in-delay {
   animation: fadeInDelay 1s ease-out 0.5s forwards;
   opacity: 0;
+}
+
+/* Custom button styles */
+.auth-button {
+  width: 320px !important;
+  height: 56px !important;
+  border-radius: 28px !important;
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.auth-button:hover {
+  transform: scale(1.05) !important;
+}
+
+.auth-button-primary {
+  background-color: #d90429ff !important;
+  color: white !important;
+}
+
+.auth-button-primary:hover {
+  background-color: #b00322 !important;
+}
+
+.auth-button-secondary {
+  background-color: white !important;
+  color: #d90429ff !important;
+  border: 2px solid #d90429ff !important;
+}
+
+.auth-button-secondary:hover {
+  background-color: #d90429ff !important;
+  color: white !important;
+}
+
+.form-button {
+  width: 100% !important;
+  height: 56px !important;
+  border-radius: 28px !important;
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.form-button:hover {
+  transform: scale(1.05) !important;
+}
+
+.form-button-primary {
+  background-color: #d90429ff !important;
+  color: white !important;
+}
+
+.form-button-primary:hover {
+  background-color: #b00322 !important;
+}
+
+/* Custom color utilities */
+.bg-primary-red {
+  background-color: #d90429ff;
+}
+
+.bg-primary-grey {
+  background-color: #19323c;
+}
+
+.text-primary-red {
+  color: #d90429ff;
+}
+
+.text-primary-grey {
+  color: #19323c;
+}
+
+.border-primary-red {
+  border-color: #d90429ff;
+}
+
+.border-primary-grey {
+  border-color: #19323c;
+}
+
+.hover\:bg-primary-red:hover {
+  background-color: #b00322;
+}
+
+.hover\:bg-primary-grey:hover {
+  background-color: #142a34;
+}
+
+.hover\:text-primary-red:hover {
+  color: #b00322;
+}
+
+.hover\:text-primary-grey:hover {
+  color: #142a34;
 }
