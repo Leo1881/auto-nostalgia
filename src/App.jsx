@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 // Loading Screen Component
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-primary-grey dark:to-primary-grey-dark flex items-center justify-center font-poppins">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-primary-grey dark:to-primary-grey-dark flex items-center justify-center font-quicksand">
       <div className="text-center">
         {/* Logo Placeholder */}
         <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-primary-red to-primary-red-dark rounded-full flex items-center justify-center shadow-lg animate-pulse">
@@ -47,7 +47,7 @@ function LoadingScreen() {
 // Auth Choice Page Component
 function AuthChoicePage({ onLogin, onSignUp }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-8 font-poppins">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-8 font-quicksand">
       <div className="w-full max-w-md px-6">
         {/* Logo and Title */}
         <div className="text-center mb-8">
@@ -121,7 +121,7 @@ function LoginForm({ onBack, onAuthenticated }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-8 font-poppins">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-8 font-quicksand">
       <div className="w-full max-w-md px-6">
         {/* Back Button */}
         <button
@@ -246,7 +246,7 @@ function SignUpForm({ onBack, onAuthenticated }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-8 font-poppins">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-8 font-quicksand">
       <div className="w-full max-w-md px-6">
         {/* Back Button */}
         <button
@@ -372,7 +372,7 @@ function MainApp() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-primary-grey dark:to-primary-grey-dark font-poppins">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-primary-grey dark:to-primary-grey-dark font-quicksand">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <header className="text-center mb-12">
