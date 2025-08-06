@@ -4,19 +4,59 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Comprehensive reset to eliminate any margin/padding */
+*,
+*::before,
+*::after {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: "Quicksand", sans-serif;
+}
+
+/* Ensure no horizontal scroll */
+html {
+  overflow-x: hidden;
+}
+
+/* Ensure main app containers have no margin/padding */
+.min-h-screen {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100vh !important;
+}
+
+/* Force the app to take full width */
+#root {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 :root {
   font-family: "Quicksand", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   --primary-red: #d90429ff;
   --primary-grey: #19323c;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  font-family: "Quicksand", sans-serif;
 }
 
 /* Custom animations for loading screen */
@@ -92,7 +132,7 @@ body {
 }
 
 .form-button {
-  width: 100% !important;
+  width: 320px !important;
   height: 56px !important;
   border-radius: 28px !important;
   font-family: "Quicksand", sans-serif !important;
@@ -104,6 +144,8 @@ body {
   transition: all 0.2s ease !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  margin: 16px auto !important;
+  display: block !important;
 }
 
 .form-button:hover {
@@ -158,4 +200,78 @@ body {
 
 .hover\:text-primary-grey:hover {
   color: #142a34;
+}
+
+/* Override any background styles */
+input.form-input,
+input[type="email"].form-input,
+input[type="password"].form-input,
+input[type="text"].form-input {
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Custom input field styles */
+.form-input {
+  width: 320px !important;
+  height: 56px !important;
+  border-radius: 28px !important;
+  font-family: "Quicksand", sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 16px !important;
+  border: 2px solid #d1d5db !important;
+  outline: none !important;
+  padding: 0 24px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #374151 !important;
+  transition: all 0.2s ease !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.form-input:focus {
+  border-color: #d90429ff !important;
+  box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.1) !important;
+  transform: scale(1.02) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.form-input::placeholder {
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+}
+
+.form-input:hover {
+  border-color: #9ca3af !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .form-input {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f9fafb !important;
+  }
+
+  .form-input:focus {
+    border-color: #d90429ff !important;
+    box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.2) !important;
+  }
+
+  .form-input::placeholder {
+    color: #6b7280 !important;
+  }
+
+  .form-input:hover {
+    border-color: #4b5563 !important;
+  }
 }
