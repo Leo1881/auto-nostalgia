@@ -8,24 +8,24 @@
 *,
 *::before,
 *::after {
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 html,
 body,
 #root {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   overflow-x: hidden;
 }
 
 body {
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 0;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
   font-family: "Quicksand", sans-serif;
@@ -38,17 +38,17 @@ html {
 
 /* Ensure main app containers have no margin/padding */
 .min-h-screen {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  height: 100vh !important;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
 }
 
 /* Force the app to take full width */
 #root {
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 :root {
@@ -93,78 +93,117 @@ html {
 
 /* Custom button styles */
 .auth-button {
-  width: 320px !important;
-  height: 56px !important;
-  border-radius: 28px !important;
-  font-family: "Quicksand", sans-serif !important;
-  font-weight: 700 !important;
-  font-size: 18px !important;
-  border: none !important;
-  outline: none !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
+  width: 320px;
+  height: 56px;
+  border-radius: 28px;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .auth-button:hover {
-  transform: scale(1.05) !important;
+  transform: scale(1.05);
 }
 
 .auth-button-primary {
-  background-color: #d90429ff !important;
-  color: white !important;
-  margin-bottom: 16px !important;
+  background-color: #d90429ff;
+  color: white;
+  margin-bottom: 16px;
+}
+
+/* Button container styling */
+.h-\[30\%\] {
+  margin: 0;
+  padding: 0;
+}
+
+.h-\[30\%\] .flex {
+  margin: 0;
+  padding: 0;
+}
+
+/* Allow padding on button container */
+.h-\[30\%\] .flex.items-end.justify-center {
+  padding-bottom: 32px;
+}
+
+/* Button container styling for min-h-screen */
+.min-h-screen .h-\[30\%\] {
+  margin: 0;
+  padding: 0;
+}
+
+.min-h-screen .h-\[30\%\] .flex {
+  margin: 0;
+  padding: 0;
+}
+
+/* Allow padding on button container */
+.min-h-screen .h-\[30\%\] .flex.items-end.justify-center {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 32px;
 }
 
 .auth-button-primary:hover {
-  background-color: #b00322 !important;
+  background-color: #b00322;
 }
 
 .auth-button-secondary {
-  background-color: white !important;
-  color: #d90429ff !important;
-  border: 3px solid #d90429ff !important;
+  background-color: white;
+  color: #d90429ff;
+  border: 3px solid #d90429ff;
 }
 
 .auth-button-secondary:hover {
-  background-color: #d90429ff !important;
-  color: white !important;
+  background-color: #d90429ff;
+  color: white;
 }
 
 .form-button {
-  width: 320px !important;
-  height: 56px !important;
-  border-radius: 28px !important;
-  font-family: "Quicksand", sans-serif !important;
-  font-weight: 700 !important;
-  font-size: 18px !important;
-  border: none !important;
-  outline: none !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
+  width: 320px;
+  height: 56px;
+  border-radius: 28px;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-  margin: 16px auto !important;
-  display: block !important;
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin: 16px auto;
+  display: block;
 }
 
 .form-button:hover {
-  transform: scale(1.05) !important;
+  transform: scale(1.05);
 }
 
 .form-button-primary {
-  background-color: #d90429ff !important;
-  color: white !important;
+  background-color: #d90429ff;
+  color: white;
 }
 
 .form-button-primary:hover {
-  background-color: #b00322 !important;
+  background-color: #b00322;
 }
 
 /* Custom color utilities */
 .bg-primary-red {
   background-color: #d90429ff;
+}
+
+/* Force margin on logo image */
+img[src="/an_plain.png"] {
+  margin-top: 32px;
 }
 
 .bg-primary-grey {
@@ -208,71 +247,71 @@ input.form-input,
 input[type="email"].form-input,
 input[type="password"].form-input,
 input[type="text"].form-input {
-  background: transparent !important;
-  background-color: transparent !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
+  background: transparent;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 /* Custom input field styles */
 .form-input {
-  width: 320px !important;
-  height: 56px !important;
-  border-radius: 28px !important;
-  font-family: "Quicksand", sans-serif !important;
-  font-weight: 500 !important;
-  font-size: 16px !important;
-  border: 2px solid #d1d5db !important;
-  outline: none !important;
-  padding: 0 24px !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  color: #374151 !important;
-  transition: all 0.2s ease !important;
-  margin-bottom: 16px !important;
-  display: block !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  width: 320px;
+  height: 56px;
+  border-radius: 28px;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  border: 2px solid #d1d5db;
+  outline: none;
+  padding: 0 24px;
+  background: transparent;
+  background-color: transparent;
+  color: #374151;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .form-input:focus {
-  border-color: #d90429ff !important;
-  box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.1) !important;
-  transform: scale(1.02) !important;
-  background: transparent !important;
-  background-color: transparent !important;
+  border-color: #d90429ff;
+  box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.1);
+  transform: scale(1.02);
+  background: transparent;
+  background-color: transparent;
 }
 
 .form-input::placeholder {
-  color: #9ca3af !important;
-  font-weight: 400 !important;
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .form-input:hover {
-  border-color: #9ca3af !important;
-  background: transparent !important;
-  background-color: transparent !important;
+  border-color: #9ca3af;
+  background: transparent;
+  background-color: transparent;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .form-input {
-    background-color: #1f2937 !important;
-    border-color: #374151 !important;
-    color: #f9fafb !important;
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
   }
 
   .form-input:focus {
-    border-color: #d90429ff !important;
-    box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.2) !important;
+    border-color: #d90429ff;
+    box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.2);
   }
 
   .form-input::placeholder {
-    color: #6b7280 !important;
+    color: #6b7280;
   }
 
   .form-input:hover {
-    border-color: #4b5563 !important;
+    border-color: #4b5563;
   }
 }
