@@ -114,6 +114,7 @@ html {
 .auth-button-primary {
   background-color: #d90429ff !important;
   color: white !important;
+  margin-bottom: 16px !important;
 }
 
 .auth-button-primary:hover {
