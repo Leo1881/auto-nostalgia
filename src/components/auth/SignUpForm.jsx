@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import CustomSelect from "../common/CustomSelect";
+import Lottie from "@lottielab/lottie-player/react";
 
-function SignUpForm({ onBack, onAuthenticated }) {
+function SignUpForm({ onBack }) {
   const { signUp } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -19,6 +20,7 @@ function SignUpForm({ onBack, onAuthenticated }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +32,15 @@ function SignUpForm({ onBack, onAuthenticated }) {
 
     setLoading(true);
     setError("");
+
+    console.log("📝 Submitting signup with data:", {
+      email: formData.email,
+      role: formData.role,
+      phoneNumber: formData.phoneNumber,
+      location: formData.location,
+      contactMethod: formData.contactMethod,
+      experience: formData.experience,
+    });
 
     const result = await signUp({
       email: formData.email,
@@ -48,7 +59,8 @@ function SignUpForm({ onBack, onAuthenticated }) {
       setError(result.error.message);
       setLoading(false);
     } else {
-      onAuthenticated();
+      setSuccess(true);
+      setLoading(false);
     }
   };
 
@@ -63,7 +75,10 @@ function SignUpForm({ onBack, onAuthenticated }) {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col p-8 font-quicksand">
       <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col justify-between">
         {/* Container 1: Logo */}
-        <div className="flex-1 flex items-center justify-center">
+        <div
+          className="flex-1 flex items-start justify-center"
+          style={{ paddingTop: "-64px" }}
+        >
           <div className="text-center">
             <img
               src="/an_plain.png"
@@ -73,217 +88,271 @@ function SignUpForm({ onBack, onAuthenticated }) {
           </div>
         </div>
 
-        {/* Container 2: Text and Input Fields */}
+        {/* Container 2: Content */}
         <div className="flex-1 flex flex-col justify-center">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">
-              Create Account
-            </h1>
-            <p className="text-white">Start your nostalgia journey</p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
-              </div>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Enter your full name"
-                  required
-                  disabled={loading}
-                  style={{
-                    marginTop: "16px",
-                    color: "#333333ff",
-                  }}
-                />
+          {!success ? (
+            <>
+              {/* Form State */}
+              <div className="text-center mb-8" style={{ marginTop: "-32px" }}>
+                <h1 className="text-2xl font-bold text-white mb-2">
+                  Create Account
+                </h1>
+                <p className="text-white">Start your nostalgia journey</p>
               </div>
 
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Enter your email"
-                  required
-                  disabled={loading}
-                  style={{
-                    color: "#333333ff",
-                  }}
-                />
-              </div>
-
-              <div>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Create a password"
-                  required
-                  disabled={loading}
-                  style={{
-                    color: "#333333ff",
-                  }}
-                />
-              </div>
-
-              <div>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  placeholder="Confirm your password"
-                  required
-                  disabled={loading}
-                  style={{
-                    color: "#333333ff",
-                  }}
-                />
-              </div>
-
-              {/* Role Selector */}
-              <div>
-                <CustomSelect
-                  value={formData.role}
-                  onChange={(value) =>
-                    handleInputChange({ target: { name: "role", value } })
-                  }
-                  options={[
-                    { value: "customer", label: "Customer" },
-                    {
-                      value: "assessor",
-                      label: "Assessor (Requires Approval)",
-                    },
-                  ]}
-                  placeholder="Select Account Type"
-                  disabled={loading}
-                />
-              </div>
-
-              {/* Conditional Assessor Fields */}
-              {formData.role === "assessor" && (
-                <>
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                {error && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {error}
+                  </div>
+                )}
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <input
-                      type="tel"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
+                      type="text"
+                      name="name"
+                      value={formData.name}
                       onChange={handleInputChange}
                       className="form-input"
-                      placeholder="Phone Number"
+                      placeholder="Enter your full name"
                       required
                       disabled={loading}
-                      style={{ marginTop: "16px" }}
+                      style={{
+                        marginTop: "16px",
+                        color: "#333333ff",
+                      }}
                     />
                   </div>
 
                   <div>
-                    <CustomSelect
-                      value={formData.location}
-                      onChange={(value) =>
-                        handleInputChange({
-                          target: { name: "location", value },
-                        })
-                      }
-                      options={[
-                        { value: "Eastern Cape", label: "Eastern Cape" },
-                        { value: "Free State", label: "Free State" },
-                        { value: "Gauteng", label: "Gauteng" },
-                        { value: "KwaZulu-Natal", label: "KwaZulu-Natal" },
-                        { value: "Limpopo", label: "Limpopo" },
-                        { value: "Mpumalanga", label: "Mpumalanga" },
-                        { value: "Northern Cape", label: "Northern Cape" },
-                        { value: "North West", label: "North West" },
-                        { value: "Western Cape", label: "Western Cape" },
-                      ]}
-                      placeholder="Location / Region of Operation"
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      placeholder="Enter your email"
+                      required
                       disabled={loading}
+                      style={{
+                        color: "#333333ff",
+                      }}
                     />
                   </div>
 
                   <div>
-                    <CustomSelect
-                      value={formData.contactMethod}
-                      onChange={(value) =>
-                        handleInputChange({
-                          target: { name: "contactMethod", value },
-                        })
-                      }
-                      options={[
-                        { value: "email", label: "Email" },
-                        { value: "phone", label: "Phone" },
-                        { value: "whatsapp", label: "WhatsApp" },
-                      ]}
-                      placeholder="Preferred Contact Method"
+                    <input
+                      type="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      placeholder="Create a password"
+                      required
                       disabled={loading}
+                      style={{
+                        color: "#333333ff",
+                      }}
                     />
                   </div>
 
                   <div>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      placeholder="Confirm password"
+                      required
+                      disabled={loading}
+                      style={{
+                        color: "#333333ff",
+                      }}
+                    />
+                  </div>
+
+                  {/* Role Selector */}
+                  <div>
                     <CustomSelect
-                      value={formData.experience}
+                      value={formData.role}
                       onChange={(value) =>
-                        handleInputChange({
-                          target: { name: "experience", value },
-                        })
+                        handleInputChange({ target: { name: "role", value } })
                       }
                       options={[
+                        { value: "customer", label: "Customer" },
                         {
-                          value: "Less than 1 year",
-                          label: "Less than 1 year",
+                          value: "assessor",
+                          label: "Assessor (Requires Approval)",
                         },
-                        { value: "1–2 years", label: "1–2 years" },
-                        { value: "3–5 years", label: "3–5 years" },
-                        { value: "6–10 years", label: "6–10 years" },
-                        { value: "11–15 years", label: "11–15 years" },
-                        { value: "16–20 years", label: "16–20 years" },
-                        { value: "Over 20 years", label: "Over 20 years" },
                       ]}
-                      placeholder="Years of experience"
+                      placeholder="Select Account Type"
                       disabled={loading}
                     />
                   </div>
-                </>
-              )}
 
-              {/* Submit button inside form */}
-              <div className="flex justify-center">
+                  {/* Conditional Assessor Fields */}
+                  {formData.role === "assessor" && (
+                    <>
+                      <div>
+                        <input
+                          type="tel"
+                          name="phoneNumber"
+                          value={formData.phoneNumber}
+                          onChange={handleInputChange}
+                          className="form-input"
+                          placeholder="Phone Number"
+                          required
+                          disabled={loading}
+                          style={{
+                            marginTop: "16px",
+                            color: "#333333ff",
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <CustomSelect
+                          value={formData.location}
+                          onChange={(value) =>
+                            handleInputChange({
+                              target: { name: "location", value },
+                            })
+                          }
+                          options={[
+                            { value: "Eastern Cape", label: "Eastern Cape" },
+                            { value: "Free State", label: "Free State" },
+                            { value: "Gauteng", label: "Gauteng" },
+                            { value: "KwaZulu-Natal", label: "KwaZulu-Natal" },
+                            { value: "Limpopo", label: "Limpopo" },
+                            { value: "Mpumalanga", label: "Mpumalanga" },
+                            { value: "Northern Cape", label: "Northern Cape" },
+                            { value: "North West", label: "North West" },
+                            { value: "Western Cape", label: "Western Cape" },
+                          ]}
+                          placeholder="Location / Region of Operation"
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div>
+                        <CustomSelect
+                          value={formData.contactMethod}
+                          onChange={(value) =>
+                            handleInputChange({
+                              target: { name: "contactMethod", value },
+                            })
+                          }
+                          options={[
+                            { value: "email", label: "Email" },
+                            { value: "phone", label: "Phone" },
+                            { value: "whatsapp", label: "WhatsApp" },
+                          ]}
+                          placeholder="Preferred Contact Method"
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div>
+                        <CustomSelect
+                          value={formData.experience}
+                          onChange={(value) =>
+                            handleInputChange({
+                              target: { name: "experience", value },
+                            })
+                          }
+                          options={[
+                            {
+                              value: "Less than 1 year",
+                              label: "Less than 1 year",
+                            },
+                            { value: "1–2 years", label: "1–2 years" },
+                            { value: "3–5 years", label: "3–5 years" },
+                            { value: "6–10 years", label: "6–10 years" },
+                            { value: "11–15 years", label: "11–15 years" },
+                            { value: "16–20 years", label: "16–20 years" },
+                            { value: "Over 20 years", label: "Over 20 years" },
+                          ]}
+                          placeholder="Years of experience"
+                          disabled={loading}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Submit button */}
+                  <div className="flex justify-center">
+                    <button
+                      type="submit"
+                      className="auth-button auth-button-primary mb-4"
+                      style={{ marginBottom: "18px" }}
+                      disabled={loading || success}
+                    >
+                      {loading
+                        ? "Creating Account..."
+                        : success
+                        ? "Account Created!"
+                        : "Create Account"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </>
+          ) : (
+            // Success State - Styled
+            <>
+              {/* Container 1: Success Content */}
+              <div className="flex-1 flex flex-col justify-center">
+                <div className="text-center">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+                    <div className="mb-6">
+                      <div
+                        className="mb-4"
+                        style={{
+                          width: "120px",
+                          height: "120px",
+                          margin: "0 auto",
+                        }}
+                      >
+                        <Lottie
+                          src="https://cdn.lottielab.com/l/6ezgsQFJevF4ii.json"
+                          autoplay
+                        />
+                      </div>
+                      <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                        Account Created Successfully!
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Container 2: Login Button */}
+              <div className="flex-1 flex items-end justify-center">
                 <button
-                  type="submit"
-                  className="auth-button auth-button-primary mb-4"
-                  style={{ marginBottom: "18px" }}
-                  disabled={loading}
+                  onClick={onBack}
+                  className="auth-button auth-button-primary"
+                  style={{ marginBottom: "32px" }}
                 >
-                  {loading ? "Creating Account..." : "Create Account"}
+                  Login
                 </button>
               </div>
-            </form>
-          </div>
+            </>
+          )}
         </div>
 
-        {/* Container 3: Back Button */}
-        <div className="flex-1 flex flex-col justify-end items-center">
-          <button
-            onClick={onBack}
-            className="auth-button auth-button-secondary"
-            style={{ marginBottom: "32px" }}
-          >
-            Back
-          </button>
-        </div>
+        {/* Container 3: Back Button - Only show when not in success state */}
+        {!success && (
+          <div className="flex-1 flex flex-col justify-end items-center">
+            <button
+              onClick={onBack}
+              className="auth-button auth-button-secondary"
+              style={{ marginBottom: "32px" }}
+            >
+              Back
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
