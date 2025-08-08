@@ -3,8 +3,10 @@ import AuthChoicePage from "./components/auth/AuthChoicePage";
 import LoginForm from "./components/auth/LoginForm";
 import SignUpForm from "./components/auth/SignUpForm";
 import MainApp from "./components/layout/MainApp";
+
 import { useAppState } from "./hooks/useAppState";
 import { APP_STATES } from "./constants/appStates.jsx";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   const {
@@ -44,4 +46,12 @@ function App() {
   return <MainApp />;
 }
 
-export default App;
+function AppWrapper() {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+}
+
+export default AppWrapper;
