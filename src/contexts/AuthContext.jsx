@@ -65,6 +65,9 @@ export const AuthProvider = ({ children }) => {
     credentials,
     experience,
     reason,
+    phoneNumber,
+    location,
+    contactMethod,
   }) => {
     try {
       console.log("🚀 Attempting signup for:", email, "as", role);
@@ -97,6 +100,9 @@ export const AuthProvider = ({ children }) => {
             credentials: credentials || "",
             experience: experience || "",
             reason: reason || "",
+            phone_number: phoneNumber || "",
+            location: location || "",
+            contact_method: contactMethod || "",
             status: "pending",
           });
 

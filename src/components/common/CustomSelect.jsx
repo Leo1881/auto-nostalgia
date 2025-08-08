@@ -53,12 +53,16 @@ const CustomSelect = ({
           disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
         onClick={toggleDropdown}
+        style={{
+          outline: "none",
+          WebkitTapHighlightColor: "transparent",
+        }}
       >
         <span
-          className={selectedOption ? "text-gray-900" : ""}
+          className={selectedOption ? "" : ""}
           style={{
-            color: selectedOption ? undefined : "#6b7280",
-            fontWeight: selectedOption ? undefined : "400",
+            color: selectedOption ? "#374151" : "#6b7280",
+            fontWeight: selectedOption ? "500" : "400",
           }}
         >
           {selectedOption ? selectedOption.label : placeholder}
@@ -84,16 +88,46 @@ const CustomSelect = ({
       </div>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
+        <div
+          className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-2xl shadow-xl max-h-60 overflow-hidden"
+          style={{
+            borderRadius: "16px",
+            boxShadow:
+              "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+            width: "320px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "white",
+            border: "2px solid #374151",
+            borderColor: "#374151",
+          }}
+        >
           {options.map((option) => (
             <div
               key={option.value}
-              className={`px-4 py-3 cursor-pointer hover:bg-gray-100 transition-colors ${
-                selectedOption?.value === option.value ? "bg-gray-100" : ""
+              className={`px-6 py-4 cursor-pointer transition-all duration-200 ${
+                selectedOption?.value === option.value
+                  ? "bg-red-50 border-l-4 border-red-500"
+                  : "hover:bg-gray-50"
               }`}
+              style={{
+                padding: "16px 24px",
+                transition: "all 0.2s ease",
+              }}
               onClick={() => handleSelect(option)}
             >
-              <span className="text-gray-900">{option.label}</span>
+              <span
+                className={`font-medium ${
+                  selectedOption?.value === option.value
+                    ? "text-red-600"
+                    : "text-gray-700"
+                }`}
+                style={{
+                  fontWeight: "500",
+                }}
+              >
+                {option.label}
+              </span>
             </div>
           ))}
         </div>

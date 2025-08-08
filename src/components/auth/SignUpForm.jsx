@@ -13,6 +13,9 @@ function SignUpForm({ onBack, onAuthenticated }) {
     credentials: "",
     experience: "",
     reason: "",
+    phoneNumber: "",
+    location: "",
+    contactMethod: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,6 +39,9 @@ function SignUpForm({ onBack, onAuthenticated }) {
       credentials: formData.credentials,
       experience: formData.experience,
       reason: formData.reason,
+      phoneNumber: formData.phoneNumber,
+      location: formData.location,
+      contactMethod: formData.contactMethod,
     });
 
     if (result.error) {
@@ -171,53 +177,83 @@ function SignUpForm({ onBack, onAuthenticated }) {
               {formData.role === "assessor" && (
                 <>
                   <div>
-                    <textarea
-                      name="credentials"
-                      value={formData.credentials}
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
                       onChange={handleInputChange}
                       className="form-input"
-                      placeholder="Professional credentials and qualifications"
+                      placeholder="Phone Number"
                       required
                       disabled={loading}
-                      rows="3"
-                      style={{
-                        color: "#333333ff",
-                        resize: "vertical",
-                      }}
+                      style={{ marginTop: "16px" }}
                     />
                   </div>
 
                   <div>
-                    <textarea
-                      name="experience"
+                    <CustomSelect
+                      value={formData.location}
+                      onChange={(value) =>
+                        handleInputChange({
+                          target: { name: "location", value },
+                        })
+                      }
+                      options={[
+                        { value: "Eastern Cape", label: "Eastern Cape" },
+                        { value: "Free State", label: "Free State" },
+                        { value: "Gauteng", label: "Gauteng" },
+                        { value: "KwaZulu-Natal", label: "KwaZulu-Natal" },
+                        { value: "Limpopo", label: "Limpopo" },
+                        { value: "Mpumalanga", label: "Mpumalanga" },
+                        { value: "Northern Cape", label: "Northern Cape" },
+                        { value: "North West", label: "North West" },
+                        { value: "Western Cape", label: "Western Cape" },
+                      ]}
+                      placeholder="Location / Region of Operation"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div>
+                    <CustomSelect
+                      value={formData.contactMethod}
+                      onChange={(value) =>
+                        handleInputChange({
+                          target: { name: "contactMethod", value },
+                        })
+                      }
+                      options={[
+                        { value: "email", label: "Email" },
+                        { value: "phone", label: "Phone" },
+                        { value: "whatsapp", label: "WhatsApp" },
+                      ]}
+                      placeholder="Preferred Contact Method"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div>
+                    <CustomSelect
                       value={formData.experience}
-                      onChange={handleInputChange}
-                      className="form-input"
-                      placeholder="Relevant experience and background"
-                      required
+                      onChange={(value) =>
+                        handleInputChange({
+                          target: { name: "experience", value },
+                        })
+                      }
+                      options={[
+                        {
+                          value: "Less than 1 year",
+                          label: "Less than 1 year",
+                        },
+                        { value: "1–2 years", label: "1–2 years" },
+                        { value: "3–5 years", label: "3–5 years" },
+                        { value: "6–10 years", label: "6–10 years" },
+                        { value: "11–15 years", label: "11–15 years" },
+                        { value: "16–20 years", label: "16–20 years" },
+                        { value: "Over 20 years", label: "Over 20 years" },
+                      ]}
+                      placeholder="Years of experience"
                       disabled={loading}
-                      rows="3"
-                      style={{
-                        color: "#333333ff",
-                        resize: "vertical",
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <textarea
-                      name="reason"
-                      value={formData.reason}
-                      onChange={handleInputChange}
-                      className="form-input"
-                      placeholder="Why do you want to be an assessor?"
-                      required
-                      disabled={loading}
-                      rows="3"
-                      style={{
-                        color: "#333333ff",
-                        resize: "vertical",
-                      }}
                     />
                   </div>
                 </>
