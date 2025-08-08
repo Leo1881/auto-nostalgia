@@ -28,9 +28,7 @@ export const AuthProvider = ({ children }) => {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        // Temporarily skip profile fetch to test signup
-        console.log("👤 User logged in, skipping profile fetch for now");
-        // await getProfile(session.user.id);
+        await getProfile(session.user.id);
       } else {
         setProfile(null);
       }
@@ -59,16 +57,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signUp = async ({ email, password, fullName, role = "customer" }) => {
+  const signUp = async ({
+    email,
+    password,
+    fullName,
+    role = "customer",
+    credentials,
+    experience,
+    reason,
+  }) => {
     try {
-      console.log("🚀 Attempting signup for:", email);
+      console.log("🚀 Attempting signup for:", email, "as", role);
+
+      // Determine the actual role to set in profile
+      const profileRole = role === "assessor" ? "pending_assessor" : role;
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
             full_name: fullName,
-            role: role,
+            role: profileRole,
           },
         },
       });
@@ -77,6 +87,26 @@ export const AuthProvider = ({ children }) => {
         console.error("❌ Signup error:", error);
         throw error;
       }
+
+      // If user selected assessor, create assessor request
+      if (role === "assessor" && data.user) {
+        const { error: requestError } = await supabase
+          .from("assessor_requests")
+          .insert({
+            user_id: data.user.id,
+            credentials: credentials || "",
+            experience: experience || "",
+            reason: reason || "",
+            status: "pending",
+          });
+
+        if (requestError) {
+          console.error("❌ Error creating assessor request:", requestError);
+        } else {
+          console.log("✅ Assessor request created successfully");
+        }
+      }
+
       console.log("✅ Signup successful:", data);
       return { data, error: null };
     } catch (error) {

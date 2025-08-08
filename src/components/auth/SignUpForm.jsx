@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import CustomSelect from "../common/CustomSelect";
 
 function SignUpForm({ onBack, onAuthenticated }) {
   const { signUp } = useAuth();
@@ -8,6 +9,10 @@ function SignUpForm({ onBack, onAuthenticated }) {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "",
+    credentials: "",
+    experience: "",
+    reason: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -27,7 +32,10 @@ function SignUpForm({ onBack, onAuthenticated }) {
       email: formData.email,
       password: formData.password,
       fullName: formData.name,
-      role: "customer",
+      role: formData.role,
+      credentials: formData.credentials,
+      experience: formData.experience,
+      reason: formData.reason,
     });
 
     if (result.error) {
@@ -139,6 +147,81 @@ function SignUpForm({ onBack, onAuthenticated }) {
                   }}
                 />
               </div>
+
+              {/* Role Selector */}
+              <div>
+                <CustomSelect
+                  value={formData.role}
+                  onChange={(value) =>
+                    handleInputChange({ target: { name: "role", value } })
+                  }
+                  options={[
+                    { value: "customer", label: "Customer" },
+                    {
+                      value: "assessor",
+                      label: "Assessor (Requires Approval)",
+                    },
+                  ]}
+                  placeholder="Select Account Type"
+                  disabled={loading}
+                />
+              </div>
+
+              {/* Conditional Assessor Fields */}
+              {formData.role === "assessor" && (
+                <>
+                  <div>
+                    <textarea
+                      name="credentials"
+                      value={formData.credentials}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      placeholder="Professional credentials and qualifications"
+                      required
+                      disabled={loading}
+                      rows="3"
+                      style={{
+                        color: "#333333ff",
+                        resize: "vertical",
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <textarea
+                      name="experience"
+                      value={formData.experience}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      placeholder="Relevant experience and background"
+                      required
+                      disabled={loading}
+                      rows="3"
+                      style={{
+                        color: "#333333ff",
+                        resize: "vertical",
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <textarea
+                      name="reason"
+                      value={formData.reason}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      placeholder="Why do you want to be an assessor?"
+                      required
+                      disabled={loading}
+                      rows="3"
+                      style={{
+                        color: "#333333ff",
+                        resize: "vertical",
+                      }}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Submit button inside form */}
               <div className="flex justify-center">

@@ -288,6 +288,51 @@ input[type="text"].form-input {
   font-weight: 400;
 }
 
+/* Style select option placeholder */
+.form-input option[value=""] {
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+}
+
+/* Alternative approach for select placeholder */
+select.form-input option:first-child {
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+}
+
+/* More specific select placeholder styling */
+select.form-input option[value=""] {
+  color: #6b7280 !important;
+  font-weight: 400 !important;
+  background-color: white !important;
+}
+
+/* Force placeholder color for all browsers */
+select.form-input option:first-of-type {
+  color: #6b7280 !important;
+  font-weight: 400 !important;
+}
+
+/* Custom select background override */
+.form-input.bg-transparent {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Custom select placeholder styling */
+.custom-select-placeholder {
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+}
+
+/* Custom select container styling */
+.custom-select-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 56px !important;
+}
+
 .form-input:hover {
   border-color: #9ca3af;
   background: transparent;
