@@ -6,7 +6,7 @@ import MainApp from "./components/layout/MainApp";
 
 import { useAppState } from "./hooks/useAppState";
 import { APP_STATES } from "./constants/appStates.jsx";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 function App() {
   const {

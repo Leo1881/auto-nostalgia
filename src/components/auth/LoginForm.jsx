@@ -1,15 +1,31 @@
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 function LoginForm({ onBack, onAuthenticated }) {
+  const { signIn } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login attempt:", formData);
-    onAuthenticated();
+    setLoading(true);
+    setError("");
+
+    const result = await signIn({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (result.error) {
+      setError(result.error.message);
+      setLoading(false);
+    } else {
+      onAuthenticated();
+    }
   };
 
   const handleInputChange = (e) => {
@@ -42,6 +58,12 @@ function LoginForm({ onBack, onAuthenticated }) {
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                  {error}
+                </div>
+              )}
+
               <div>
                 <input
                   type="email"
@@ -51,6 +73,7 @@ function LoginForm({ onBack, onAuthenticated }) {
                   className="form-input"
                   placeholder="Enter your email"
                   required
+                  disabled={loading}
                   style={{
                     marginTop: "16px",
                     color: "#333333ff",
@@ -67,6 +90,7 @@ function LoginForm({ onBack, onAuthenticated }) {
                   className="form-input"
                   placeholder="Enter your password"
                   required
+                  disabled={loading}
                   style={{
                     color: "#333333ff",
                   }}
@@ -82,8 +106,10 @@ function LoginForm({ onBack, onAuthenticated }) {
             type="submit"
             className="auth-button auth-button-primary mb-4"
             style={{ marginBottom: "18px" }}
+            disabled={loading}
+            onClick={handleSubmit}
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </button>
 
           <button

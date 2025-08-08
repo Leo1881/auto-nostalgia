@@ -1,11 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-
-const AuthContext = createContext({});
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+import { AuthContext } from "./AuthContext.js";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -33,7 +28,9 @@ export const AuthProvider = ({ children }) => {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        await getProfile(session.user.id);
+        // Temporarily skip profile fetch to test signup
+        console.log("👤 User logged in, skipping profile fetch for now");
+        // await getProfile(session.user.id);
       } else {
         setProfile(null);
       }
@@ -64,6 +61,7 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async ({ email, password, fullName, role = "customer" }) => {
     try {
+      console.log("🚀 Attempting signup for:", email);
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -75,9 +73,14 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("❌ Signup error:", error);
+        throw error;
+      }
+      console.log("✅ Signup successful:", data);
       return { data, error: null };
     } catch (error) {
+      console.error("💥 Signup failed:", error);
       return { data: null, error };
     }
   };
