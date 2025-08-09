@@ -73,12 +73,10 @@ function SignUpForm({ onBack }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col p-8 font-quicksand">
+      
       <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col justify-between">
         {/* Container 1: Logo */}
-        <div
-          className="flex-1 flex items-start justify-center"
-          style={{ paddingTop: "-64px" }}
-        >
+        <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <img
               src="/an_plain.png"
@@ -300,44 +298,29 @@ function SignUpForm({ onBack }) {
             </>
           ) : (
             // Success State - Styled
-            <>
-              {/* Container 1: Success Content */}
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="text-center">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-                    <div className="mb-6">
-                      <div
-                        className="mb-4"
-                        style={{
-                          width: "120px",
-                          height: "120px",
-                          margin: "0 auto",
-                        }}
-                      >
-                        <Lottie
-                          src="https://cdn.lottielab.com/l/6ezgsQFJevF4ii.json"
-                          autoplay
-                        />
-                      </div>
-                      <h1 className="text-2xl font-bold text-gray-800 mb-2">
-                        Account Created Successfully!
-                      </h1>
-                    </div>
+            <div className="text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+                <div className="mb-6">
+                  <div
+                    className="mb-1"
+                    style={{
+                      width: "400px",
+                      height: "200px",
+                      margin: "0 auto 16px auto",
+                    }}
+                  >
+                    <Lottie
+                      src="/checkmark-animation.json"
+                      autoplay
+                      style={{ width: "100%", height: "100%" }}
+                    />
                   </div>
+                  <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                    Account Created Successfully!
+                  </h1>
                 </div>
               </div>
-
-              {/* Container 2: Login Button */}
-              <div className="flex-1 flex items-end justify-center">
-                <button
-                  onClick={onBack}
-                  className="auth-button auth-button-primary"
-                  style={{ marginBottom: "32px" }}
-                >
-                  Login
-                </button>
-              </div>
-            </>
+            </div>
           )}
         </div>
 
@@ -350,6 +333,19 @@ function SignUpForm({ onBack }) {
               style={{ marginBottom: "32px" }}
             >
               Back
+            </button>
+          </div>
+        )}
+
+        {/* Container 3: Login Button - Only show when in success state */}
+        {success && (
+          <div className="flex-1 flex flex-col justify-end items-center">
+            <button
+              onClick={onBack}
+              className="auth-button auth-button-primary"
+              style={{ marginBottom: "32px" }}
+            >
+              Login
             </button>
           </div>
         )}
