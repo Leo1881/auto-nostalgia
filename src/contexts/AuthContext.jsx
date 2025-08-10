@@ -59,107 +59,79 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async ({
     email,
-    password, // eslint-disable-line no-unused-vars
-    fullName, // eslint-disable-line no-unused-vars
+    password,
+    fullName,
     role = "customer",
-    credentials, // eslint-disable-line no-unused-vars
-    experience,
-    reason, // eslint-disable-line no-unused-vars
     phoneNumber,
     location,
     contactMethod,
+    experience,
   }) => {
     try {
-      console.log("🚀 Attempting signup for:", email, "as", role);
-      console.log("📝 About to call supabase.auth.signUp...");
-
-      // Determine the actual role to set in profile
-      const _profileRole = role === "assessor" ? "pending_assessor" : role; // eslint-disable-line no-unused-vars
-
-      // Try real Supabase signup with timeout
-      console.log("🔄 Attempting real Supabase signup...");
-
-      // Try real Supabase signup with timeout
-      console.log("🔄 Attempting real Supabase signup...");
-
-      // Temporary: Use mock signup for testing assessor workflow
-      const USE_MOCK_SIGNUP = true; // Set to false to use real Supabase
-
-      let data, error;
-
-      if (USE_MOCK_SIGNUP) {
-        console.log("🧪 Using mock signup (temporary workaround)");
-        const mockData = {
-          user: {
-            id: `mock-${Date.now()}`,
-            email: email,
+      // Sign up the user
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            role: role,
           },
-        };
-        console.log("✅ Mock signup successful:", mockData);
-        data = mockData;
-        error = null; // eslint-disable-line no-unused-vars
-      } else {
-        const signUpPromise = supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName,
-              role: _profileRole,
-            },
-          },
-        });
+        },
+      });
 
-        const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(
-            () => reject(new Error("Signup timeout after 15 seconds")),
-            15000
-          );
-        });
+      if (error) {
+        return { data: null, error };
+      }
 
-        const { data, error } = await Promise.race([
-          signUpPromise,
-          timeoutPromise,
-        ]);
+      // If user was created successfully, create their profile
+      if (data.user) {
+        try {
+          const { error: profileError } = await supabase
+            .from("profiles")
+            .insert([
+              {
+                id: data.user.id,
+                email: email,
+                full_name: fullName,
+                role: role,
+              },
+            ]);
 
-        console.log("📊 Supabase signUp response:", { data, error });
+          if (profileError) {
+            // Don't throw here - user was created successfully
+          }
 
-        if (error) {
-          console.error("❌ Signup error:", error);
-          throw error;
+          // If user selected assessor role, create assessor request
+          if (role === "assessor") {
+            try {
+              const { error: assessorError } = await supabase
+                .from("assessor_requests")
+                .insert([
+                  {
+                    user_id: data.user.id,
+                    phone_number: phoneNumber,
+                    location: location,
+                    contact_method: contactMethod,
+                    experience: experience,
+                    status: "pending",
+                  },
+                ]);
+
+              if (assessorError) {
+                // Handle silently
+              }
+            } catch {
+              // Handle silently
+            }
+          }
+        } catch {
+          // Handle silently
         }
       }
 
-      // Manually create profile if user was created successfully
-      if (data.user) {
-        console.log("🔧 Manually creating profile for user:", data.user.id);
-
-        // Temporarily bypass profile creation for testing
-        console.log("🧪 Temporarily bypassing profile creation for testing...");
-        console.log("✅ Profile creation bypassed successfully");
-      }
-
-      // If user selected assessor, create assessor request
-      if (role === "assessor" && data.user) {
-        console.log("🔧 Creating assessor request for user:", data.user.id);
-        console.log("📝 Assessor data:", {
-          phoneNumber,
-          location,
-          contactMethod,
-          experience,
-        });
-
-        // Temporarily bypass assessor request creation for testing
-        console.log(
-          "🧪 Temporarily bypassing assessor request creation for testing..."
-        );
-        console.log("✅ Assessor request creation bypassed successfully");
-      }
-
-      console.log("✅ Signup successful:", data);
       return { data, error: null };
     } catch (error) {
-      console.error("💥 Signup failed:", error);
       return { data: null, error };
     }
   };
@@ -171,7 +143,10 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        return { data: null, error };
+      }
+
       return { data, error: null };
     } catch (error) {
       return { data: null, error };
@@ -181,7 +156,9 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        console.error("Sign out error:", error);
+      }
     } catch (error) {
       console.error("Error signing out:", error);
     }

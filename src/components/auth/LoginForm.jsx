@@ -96,22 +96,23 @@ function LoginForm({ onBack, onAuthenticated }) {
                   }}
                 />
               </div>
+
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="auth-button auth-button-primary mb-4"
+                  style={{ marginBottom: "18px" }}
+                  disabled={loading}
+                >
+                  {loading ? "Signing In..." : "Sign In"}
+                </button>
+              </div>
             </form>
           </div>
         </div>
 
         {/* Container 3: Buttons and Link */}
         <div className="flex-1 flex flex-col justify-end items-center">
-          <button
-            type="submit"
-            className="auth-button auth-button-primary mb-4"
-            style={{ marginBottom: "18px" }}
-            disabled={loading}
-            onClick={handleSubmit}
-          >
-            {loading ? "Signing In..." : "Sign In"}
-          </button>
-
           <button
             onClick={onBack}
             className="auth-button auth-button-secondary"
