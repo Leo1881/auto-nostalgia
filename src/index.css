@@ -44,6 +44,54 @@ html {
   height: 100vh;
 }
 
+/* Allow padding on admin panel specifically */
+.min-h-screen .max-w-7xl {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  .min-h-screen .max-w-7xl {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .min-h-screen .max-w-7xl {
+    padding-left: 6rem !important;
+    padding-right: 6rem !important;
+  }
+}
+
+/* Allow vertical padding on admin panel main content */
+.min-h-screen main.max-w-7xl {
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+}
+
+/* Allow padding on admin panel header */
+.min-h-screen header .py-5 {
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+}
+
+/* Admin panel sign out button styles */
+.min-h-screen header button.bg-red-600 {
+  background-color: #dc2626 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  border: none !important;
+}
+
+.min-h-screen header button.bg-red-600:hover {
+  background-color: #b91c1c !important;
+}
+
 /* Force the app to take full width */
 #root {
   width: 100%;

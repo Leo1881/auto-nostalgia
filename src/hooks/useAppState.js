@@ -17,6 +17,10 @@ export function useAppState() {
     setAppState(APP_STATES.MAIN);
   };
 
+  const goToAdmin = () => {
+    setAppState(APP_STATES.ADMIN);
+  };
+
   const handleBackToChoice = () => {
     setAppState(APP_STATES.AUTH_CHOICE);
   };
@@ -35,5 +39,6 @@ export function useAppState() {
     handleBackToChoice,
     goToLogin,
     goToSignUp,
+    goToAdmin,
   };
 }

@@ -4,6 +4,7 @@ export const APP_STATES = {
   LOGIN: "login",
   SIGNUP: "signup",
   MAIN: "main",
+  ADMIN: "admin",
 };
 
 export const FEATURES = [

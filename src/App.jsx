@@ -2,7 +2,7 @@ import LoadingScreen from "./components/layout/LoadingScreen";
 import AuthChoicePage from "./components/auth/AuthChoicePage";
 import LoginForm from "./components/auth/LoginForm";
 import SignUpForm from "./components/auth/SignUpForm";
-import MainApp from "./components/layout/MainApp";
+import AuthenticatedApp from "./components/layout/AuthenticatedApp";
 
 import { useAppState } from "./hooks/useAppState";
 import { APP_STATES } from "./constants/appStates.jsx";
@@ -43,7 +43,7 @@ function App() {
     );
   }
 
-  return <MainApp />;
+  return <AuthenticatedApp />;
 }
 
 function AppWrapper() {
