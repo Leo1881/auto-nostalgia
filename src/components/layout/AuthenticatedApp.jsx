@@ -5,6 +5,8 @@ import AdminPanel from "../admin/AdminPanel";
 function AuthenticatedApp() {
   const { profile, loading } = useAuth();
 
+  console.log("AuthenticatedApp render:", { profile, loading });
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center font-quicksand">
@@ -16,12 +18,16 @@ function AuthenticatedApp() {
     );
   }
 
+  console.log("Profile role:", profile?.role);
+
   // Route admins to admin panel
   if (profile?.role === "admin") {
+    console.log("Routing to AdminPanel");
     return <AdminPanel />;
   }
 
   // Route everyone else to main app
+  console.log("Routing to MainApp");
   return <MainApp />;
 }
 

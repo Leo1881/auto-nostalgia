@@ -40,18 +40,31 @@ export const AuthProvider = ({ children }) => {
 
   const getProfile = async (userId) => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+      console.log("Fetching profile for user:", userId);
 
-      if (error) {
-        console.error("Error fetching profile:", error);
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      const response = await fetch(
+        `https://qqkefsjuzxzyinotlkhw.supabase.co/rest/v1/profiles?id=eq.${userId}&select=*&limit=1`,
+        {
+          headers: {
+            apikey: anonKey,
+            Authorization: `Bearer ${anonKey}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Error fetching profile:", response.statusText);
         return;
       }
 
-      setProfile(data);
+      const data = await response.json();
+      console.log("Profile data:", data);
+
+      if (data && data.length > 0) {
+        setProfile(data[0]);
+      }
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -138,17 +151,51 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async ({ email, password }) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      console.log("🔐 Starting direct HTTP sign in...");
 
-      if (error) {
-        return { data: null, error };
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      const response = await fetch(
+        "https://qqkefsjuzxzyinotlkhw.supabase.co/auth/v1/token?grant_type=password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: anonKey,
+            Authorization: `Bearer ${anonKey}`,
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      console.log("Direct auth response:", result);
+
+      if (response.ok && result.access_token) {
+        console.log("✅ Direct authentication successful");
+
+        // Don't use supabase.auth.setSession() as it hangs
+        // Instead, manually set the user state
+        setUser(result.user);
+        if (result.user) {
+          await getProfile(result.user.id);
+        }
+
+        return { data: { user: result.user, session: result }, error: null };
+      } else {
+        console.error("❌ Direct authentication failed:", result);
+        return {
+          data: null,
+          error: new Error(
+            result.error_description || result.error || "Authentication failed"
+          ),
+        };
       }
-
-      return { data, error: null };
     } catch (error) {
+      console.error("Sign in error:", error);
       return { data: null, error };
     }
   };

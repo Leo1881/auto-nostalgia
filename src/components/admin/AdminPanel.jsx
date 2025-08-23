@@ -10,14 +10,20 @@ function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [assessorsDropdownOpen, setAssessorsDropdownOpen] = useState(false);
+
+  // Debug logging
+  console.log("AdminPanel render:", { user, profile, loading, error });
 
   useEffect(() => {
+    console.log("AdminPanel useEffect triggered");
     fetchAssessorRequests();
     fetchActiveAssessors();
   }, []);
 
   const fetchAssessorRequests = async () => {
     try {
+      console.log("Fetching assessor requests...");
       setLoading(true);
 
       // First fetch all assessor requests
@@ -25,6 +31,8 @@ function AdminPanel() {
         .from("assessor_requests")
         .select("*")
         .order("created_at", { ascending: false });
+
+      console.log("Assessor requests result:", { requests, requestsError });
 
       if (requestsError) {
         setError("Failed to fetch assessor requests");
@@ -36,6 +44,8 @@ function AdminPanel() {
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, email, full_name, role, created_at");
+
+      console.log("Profiles result:", { profiles, profilesError });
 
       if (profilesError) {
         setError("Failed to fetch profiles");
@@ -49,6 +59,7 @@ function AdminPanel() {
         profiles: profiles.find((profile) => profile.id === request.user_id),
       }));
 
+      console.log("Combined data:", combinedData);
       setAssessorRequests(combinedData || []);
     } catch (err) {
       setError("Failed to fetch assessor requests");
@@ -152,10 +163,10 @@ function AdminPanel() {
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-lg border-b-4 border-primary-red">
         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
-          <div className="flex justify-between items-center py-5">
+          <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
                   Admin Panel
                 </h1>
               </div>
@@ -173,42 +184,93 @@ function AdminPanel() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
-          <div className="flex space-x-8">
+      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 w-full">
+        <nav className="px-8 sm:px-12 lg:px-16">
+          <div className="flex justify-center space-x-16">
             <button
               onClick={() => setActiveTab("dashboard")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`py-6 px-8 font-medium text-sm transition-colors duration-200 ${
                 activeTab === "dashboard"
-                  ? "border-primary-red text-primary-red"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "text-primary-red"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
             >
               Dashboard
             </button>
+
+            {/* Assessors Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setAssessorsDropdownOpen(!assessorsDropdownOpen)}
+                className={`py-6 px-8 font-medium text-sm transition-colors duration-200 flex items-center space-x-1 ${
+                  activeTab === "pending" || activeTab === "assessors"
+                    ? "text-primary-red"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <span>Assessors</span>
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    assessorsDropdownOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {assessorsDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 min-w-48 z-10">
+                  <button
+                    onClick={() => {
+                      setActiveTab("pending");
+                      setAssessorsDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 text-sm transition-colors duration-200 ${
+                      activeTab === "pending"
+                        ? "text-primary-red bg-red-50 dark:bg-red-900/20"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    Pending Requests ({stats.pending})
+                  </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab("assessors");
+                      setAssessorsDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 text-sm transition-colors duration-200 ${
+                      activeTab === "assessors"
+                        ? "text-primary-red bg-red-50 dark:bg-red-900/20"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    Active Assessors ({activeAssessors.length})
+                  </button>
+                </div>
+              )}
+            </div>
+
             <button
-              onClick={() => setActiveTab("pending")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "pending"
-                  ? "border-primary-red text-primary-red"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              onClick={() => setActiveTab("clients")}
+              className={`py-6 px-8 font-medium text-sm transition-colors duration-200 ${
+                activeTab === "clients"
+                  ? "text-primary-red"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
             >
-              Pending Requests ({stats.pending})
-            </button>
-            <button
-              onClick={() => setActiveTab("assessors")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "assessors"
-                  ? "border-primary-red text-primary-red"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
-              Active Assessors ({activeAssessors.length})
+              Clients
             </button>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-16 sm:px-20 lg:px-24 py-20">
@@ -529,6 +591,55 @@ function AdminPanel() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Clients Tab */}
+        {activeTab === "clients" && (
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+              Clients
+            </h1>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+              <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                      Client Management
+                    </h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      Manage client accounts and information
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-8">
+                <div className="text-center py-12">
+                  <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
+                    <svg
+                      className="h-12 w-12 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    Client Management Coming Soon
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Client management features will be available here.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

@@ -71,9 +71,9 @@ html {
 }
 
 /* Allow padding on admin panel header */
-.min-h-screen header .py-5 {
-  padding-top: 1.25rem !important;
-  padding-bottom: 1.25rem !important;
+.min-h-screen header .py-4 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
 }
 
 /* Admin panel sign out button styles */
@@ -90,6 +90,15 @@ html {
 
 .min-h-screen header button.bg-red-600:hover {
   background-color: #b91c1c !important;
+}
+
+/* Admin panel navigation button styles */
+.min-h-screen nav button {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  border: none !important;
 }
 
 /* Force the app to take full width */
