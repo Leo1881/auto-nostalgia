@@ -128,6 +128,23 @@ html {
   padding-top: 30px !important;
 }
 
+/* Force SVG icons to display */
+.min-h-screen svg {
+  display: block !important;
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+/* Force green color for completed requirements */
+.min-h-screen .text-green-600 {
+  color: #059669 !important;
+}
+
+/* Force gray color for incomplete requirements */
+.min-h-screen .text-gray-400 {
+  color: #9ca3af !important;
+}
+
 /* Force the app to take full width */
 #root {
   width: 100%;

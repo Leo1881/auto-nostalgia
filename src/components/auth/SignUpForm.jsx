@@ -193,9 +193,30 @@ function SignUpForm({ onBack }) {
                             : "text-gray-400"
                         }`}
                       >
-                        <span className="mr-2">
-                          {passwordRequirements.length ? "✓" : "○"}
-                        </span>
+                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                          {passwordRequirements.length ? (
+                            <svg
+                              className="w-4 h-4 text-green-600"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-4 h-4 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                            </svg>
+                          )}
+                        </div>
                         At least 8 characters
                       </div>
                       <div
@@ -205,9 +226,30 @@ function SignUpForm({ onBack }) {
                             : "text-gray-400"
                         }`}
                       >
-                        <span className="mr-2">
-                          {passwordRequirements.uppercase ? "✓" : "○"}
-                        </span>
+                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                          {passwordRequirements.uppercase ? (
+                            <svg
+                              className="w-4 h-4 text-green-600"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-4 h-4 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                            </svg>
+                          )}
+                        </div>
                         One uppercase letter
                       </div>
                       <div
@@ -217,9 +259,30 @@ function SignUpForm({ onBack }) {
                             : "text-gray-400"
                         }`}
                       >
-                        <span className="mr-2">
-                          {passwordRequirements.lowercase ? "✓" : "○"}
-                        </span>
+                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                          {passwordRequirements.lowercase ? (
+                            <svg
+                              className="w-4 h-4 text-green-600"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-4 h-4 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                            </svg>
+                          )}
+                        </div>
                         One lowercase letter
                       </div>
                       <div
@@ -229,9 +292,30 @@ function SignUpForm({ onBack }) {
                             : "text-gray-400"
                         }`}
                       >
-                        <span className="mr-2">
-                          {passwordRequirements.number ? "✓" : "○"}
-                        </span>
+                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                          {passwordRequirements.number ? (
+                            <svg
+                              className="w-4 h-4 text-green-600"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-4 h-4 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                            </svg>
+                          )}
+                        </div>
                         One number
                       </div>
                       <div
@@ -241,9 +325,30 @@ function SignUpForm({ onBack }) {
                             : "text-gray-400"
                         }`}
                       >
-                        <span className="mr-2">
-                          {passwordRequirements.special ? "✓" : "○"}
-                        </span>
+                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                          {passwordRequirements.special ? (
+                            <svg
+                              className="w-4 h-4 text-green-600"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-4 h-4 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                            </svg>
+                          )}
+                        </div>
                         One special character (!@#$%^&*)
                       </div>
                     </div>
