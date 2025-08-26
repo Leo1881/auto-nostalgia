@@ -56,6 +56,7 @@ const CustomSelect = ({
         style={{
           outline: "none",
           WebkitTapHighlightColor: "transparent",
+          borderRadius: isOpen ? "28px 28px 0 0" : "28px",
         }}
       >
         <span
@@ -68,7 +69,9 @@ const CustomSelect = ({
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <svg
-          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`transition-transform duration-300 ease-in-out ${
+            isOpen ? "rotate-180" : ""
+          }`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -86,52 +89,57 @@ const CustomSelect = ({
           />
         </svg>
       </div>
-
-      {isOpen && (
-        <div
-          className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-2xl shadow-xl max-h-60 overflow-hidden"
-          style={{
-            borderRadius: "16px",
-            boxShadow:
-              "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-            width: "320px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            backgroundColor: "white",
-            border: "2px solid #374151",
-            borderColor: "#374151",
-          }}
-        >
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className={`px-6 py-4 cursor-pointer transition-all duration-200 ${
+      <div
+        className={`absolute z-10 w-full bg-white shadow-xl max-h-60 transition-all duration-300 ease-in-out ${
+          isOpen
+            ? "opacity-100 transform translate-y-0 scale-y-100"
+            : "opacity-0 transform translate-y-0 scale-y-0 pointer-events-none"
+        }`}
+        style={{
+          borderRadius: "0 0 28px 28px",
+          boxShadow:
+            "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+          width: "320px",
+          left: "50%",
+          top: "100%",
+          transformOrigin: "top",
+          transform: isOpen
+            ? "translateX(-50%) translateY(0) scaleY(1)"
+            : "translateX(-50%) translateY(0) scaleY(0)",
+          backgroundColor: "white",
+          border: "2px solid #d1d5db",
+          borderTop: "none",
+        }}
+      >
+        {options.map((option) => (
+          <div
+            key={option.value}
+            className={`px-6 py-4 cursor-pointer transition-all duration-200 ease-in-out ${
+              selectedOption?.value === option.value
+                ? "bg-red-50 border-l-4 border-red-500"
+                : "hover:bg-gray-50 hover:scale-[1.02]"
+            }`}
+            style={{
+              padding: "16px 24px",
+              transition: "all 0.2s ease-in-out",
+            }}
+            onClick={() => handleSelect(option)}
+          >
+            <span
+              className={`font-medium ${
                 selectedOption?.value === option.value
-                  ? "bg-red-50 border-l-4 border-red-500"
-                  : "hover:bg-gray-50"
+                  ? "text-red-600"
+                  : "text-gray-700"
               }`}
               style={{
-                padding: "16px 24px",
-                transition: "all 0.2s ease",
+                fontWeight: "500",
               }}
-              onClick={() => handleSelect(option)}
             >
-              <span
-                className={`font-medium ${
-                  selectedOption?.value === option.value
-                    ? "text-red-600"
-                    : "text-gray-700"
-                }`}
-                style={{
-                  fontWeight: "500",
-                }}
-              >
-                {option.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+              {option.label}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
