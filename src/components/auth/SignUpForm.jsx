@@ -21,9 +21,22 @@ function SignUpForm({ onBack }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false,
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate password requirements
+    if (!validatePassword(formData.password)) {
+      setError("Password does not meet requirements");
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match");
@@ -64,11 +77,29 @@ function SignUpForm({ onBack }) {
     }
   };
 
+  const validatePassword = (password) => {
+    const requirements = {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    };
+    setPasswordRequirements(requirements);
+    return Object.values(requirements).every(Boolean);
+  };
+
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // Validate password when password field changes
+    if (name === "password") {
+      validatePassword(value);
+    }
   };
 
   return (
@@ -86,7 +117,10 @@ function SignUpForm({ onBack }) {
         </div>
 
         {/* Container 2: Content */}
-        <div className="flex-1 flex flex-col justify-center">
+        <div
+          className="flex-1 flex flex-col justify-start pt-16"
+          style={{ paddingTop: "30px" }}
+        >
           {!success ? (
             <>
               {/* Form State */}
@@ -151,6 +185,68 @@ function SignUpForm({ onBack }) {
                         color: "#333333ff",
                       }}
                     />
+                    <div className="mt-2 ml-6 space-y-1 mb-4">
+                      <div
+                        className={`flex items-center text-xs ${
+                          passwordRequirements.length
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <span className="mr-2">
+                          {passwordRequirements.length ? "✓" : "○"}
+                        </span>
+                        At least 8 characters
+                      </div>
+                      <div
+                        className={`flex items-center text-xs ${
+                          passwordRequirements.uppercase
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <span className="mr-2">
+                          {passwordRequirements.uppercase ? "✓" : "○"}
+                        </span>
+                        One uppercase letter
+                      </div>
+                      <div
+                        className={`flex items-center text-xs ${
+                          passwordRequirements.lowercase
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <span className="mr-2">
+                          {passwordRequirements.lowercase ? "✓" : "○"}
+                        </span>
+                        One lowercase letter
+                      </div>
+                      <div
+                        className={`flex items-center text-xs ${
+                          passwordRequirements.number
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <span className="mr-2">
+                          {passwordRequirements.number ? "✓" : "○"}
+                        </span>
+                        One number
+                      </div>
+                      <div
+                        className={`flex items-center text-xs ${
+                          passwordRequirements.special
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        <span className="mr-2">
+                          {passwordRequirements.special ? "✓" : "○"}
+                        </span>
+                        One special character (!@#$%^&*)
+                      </div>
+                    </div>
                   </div>
 
                   <div>

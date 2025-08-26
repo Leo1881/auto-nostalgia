@@ -21,7 +21,24 @@ function LoginForm({ onBack, onAuthenticated }) {
     });
 
     if (result.error) {
-      setError(result.error.message);
+      // Provide user-friendly error messages
+      let errorMessage = result.error.message;
+
+      if (errorMessage.includes("Invalid login credentials")) {
+        errorMessage =
+          "Invalid email or password. Please check your credentials and try again.";
+      } else if (errorMessage.includes("Email not confirmed")) {
+        errorMessage =
+          "Please check your email and confirm your account before signing in.";
+      } else if (errorMessage.includes("Too many requests")) {
+        errorMessage =
+          "Too many login attempts. Please wait a moment before trying again.";
+      } else if (errorMessage.includes("User not found")) {
+        errorMessage =
+          "No account found with this email address. Please check your email or sign up.";
+      }
+
+      setError(errorMessage);
       setLoading(false);
     } else {
       onAuthenticated();
@@ -29,6 +46,11 @@ function LoginForm({ onBack, onAuthenticated }) {
   };
 
   const handleInputChange = (e) => {
+    // Clear error when user starts typing
+    if (error) {
+      setError("");
+    }
+
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -58,19 +80,17 @@ function LoginForm({ onBack, onAuthenticated }) {
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                  {error}
-                </div>
-              )}
-
               <div>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="form-input"
+                  className={`form-input ${
+                    error
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      : ""
+                  }`}
                   placeholder="Enter your email"
                   required
                   disabled={loading}
@@ -87,7 +107,11 @@ function LoginForm({ onBack, onAuthenticated }) {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="form-input"
+                  className={`form-input ${
+                    error
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      : ""
+                  }`}
                   placeholder="Enter your password"
                   required
                   disabled={loading}
@@ -109,6 +133,26 @@ function LoginForm({ onBack, onAuthenticated }) {
               </div>
             </form>
           </div>
+
+          {error && (
+            <div
+              className="text-red-600 text-sm font-bold mb-4"
+              style={{
+                color: "red",
+                marginLeft: "auto",
+                marginRight: "auto",
+                textAlign: "center",
+                fontWeight: "bold",
+                position: "absolute",
+                bottom: "30%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 10,
+              }}
+            >
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Container 3: Buttons and Link */}

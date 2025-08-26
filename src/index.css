@@ -101,6 +101,33 @@ html {
   border: none !important;
 }
 
+/* Password requirements styles */
+.min-h-screen .space-y-1 > div {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.min-h-screen .mb-4 {
+  margin-bottom: 1rem !important;
+}
+
+.min-h-screen .mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.min-h-screen .ml-6 {
+  margin-left: 3rem !important;
+}
+
+.min-h-screen .mr-2 {
+  margin-right: 0.5rem !important;
+}
+
+/* Force padding on signup form container */
+.min-h-screen .pt-16 {
+  padding-top: 30px !important;
+}
+
 /* Force the app to take full width */
 #root {
   width: 100%;
