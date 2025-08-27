@@ -153,8 +153,24 @@ function ResetPasswordForm({ onSuccess }) {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-600 text-sm">{error}</p>
+            <div
+              className="text-red-600 text-sm font-bold mb-4"
+              style={{
+                color: "red",
+                marginLeft: "auto",
+                marginRight: "auto",
+                textAlign: "center",
+                fontWeight: "bold",
+                position: "absolute",
+                bottom: "15%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 10,
+                paddingLeft: "8px",
+                paddingRight: "8px",
+              }}
+            >
+              {error}
             </div>
           )}
 
