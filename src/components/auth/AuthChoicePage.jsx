@@ -9,7 +9,7 @@ function AuthChoicePage({ onLogin, onSignUp }) {
         <div className="w-full max-w-md px-6 text-center">
           <div className="mb-6">
             <img
-              src="/auto-nostalgia/an_plain.png"
+              src="/auto-nostalgia/docs/an_plain.png"
               alt="Auto Nostalgia"
               className="mx-auto max-w-[350px] md:max-w-[428px] lg:max-w-[506px]"
               style={{ marginTop: "32px" }}

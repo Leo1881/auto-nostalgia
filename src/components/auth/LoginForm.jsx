@@ -65,7 +65,7 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <img
-              src="/auto-nostalgia/an_plain.png"
+              src="/auto-nostalgia/docs/an_plain.png"
               alt="Auto Nostalgia"
               className="mx-auto max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
             />
