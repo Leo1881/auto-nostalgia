@@ -6,6 +6,153 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(null);
+
+  // Rate limiting configuration
+  const RATE_LIMIT_CONFIG = {
+    maxAttempts: 5,
+    timeWindow: 15 * 60 * 1000, // 15 minutes
+    blockDuration: 60 * 60 * 1000, // 1 hour
+    progressiveDelays: {
+      1: 0, // No delay after 1st failure
+      2: 1000, // 1 second after 2nd failure
+      3: 5000, // 5 seconds after 3rd failure
+      4: 15000, // 15 seconds after 4th failure
+      5: 60000, // 1 minute after 5th failure
+    },
+  };
+
+  // Rate limiting functions
+  const getLoginAttempts = () => {
+    try {
+      const attempts = localStorage.getItem("loginAttempts");
+      return attempts ? JSON.parse(attempts) : [];
+    } catch (error) {
+      console.error("Error reading login attempts:", error);
+      return [];
+    }
+  };
+
+  const saveLoginAttempts = (attempts) => {
+    try {
+      localStorage.setItem("loginAttempts", JSON.stringify(attempts));
+    } catch (error) {
+      console.error("Error saving login attempts:", error);
+    }
+  };
+
+  const recordLoginAttempt = (email, success) => {
+    const attempts = getLoginAttempts();
+    const now = Date.now();
+
+    // Add new attempt
+    attempts.push({
+      email,
+      success,
+      timestamp: now,
+      ip: "client", // In a real app, you'd get the actual IP
+    });
+
+    // Clean up old attempts (older than 24 hours)
+    const oneDayAgo = now - 24 * 60 * 60 * 1000;
+    const recentAttempts = attempts.filter(
+      (attempt) => attempt.timestamp > oneDayAgo
+    );
+
+    saveLoginAttempts(recentAttempts);
+    return recentAttempts;
+  };
+
+  const checkRateLimit = (email) => {
+    const attempts = getLoginAttempts();
+    const now = Date.now();
+
+    // Get failed attempts for this email in the time window
+    const failedAttempts = attempts.filter(
+      (attempt) =>
+        attempt.email === email &&
+        !attempt.success &&
+        attempt.timestamp > now - RATE_LIMIT_CONFIG.timeWindow
+    );
+
+    const attemptCount = failedAttempts.length;
+
+    // Check if blocked
+    if (attemptCount >= RATE_LIMIT_CONFIG.maxAttempts) {
+      const lastAttempt = failedAttempts[failedAttempts.length - 1];
+      const timeSinceLastAttempt = now - lastAttempt.timestamp;
+
+      if (timeSinceLastAttempt < RATE_LIMIT_CONFIG.blockDuration) {
+        const remainingTime = Math.ceil(
+          (RATE_LIMIT_CONFIG.blockDuration - timeSinceLastAttempt) / 1000 / 60
+        );
+        return {
+          blocked: true,
+          remainingMinutes: remainingTime,
+          message: `Too many failed attempts. Please try again in ${remainingTime} minutes.`,
+        };
+      }
+    }
+
+    // Check if we need to apply progressive delay
+    const delay = RATE_LIMIT_CONFIG.progressiveDelays[attemptCount] || 0;
+
+    return {
+      blocked: false,
+      delay,
+      attemptCount,
+      remainingAttempts: RATE_LIMIT_CONFIG.maxAttempts - attemptCount,
+    };
+  };
+
+  const clearLoginAttempts = (email) => {
+    const attempts = getLoginAttempts();
+    const clearedAttempts = attempts.filter(
+      (attempt) => attempt.email !== email
+    );
+    saveLoginAttempts(clearedAttempts);
+  };
+
+  // Check if token expires soon (within 5 minutes)
+  const isTokenExpiringSoon = (token) => {
+    if (!token || !token.expires_at) return false;
+    const expiresAt = token.expires_at * 1000; // Convert to milliseconds
+    const fiveMinutesFromNow = Date.now() + 5 * 60 * 1000;
+    return expiresAt < fiveMinutesFromNow;
+  };
+
+  // Automatically refresh token when it's about to expire
+  const refreshTokenIfNeeded = async () => {
+    try {
+      const {
+        data: { session: currentSession },
+      } = await supabase.auth.getSession();
+
+      if (currentSession && isTokenExpiringSoon(currentSession)) {
+        console.log("🔄 Token expiring soon, refreshing...");
+
+        const { data, error } = await supabase.auth.refreshSession();
+
+        if (error) {
+          console.error("❌ Token refresh failed:", error);
+          // If refresh fails, sign out the user
+          await signOut();
+          return;
+        }
+
+        if (data.session) {
+          console.log("✅ Token refreshed successfully");
+          setSession(data.session);
+          setUser(data.session.user);
+          if (data.session.user) {
+            await getProfile(data.session.user.id);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("❌ Error checking token refresh:", error);
+    }
+  };
 
   useEffect(() => {
     // Get initial session
@@ -13,6 +160,7 @@ export const AuthProvider = ({ children }) => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+      setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
         await getProfile(session.user.id);
@@ -26,6 +174,8 @@ export const AuthProvider = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("🔐 Auth state changed:", event, session?.user?.email);
+      setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
         await getProfile(session.user.id);
@@ -37,6 +187,15 @@ export const AuthProvider = ({ children }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Set up periodic token refresh checking (every 2 minutes)
+  useEffect(() => {
+    if (!user) return; // Only check if user is logged in
+
+    const interval = setInterval(refreshTokenIfNeeded, 2 * 60 * 1000); // 2 minutes
+
+    return () => clearInterval(interval);
+  }, [user]);
 
   const getProfile = async (userId) => {
     try {
@@ -153,6 +312,30 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("🔐 Starting direct HTTP sign in...");
 
+      // Check rate limiting before attempting login
+      const rateLimitCheck = checkRateLimit(email);
+
+      if (rateLimitCheck.blocked) {
+        console.log(
+          "🚫 Login blocked due to rate limiting:",
+          rateLimitCheck.message
+        );
+        return {
+          data: null,
+          error: new Error(rateLimitCheck.message),
+        };
+      }
+
+      // Apply progressive delay if needed
+      if (rateLimitCheck.delay > 0) {
+        console.log(
+          `⏳ Applying ${rateLimitCheck.delay}ms delay due to ${rateLimitCheck.attemptCount} previous failed attempts`
+        );
+        await new Promise((resolve) =>
+          setTimeout(resolve, rateLimitCheck.delay)
+        );
+      }
+
       const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
       const response = await fetch(
@@ -177,9 +360,16 @@ export const AuthProvider = ({ children }) => {
       if (response.ok && result.access_token) {
         console.log("✅ Direct authentication successful");
 
+        // Record successful login attempt
+        recordLoginAttempt(email, true);
+
+        // Clear any previous failed attempts for this email
+        clearLoginAttempts(email);
+
         // Don't use supabase.auth.setSession() as it hangs
         // Instead, manually set the user state
         setUser(result.user);
+        setSession(result);
         if (result.user) {
           await getProfile(result.user.id);
         }
@@ -187,6 +377,10 @@ export const AuthProvider = ({ children }) => {
         return { data: { user: result.user, session: result }, error: null };
       } else {
         console.error("❌ Direct authentication failed:", result);
+
+        // Record failed login attempt
+        recordLoginAttempt(email, false);
+
         return {
           data: null,
           error: new Error(
@@ -197,6 +391,33 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Sign in error:", error);
       return { data: null, error };
+    }
+  };
+
+  const refreshSession = async () => {
+    try {
+      console.log("🔄 Manually refreshing session...");
+      const { data, error } = await supabase.auth.refreshSession();
+
+      if (error) {
+        console.error("❌ Manual session refresh failed:", error);
+        return { error };
+      }
+
+      if (data.session) {
+        console.log("✅ Manual session refresh successful");
+        setSession(data.session);
+        setUser(data.session.user);
+        if (data.session.user) {
+          await getProfile(data.session.user.id);
+        }
+        return { data: data.session, error: null };
+      }
+
+      return { error: new Error("No session data returned") };
+    } catch (error) {
+      console.error("❌ Error in manual session refresh:", error);
+      return { error };
     }
   };
 
@@ -244,10 +465,14 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     profile,
+    session,
     loading,
     signUp,
     signIn,
     signOut,
+    refreshSession,
+    checkRateLimit,
+    clearLoginAttempts,
     isAdmin: profile?.role === "admin",
     isAssessor: profile?.role === "assessor",
     isCustomer: profile?.role === "customer",
