@@ -9,8 +9,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "npm run build && cp -r dist/* docs/",
+    "deploy": "git add docs && git commit -m 'Update docs' && git push"
   },
   "dependencies": {
     "@lottielab/lottie-player": "^1.1.3",
