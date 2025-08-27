@@ -1,15 +1,30 @@
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 import FeatureCard from "../features/FeatureCard";
 import { FEATURES } from "../../constants/appStates.jsx";
 
 function MainApp() {
   const [count, setCount] = useState(0);
+  const { signOut, loading } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-primary-grey dark:to-primary-grey-dark font-quicksand">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <header className="text-center mb-12">
+        <header className="text-center mb-12 relative">
+          <div className="absolute top-0 right-0">
+            <button
+              onClick={handleSignOut}
+              disabled={loading}
+              className="px-6 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-full transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-sm"
+            >
+              {loading ? "Signing Out..." : "Sign Out"}
+            </button>
+          </div>
           <h1 className="text-4xl md:text-6xl font-bold text-primary-grey dark:text-white mb-4">
             Auto Nostalgia
           </h1>

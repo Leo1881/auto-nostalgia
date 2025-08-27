@@ -202,12 +202,42 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = async () => {
     try {
+      console.log("🔐 Starting sign out process...");
+
+      // Set loading state for better UX
+      setLoading(true);
+
+      // Clear user and profile state immediately for better UX
+      setUser(null);
+      setProfile(null);
+
+      // Sign out from Supabase
       const { error } = await supabase.auth.signOut();
+
       if (error) {
-        console.error("Sign out error:", error);
+        console.error("❌ Sign out error:", error);
+        // Even if Supabase signout fails, we've cleared local state
+        setLoading(false);
+        return { error };
       }
+
+      console.log("✅ Sign out successful");
+
+      // Clear any local storage or session storage if needed
+      localStorage.removeItem("supabase.auth.token");
+      sessionStorage.clear();
+
+      // Force a page reload to clear any cached data
+      window.location.reload();
+
+      return { error: null };
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error("❌ Error signing out:", error);
+      // Clear state even if there's an error
+      setUser(null);
+      setProfile(null);
+      setLoading(false);
+      return { error };
     }
   };
 
