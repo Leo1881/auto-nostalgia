@@ -13,3 +13,7 @@ export { default as FeatureCard } from "./features/FeatureCard";
 // Common Components
 export { default as CustomSelect } from "./common/CustomSelect";
 export { default as LoadingButton } from "./common/LoadingButton";
+export { default as PermissionGuard } from "./common/PermissionGuard";
+
+// Admin Components
+export { default as UserManagement } from "./admin/UserManagement";

@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
 import AssessorRequestCard from "./AssessorRequestCard";
-import { LOADING_TEXT, LOADING_SPINNER_CLASSES } from "../../constants/loadingStates";
+import UserManagement from "./UserManagement";
+import {
+  LOADING_TEXT,
+  LOADING_SPINNER_CLASSES,
+} from "../../constants/loadingStates";
 
 function AdminPanel() {
   const { user, profile, signOut } = useAuth();
@@ -258,6 +262,17 @@ function AdminPanel() {
                 </div>
               )}
             </div>
+
+            <button
+              onClick={() => setActiveTab("users")}
+              className={`py-6 px-8 font-medium text-sm transition-colors duration-200 ${
+                activeTab === "users"
+                  ? "text-primary-red"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Users
+            </button>
 
             <button
               onClick={() => setActiveTab("clients")}
@@ -596,6 +611,9 @@ function AdminPanel() {
             </div>
           </div>
         )}
+
+        {/* Users Tab */}
+        {activeTab === "users" && <UserManagement />}
 
         {/* Clients Tab */}
         {activeTab === "clients" && (

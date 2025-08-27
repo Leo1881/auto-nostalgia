@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import {
+  ACCOUNT_STATUS,
+  isAccountSuspended,
+  isAccountDisabled,
+} from "../constants/permissions";
 import { AuthContext } from "./AuthContext.js";
 
 export const AuthProvider = ({ children }) => {
@@ -163,7 +168,23 @@ export const AuthProvider = ({ children }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        await getProfile(session.user.id);
+        const userProfile = await getProfile(session.user.id);
+        // Check account status on initial load
+        if (userProfile) {
+          const accountStatus =
+            userProfile.account_status || ACCOUNT_STATUS.ACTIVE;
+          if (
+            isAccountSuspended(accountStatus) ||
+            isAccountDisabled(accountStatus)
+          ) {
+            console.log("🔒 Account suspended/disabled on initial load");
+            setUser(null);
+            setProfile(null);
+            setSession(null);
+            // Sign out the user
+            await supabase.auth.signOut();
+          }
+        }
       }
       setLoading(false);
     };
@@ -178,7 +199,23 @@ export const AuthProvider = ({ children }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        await getProfile(session.user.id);
+        const userProfile = await getProfile(session.user.id);
+        // Check account status on auth state change
+        if (userProfile) {
+          const accountStatus =
+            userProfile.account_status || ACCOUNT_STATUS.ACTIVE;
+          if (
+            isAccountSuspended(accountStatus) ||
+            isAccountDisabled(accountStatus)
+          ) {
+            console.log("🔒 Account suspended/disabled on auth state change");
+            setUser(null);
+            setProfile(null);
+            setSession(null);
+            // Sign out the user
+            await supabase.auth.signOut();
+          }
+        }
       } else {
         setProfile(null);
       }
@@ -223,7 +260,9 @@ export const AuthProvider = ({ children }) => {
 
       if (data && data.length > 0) {
         setProfile(data[0]);
+        return data[0]; // Return the profile data
       }
+      return null;
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -366,13 +405,45 @@ export const AuthProvider = ({ children }) => {
         // Clear any previous failed attempts for this email
         clearLoginAttempts(email);
 
-        // Don't use supabase.auth.setSession() as it hangs
-        // Instead, manually set the user state
+        // Check account status BEFORE setting user state
+        if (result.user) {
+          const userProfile = await getProfile(result.user.id);
+
+          // Check account status after getting profile
+          if (userProfile) {
+            const accountStatus =
+              userProfile.account_status || ACCOUNT_STATUS.ACTIVE;
+
+            if (isAccountSuspended(accountStatus)) {
+              console.log(
+                "🔒 Account suspended:",
+                userProfile.suspension_reason
+              );
+              // Don't set user state - keep them logged out
+              return {
+                data: null,
+                error: new Error(
+                  `Account suspended: ${
+                    userProfile.suspension_reason || "No reason provided"
+                  }`
+                ),
+              };
+            }
+
+            if (isAccountDisabled(accountStatus)) {
+              console.log("🚫 Account disabled");
+              // Don't set user state - keep them logged out
+              return {
+                data: null,
+                error: new Error("Account has been permanently disabled"),
+              };
+            }
+          }
+        }
+
+        // Only set user state if account status checks pass
         setUser(result.user);
         setSession(result);
-        if (result.user) {
-          await getProfile(result.user.id);
-        }
 
         return { data: { user: result.user, session: result }, error: null };
       } else {
