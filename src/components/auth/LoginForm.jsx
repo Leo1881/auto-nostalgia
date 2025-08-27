@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { LOADING_TEXT, BUTTON_STATES } from "../../constants/loadingStates";
 
 function LoginForm({ onBack, onAuthenticated }) {
   const { signIn } = useAuth();
@@ -124,11 +125,11 @@ function LoginForm({ onBack, onAuthenticated }) {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="auth-button auth-button-primary mb-4"
+                  className={loading ? BUTTON_STATES.PRIMARY.LOADING : BUTTON_STATES.PRIMARY.NORMAL}
                   style={{ marginBottom: "18px" }}
                   disabled={loading}
                 >
-                  {loading ? "Signing In..." : "Sign In"}
+                  {loading ? LOADING_TEXT.SIGNING_IN : "Sign In"}
                 </button>
               </div>
             </form>

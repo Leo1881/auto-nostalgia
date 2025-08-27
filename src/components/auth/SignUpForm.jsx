@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import CustomSelect from "../common/CustomSelect";
 import Lottie from "@lottielab/lottie-player/react";
+import { LOADING_TEXT, BUTTON_STATES } from "../../constants/loadingStates";
 
 function SignUpForm({ onBack }) {
   const { signUp } = useAuth();
@@ -482,12 +483,12 @@ function SignUpForm({ onBack }) {
                   <div className="flex justify-center">
                     <button
                       type="submit"
-                      className="auth-button auth-button-primary mb-4"
+                      className={loading ? BUTTON_STATES.PRIMARY.LOADING : BUTTON_STATES.PRIMARY.NORMAL}
                       style={{ marginBottom: "18px" }}
                       disabled={loading || success}
                     >
                       {loading
-                        ? "Creating Account..."
+                        ? LOADING_TEXT.CREATING_ACCOUNT
                         : success
                         ? "Account Created!"
                         : "Create Account"}

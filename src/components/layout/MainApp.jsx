@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { LOADING_TEXT } from "../../constants/loadingStates";
 import FeatureCard from "../features/FeatureCard";
 import { FEATURES } from "../../constants/appStates.jsx";
 
@@ -22,7 +23,7 @@ function MainApp() {
               disabled={loading}
               className="px-6 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-full transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-sm"
             >
-              {loading ? "Signing Out..." : "Sign Out"}
+              {loading ? LOADING_TEXT.SIGNING_OUT : "Sign Out"}
             </button>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-primary-grey dark:text-white mb-4">

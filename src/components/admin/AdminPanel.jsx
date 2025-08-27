@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
 import AssessorRequestCard from "./AssessorRequestCard";
+import { LOADING_TEXT, LOADING_SPINNER_CLASSES } from "../../constants/loadingStates";
 
 function AdminPanel() {
   const { user, profile, signOut } = useAuth();
@@ -453,9 +454,9 @@ function AdminPanel() {
               <div className="p-8">
                 {loading ? (
                   <div className="text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-primary-red"></div>
+                    <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
                     <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-                      Loading requests...
+                      {LOADING_TEXT.LOADING_REQUESTS}
                     </p>
                   </div>
                 ) : assessorRequests.filter((req) => req.status === "pending")
@@ -530,9 +531,9 @@ function AdminPanel() {
               <div className="p-8">
                 {loading ? (
                   <div className="text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-primary-red"></div>
+                    <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
                     <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-                      Loading assessors...
+                      {LOADING_TEXT.LOADING_ASSESSORS}
                     </p>
                   </div>
                 ) : activeAssessors.length === 0 ? (

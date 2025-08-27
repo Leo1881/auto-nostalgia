@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LOADING_TEXT, BUTTON_STATES } from "../../constants/loadingStates";
 
 function AssessorRequestCard({ request, onStatusUpdate }) {
   const [loading, setLoading] = useState(false);
@@ -150,16 +151,16 @@ function AssessorRequestCard({ request, onStatusUpdate }) {
             <button
               onClick={() => handleStatusUpdate("rejected")}
               disabled={loading}
-              className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"
+              className={loading ? BUTTON_STATES.ACTION.LOADING : "px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"}
             >
-              {loading ? "Processing..." : "Reject"}
+              {loading ? LOADING_TEXT.PROCESSING : "Reject"}
             </button>
             <button
               onClick={() => handleStatusUpdate("approved")}
               disabled={loading}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"
+              className={loading ? "px-6 py-3 bg-green-600 text-white rounded-lg opacity-75 cursor-not-allowed transition-all duration-200 shadow-md font-semibold" : "px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"}
             >
-              {loading ? "Processing..." : "Approve"}
+              {loading ? LOADING_TEXT.PROCESSING : "Approve"}
             </button>
           </div>
         )}
