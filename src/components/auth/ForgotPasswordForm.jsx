@@ -77,7 +77,7 @@ function ForgotPasswordForm({ onBack, onSuccess }) {
               style={{
                 width: "400px",
                 height: "200px",
-                margin: "64px auto 16px auto",
+                margin: "128px auto 16px auto",
               }}
             >
               <Lottie

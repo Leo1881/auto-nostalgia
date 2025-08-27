@@ -144,12 +144,12 @@ function ResetPasswordForm({ onSuccess }) {
       <div className="max-w-md w-full space-y-8">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2
+              className="text-3xl font-bold text-gray-900 dark:text-white"
+              style={{ marginBottom: "24px" }}
+            >
               Reset Password
             </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              Enter your new password below
-            </p>
           </div>
 
           {error && (
@@ -159,13 +159,7 @@ function ResetPasswordForm({ onSuccess }) {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                New Password
-              </label>
+            <div className="text-center">
               <input
                 id="password"
                 type="password"
@@ -180,13 +174,7 @@ function ResetPasswordForm({ onSuccess }) {
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Confirm New Password
-              </label>
+            <div className="text-center">
               <input
                 id="confirmPassword"
                 type="password"
@@ -202,11 +190,11 @@ function ResetPasswordForm({ onSuccess }) {
             </div>
 
             {/* Password Requirements */}
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Password Requirements:
-              </p>
-              <div className="space-y-2">
+            <div
+              className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center"
+              style={{ marginBottom: "24px" }}
+            >
+              <div className="space-y-2" style={{ marginLeft: "40px" }}>
                 <div
                   className={`flex items-center text-sm ${
                     passwordRequirements.length
@@ -370,17 +358,19 @@ function ResetPasswordForm({ onSuccess }) {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className={
-                loading
-                  ? BUTTON_STATES.PRIMARY.LOADING
-                  : BUTTON_STATES.PRIMARY.NORMAL
-              }
-              disabled={loading}
-            >
-              {loading ? LOADING_TEXT.PROCESSING : "Update Password"}
-            </button>
+            <div className="text-center">
+              <button
+                type="submit"
+                className={
+                  loading
+                    ? BUTTON_STATES.PRIMARY.LOADING
+                    : BUTTON_STATES.PRIMARY.NORMAL
+                }
+                disabled={loading}
+              >
+                {loading ? LOADING_TEXT.PROCESSING : "Update Password"}
+              </button>
+            </div>
           </form>
         </div>
       </div>
