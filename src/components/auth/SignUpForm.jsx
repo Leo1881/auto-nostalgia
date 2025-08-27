@@ -104,15 +104,15 @@ function SignUpForm({ onBack }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col p-8 font-quicksand">
-      <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col p-4 sm:p-8 font-quicksand">
+      <div className="w-full max-w-md mx-auto px-4 sm:px-6 flex-1 flex flex-col justify-between">
         {/* Container 1: Logo */}
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <img
               src="/an_plain.png"
               alt="Auto Nostalgia"
-              className="mx-auto max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
+              className="mx-auto max-w-[160px] sm:max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
             />
           </div>
         </div>
@@ -132,7 +132,7 @@ function SignUpForm({ onBack }) {
                 <p className="text-white">Start your nostalgia journey</p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">
                 {error && (
                   <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                     {error}
@@ -509,13 +509,14 @@ function SignUpForm({ onBack }) {
           ) : (
             // Success State - Styled
             <div className="text-center">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-8">
                 <div className="mb-6">
                   <div
                     className="mb-1"
                     style={{
-                      width: "400px",
-                      height: "200px",
+                      width: "100%",
+                      maxWidth: "400px",
+                      height: "150px",
                       margin: "0 auto 16px auto",
                     }}
                   >
@@ -540,7 +541,9 @@ function SignUpForm({ onBack }) {
             <button
               onClick={onBack}
               className="auth-button auth-button-secondary w-full sm:w-auto"
-              style={{ marginBottom: "32px" }}
+              style={{
+                marginBottom: window.innerWidth < 640 ? "48px" : "32px",
+              }}
             >
               Back
             </button>
@@ -553,7 +556,9 @@ function SignUpForm({ onBack }) {
             <button
               onClick={onBack}
               className="auth-button auth-button-primary w-full sm:w-auto"
-              style={{ marginBottom: "32px" }}
+              style={{
+                marginBottom: window.innerWidth < 640 ? "48px" : "32px",
+              }}
             >
               Login
             </button>
