@@ -5,7 +5,7 @@ function LoadingScreen() {
         {/* App Logo */}
         <div className="mb-8 animate-fade-in">
           <img
-            src="/auto-nostalgia/docs/an_plain.png"
+            src="/auto-nostalgia/an_plain.png"
             alt="Auto Nostalgia"
             className="mx-auto max-w-[144px] md:max-w-[180px] lg:max-w-[216px]"
           />
