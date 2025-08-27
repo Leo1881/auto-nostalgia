@@ -193,11 +193,12 @@ function SignUpForm({ onBack }) {
                             ? "text-green-600"
                             : "text-gray-400"
                         }`}
+                        style={{ fontSize: "10px" }}
                       >
-                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                        <div className="mr-2 w-3 h-3 flex items-center justify-center">
                           {passwordRequirements.length ? (
                             <svg
-                              className="w-4 h-4 text-green-600"
+                              className="w-3 h-3 text-green-600"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -209,7 +210,7 @@ function SignUpForm({ onBack }) {
                             </svg>
                           ) : (
                             <svg
-                              className="w-4 h-4 text-gray-400"
+                              className="w-3 h-3 text-gray-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -226,11 +227,12 @@ function SignUpForm({ onBack }) {
                             ? "text-green-600"
                             : "text-gray-400"
                         }`}
+                        style={{ fontSize: "10px" }}
                       >
-                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                        <div className="mr-2 w-3 h-3 flex items-center justify-center">
                           {passwordRequirements.uppercase ? (
                             <svg
-                              className="w-4 h-4 text-green-600"
+                              className="w-3 h-3 text-green-600"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -242,7 +244,7 @@ function SignUpForm({ onBack }) {
                             </svg>
                           ) : (
                             <svg
-                              className="w-4 h-4 text-gray-400"
+                              className="w-3 h-3 text-gray-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -259,11 +261,12 @@ function SignUpForm({ onBack }) {
                             ? "text-green-600"
                             : "text-gray-400"
                         }`}
+                        style={{ fontSize: "10px" }}
                       >
-                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                        <div className="mr-2 w-3 h-3 flex items-center justify-center">
                           {passwordRequirements.lowercase ? (
                             <svg
-                              className="w-4 h-4 text-green-600"
+                              className="w-3 h-3 text-green-600"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -275,7 +278,7 @@ function SignUpForm({ onBack }) {
                             </svg>
                           ) : (
                             <svg
-                              className="w-4 h-4 text-gray-400"
+                              className="w-3 h-3 text-gray-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -292,11 +295,12 @@ function SignUpForm({ onBack }) {
                             ? "text-green-600"
                             : "text-gray-400"
                         }`}
+                        style={{ fontSize: "10px" }}
                       >
-                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                        <div className="mr-2 w-3 h-3 flex items-center justify-center">
                           {passwordRequirements.number ? (
                             <svg
-                              className="w-4 h-4 text-green-600"
+                              className="w-3 h-3 text-green-600"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -308,7 +312,7 @@ function SignUpForm({ onBack }) {
                             </svg>
                           ) : (
                             <svg
-                              className="w-4 h-4 text-gray-400"
+                              className="w-3 h-3 text-gray-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -325,11 +329,12 @@ function SignUpForm({ onBack }) {
                             ? "text-green-600"
                             : "text-gray-400"
                         }`}
+                        style={{ fontSize: "10px" }}
                       >
-                        <div className="mr-2 w-4 h-4 flex items-center justify-center">
+                        <div className="mr-2 w-3 h-3 flex items-center justify-center">
                           {passwordRequirements.special ? (
                             <svg
-                              className="w-4 h-4 text-green-600"
+                              className="w-3 h-3 text-green-600"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                             >
@@ -341,7 +346,7 @@ function SignUpForm({ onBack }) {
                             </svg>
                           ) : (
                             <svg
-                              className="w-4 h-4 text-gray-400"
+                              className="w-3 h-3 text-gray-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -382,7 +387,7 @@ function SignUpForm({ onBack }) {
                         { value: "customer", label: "Customer" },
                         {
                           value: "assessor",
-                          label: "Assessor (Requires Approval)",
+                          label: "Assessor",
                         },
                       ]}
                       placeholder="Select Account Type"
@@ -429,7 +434,7 @@ function SignUpForm({ onBack }) {
                             { value: "North West", label: "North West" },
                             { value: "Western Cape", label: "Western Cape" },
                           ]}
-                          placeholder="Location / Region of Operation"
+                          placeholder="Location"
                           disabled={loading}
                         />
                       </div>
@@ -483,11 +488,11 @@ function SignUpForm({ onBack }) {
                   <div className="flex justify-center">
                     <button
                       type="submit"
-                      className={
+                      className={`${
                         loading
                           ? BUTTON_STATES.PRIMARY.LOADING
                           : BUTTON_STATES.PRIMARY.NORMAL
-                      }
+                      } w-full sm:w-auto`}
                       style={{ marginBottom: "18px" }}
                       disabled={loading || success}
                     >
@@ -534,7 +539,7 @@ function SignUpForm({ onBack }) {
           <div className="flex-1 flex flex-col justify-end items-center">
             <button
               onClick={onBack}
-              className="auth-button auth-button-secondary"
+              className="auth-button auth-button-secondary w-full sm:w-auto"
               style={{ marginBottom: "32px" }}
             >
               Back
@@ -547,7 +552,7 @@ function SignUpForm({ onBack }) {
           <div className="flex-1 flex flex-col justify-end items-center">
             <button
               onClick={onBack}
-              className="auth-button auth-button-primary"
+              className="auth-button auth-button-primary w-full sm:w-auto"
               style={{ marginBottom: "32px" }}
             >
               Login

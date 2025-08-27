@@ -56,7 +56,10 @@ const CustomSelect = ({
         style={{
           outline: "none",
           WebkitTapHighlightColor: "transparent",
-          borderRadius: isOpen ? "28px 28px 0 0" : "28px",
+          borderRadius: isOpen ? "24px 24px 0 0" : "24px",
+          height: "48px !important",
+          minHeight: "48px",
+          maxHeight: "48px",
         }}
       >
         <span
@@ -96,10 +99,10 @@ const CustomSelect = ({
             : "opacity-0 transform translate-y-0 scale-y-0 pointer-events-none"
         }`}
         style={{
-          borderRadius: "0 0 28px 28px",
+          borderRadius: "0 0 24px 24px",
           boxShadow:
             "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-          width: "320px",
+          width: "280px",
           left: "50%",
           top: "100%",
           transformOrigin: "top",
