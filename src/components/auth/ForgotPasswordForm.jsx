@@ -108,7 +108,17 @@ function ForgotPasswordForm({ onBack, onSuccess }) {
                 </ul>
               </div>
 
-              <button onClick={onBack} className={BUTTON_STATES.PRIMARY.NORMAL}>
+              <button
+                onClick={onBack}
+                className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: "0",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                }}
+              >
                 Back to Sign In
               </button>
             </div>
@@ -126,7 +136,14 @@ function ForgotPasswordForm({ onBack, onSuccess }) {
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
               Forgot Password
             </h2>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p
+              className="text-gray-600 dark:text-gray-400"
+              style={{
+                marginBottom: "24px",
+                paddingLeft: "16px",
+                paddingRight: "16px",
+              }}
+            >
               Enter your email address and we'll send you a link to reset your
               password
             </p>
@@ -139,13 +156,7 @@ function ForgotPasswordForm({ onBack, onSuccess }) {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Email Address
-              </label>
+            <div className="text-center">
               <input
                 id="email"
                 type="email"
@@ -160,23 +171,32 @@ function ForgotPasswordForm({ onBack, onSuccess }) {
               />
             </div>
 
-            <button
-              type="submit"
-              className={
-                loading
-                  ? BUTTON_STATES.PRIMARY.LOADING
-                  : BUTTON_STATES.PRIMARY.NORMAL
-              }
-              disabled={loading}
-            >
-              {loading ? LOADING_TEXT.PROCESSING : "Send Reset Link"}
-            </button>
+            <div className="text-center">
+              <button
+                type="submit"
+                className={
+                  loading
+                    ? BUTTON_STATES.PRIMARY.LOADING
+                    : BUTTON_STATES.PRIMARY.NORMAL
+                }
+                disabled={loading}
+              >
+                {loading ? LOADING_TEXT.PROCESSING : "Send Reset Link"}
+              </button>
+            </div>
           </form>
 
           <div className="mt-6 text-center">
             <button
               onClick={onBack}
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+              className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
+              style={{
+                background: "none",
+                border: "none",
+                padding: "0",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
             >
               ← Back to Sign In
             </button>

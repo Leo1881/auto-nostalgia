@@ -125,7 +125,11 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className={loading ? BUTTON_STATES.PRIMARY.LOADING : BUTTON_STATES.PRIMARY.NORMAL}
+                  className={
+                    loading
+                      ? BUTTON_STATES.PRIMARY.LOADING
+                      : BUTTON_STATES.PRIMARY.NORMAL
+                  }
                   style={{ marginBottom: "18px" }}
                   disabled={loading}
                 >
@@ -166,11 +170,17 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
             Back
           </button>
 
-          <div className="text-center" style={{ marginBottom: "16px" }}>
+          <div className="text-center" style={{ marginBottom: "32px" }}>
             <button
               onClick={onForgotPassword}
-              className="text-sm text-white hover:text-gray-200"
-              style={{ color: "#333333ff" }}
+              className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
+              style={{
+                background: "none",
+                border: "none",
+                padding: "0",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
             >
               Forgot your password?
             </button>
