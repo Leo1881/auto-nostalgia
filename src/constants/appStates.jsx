@@ -3,6 +3,8 @@ export const APP_STATES = {
   AUTH_CHOICE: "auth-choice",
   LOGIN: "login",
   SIGNUP: "signup",
+  FORGOT_PASSWORD: "forgot-password",
+  RESET_PASSWORD: "reset-password",
   MAIN: "main",
   ADMIN: "admin",
 };

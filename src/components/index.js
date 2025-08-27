@@ -2,6 +2,8 @@
 export { default as LoginForm } from "./auth/LoginForm";
 export { default as SignUpForm } from "./auth/SignUpForm";
 export { default as AuthChoicePage } from "./auth/AuthChoicePage";
+export { default as ForgotPasswordForm } from "./auth/ForgotPasswordForm";
+export { default as ResetPasswordForm } from "./auth/ResetPasswordForm";
 
 // Layout Components
 export { default as LoadingScreen } from "./layout/LoadingScreen";

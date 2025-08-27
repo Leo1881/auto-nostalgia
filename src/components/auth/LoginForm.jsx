@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { LOADING_TEXT, BUTTON_STATES } from "../../constants/loadingStates";
 
-function LoginForm({ onBack, onAuthenticated }) {
+function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
   const { signIn } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
@@ -167,13 +167,13 @@ function LoginForm({ onBack, onAuthenticated }) {
           </button>
 
           <div className="text-center" style={{ marginBottom: "16px" }}>
-            <a
-              href="#"
+            <button
+              onClick={onForgotPassword}
               className="text-sm text-white hover:text-gray-200"
               style={{ color: "#333333ff" }}
             >
               Forgot your password?
-            </a>
+            </button>
           </div>
         </div>
       </div>
