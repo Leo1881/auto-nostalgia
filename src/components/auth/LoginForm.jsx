@@ -59,13 +59,13 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col p-8 font-quicksand">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col px-8 pt-8 pb-6 sm:pb-8 font-quicksand">
       <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col justify-between">
         {/* Container 1: Logo */}
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <img
-              src="/auto-nostalgia/an_plain.png"
+              src="/an_plain.png"
               alt="Auto Nostalgia"
               className="mx-auto max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
             />
@@ -80,7 +80,7 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <input
                   type="email"
@@ -125,12 +125,12 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className={
+                  className={`${
                     loading
                       ? BUTTON_STATES.PRIMARY.LOADING
                       : BUTTON_STATES.PRIMARY.NORMAL
-                  }
-                  style={{ marginBottom: "18px" }}
+                  } w-full sm:w-auto`}
+                  style={{ marginBottom: "0px" }}
                   disabled={loading}
                 >
                   {loading ? LOADING_TEXT.SIGNING_IN : "Sign In"}
@@ -164,13 +164,13 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
         <div className="flex-1 flex flex-col justify-end items-center">
           <button
             onClick={onBack}
-            className="auth-button auth-button-secondary"
-            style={{ marginBottom: "32px" }}
+            className="auth-button auth-button-secondary w-full sm:w-auto"
+            style={{ marginBottom: "8px" }}
           >
             Back
           </button>
 
-          <div className="text-center" style={{ marginBottom: "32px" }}>
+          <div className="text-center" style={{ marginBottom: "64px" }}>
             <button
               onClick={onForgotPassword}
               className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"

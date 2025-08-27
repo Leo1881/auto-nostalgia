@@ -1,11 +1,14 @@
 function LoadingScreen() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-primary-grey dark:to-primary-grey-dark flex items-center justify-center font-quicksand">
-      <div className="text-center">
+      <div
+        className="text-center flex flex-col items-center justify-center"
+        style={{ marginTop: "-48px" }}
+      >
         {/* App Logo */}
-        <div className="mb-8 animate-fade-in">
+        <div className="animate-fade-in mb-6">
           <img
-            src="/auto-nostalgia/an_plain.png"
+            src="/an_plain.png"
             alt="Auto Nostalgia"
             className="mx-auto max-w-[144px] md:max-w-[180px] lg:max-w-[216px]"
           />
