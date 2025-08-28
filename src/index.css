@@ -99,6 +99,45 @@ html {
   padding-right: 0.75rem !important;
 }
 
+/* Force gap between vehicle cards */
+.grid.gap-8 > * {
+  margin: 1rem !important;
+}
+
+/* Specific rule for vehicle grid spacing */
+.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-8 > * {
+  margin: 1rem !important;
+}
+
+/* Force spacing between vehicle cards - only top/bottom margin */
+.flex.flex-wrap > div {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Ensure vehicle cards have consistent width */
+.flex.flex-wrap > div {
+  width: 100% !important;
+  max-width: 24rem !important;
+}
+
+/* Ensure red circle badge is visible */
+.w-8.h-8.bg-red-600.rounded-full {
+  background-color: #dc2626 !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Ensure text inside red circle is white */
+.w-8.h-8.bg-red-600.rounded-full span {
+  color: white !important;
+  font-weight: bold !important;
+}
+
 /* Allow margins and padding on dashboard content */
 .customer-dashboard .space-y-6 > * {
   margin-top: 0.75rem !important;
