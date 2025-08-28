@@ -7,9 +7,9 @@ function DashboardHome() {
   const { profile } = useAuth();
 
   const handleAddVehicle = (vehicleData) => {
-    console.log("Adding vehicle:", vehicleData);
-    // TODO: Implement vehicle addition logic
-    // This will be connected to Supabase later
+    console.log("Vehicle added successfully:", vehicleData);
+    // TODO: Refresh vehicle count and list
+    // This will be implemented when we add vehicle listing functionality
   };
 
   const handleCloseModal = () => {

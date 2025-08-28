@@ -445,6 +445,12 @@ export const AuthProvider = ({ children }) => {
         setUser(result.user);
         setSession(result);
 
+        // Set the Supabase session properly
+        await supabase.auth.setSession({
+          access_token: result.access_token,
+          refresh_token: result.refresh_token,
+        });
+
         return { data: { user: result.user, session: result }, error: null };
       } else {
         console.error("❌ Direct authentication failed:", result);

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { vehicleService } from "../../lib/vehicleService";
+import { supabase } from "../../lib/supabase";
 
 function AddVehicleModal({ isOpen, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
@@ -22,6 +24,7 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,15 +53,141 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
     if (!formData.color.trim()) newErrors.color = "Color is required";
     if (!formData.mileage.trim()) newErrors.mileage = "Mileage is required";
 
+    // Validate year range
+    const year = parseInt(formData.year);
+    if (year < 1900 || year > new Date().getFullYear() + 1) {
+      newErrors.year = "Year must be between 1900 and next year";
+    }
+
+    // Validate mileage
+    const mileage = parseInt(formData.mileage);
+    if (mileage < 0) {
+      newErrors.mileage = "Mileage must be a positive number";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      onSubmit(formData);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // First check if user is authenticated
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      console.log("Session check:", {
+        hasSession: !!session,
+        hasUser: !!session?.user,
+        sessionData: session,
+      });
+
+      if (!session || !session.user) {
+        alert("Please log in again to add a vehicle.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Check if registration number already exists
+      const registrationExists = await vehicleService.checkRegistrationExists(
+        formData.registration
+      );
+      if (registrationExists) {
+        setErrors((prev) => ({
+          ...prev,
+          registration: "Registration number already exists",
+        }));
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Check if VIN already exists
+      const vinExists = await vehicleService.checkVINExists(formData.vin);
+      if (vinExists) {
+        setErrors((prev) => ({ ...prev, vin: "VIN already exists" }));
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Add the vehicle to the database
+      const newVehicle = await vehicleService.addVehicle(formData);
+
+      // Call the onSubmit callback with the new vehicle data
+      if (onSubmit) {
+        onSubmit(newVehicle);
+      }
+
+      // Close the modal
       onClose();
+
+      // Reset form
+      setFormData({
+        make: "",
+        model: "",
+        variant: "",
+        year: "",
+        registration: "",
+        vin: "",
+        color: "",
+        mileage: "",
+        engineSize: "",
+        transmission: "",
+        fuelType: "",
+        bodyType: "",
+        numberOfDoors: "",
+        condition: "",
+        modifications: "",
+        serviceHistory: "",
+        description: "",
+      });
+    } catch (error) {
+      console.error("Error adding vehicle:", error);
+      console.error("Error details:", {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
+
+      // Handle network connectivity issues
+      if (
+        error.message.includes("Failed to fetch") ||
+        error.message.includes("ERR_INTERNET_DISCONNECTED")
+      ) {
+        alert(
+          "Network connection error. Please check your internet connection and try again."
+        );
+      }
+      // Handle authentication errors
+      else if (error.message.includes("User not authenticated")) {
+        alert("Please log in again to add a vehicle.");
+      }
+      // Handle specific error types
+      else if (error.message.includes("duplicate key")) {
+        if (error.message.includes("registration_number")) {
+          setErrors((prev) => ({
+            ...prev,
+            registration: "Registration number already exists",
+          }));
+        } else if (error.message.includes("vin")) {
+          setErrors((prev) => ({ ...prev, vin: "VIN already exists" }));
+        }
+      } else {
+        // Show a more specific error message
+        const errorMessage =
+          error.details || error.message || "Unknown error occurred";
+        alert(`Error adding vehicle: ${errorMessage}`);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -460,9 +589,14 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-primary-red text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
+              disabled={isSubmitting}
+              className={`px-6 py-2 bg-primary-red text-white rounded-lg transition-colors duration-200 font-medium ${
+                isSubmitting
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-red-700"
+              }`}
             >
-              Add Vehicle
+              {isSubmitting ? "Adding Vehicle..." : "Add Vehicle"}
             </button>
           </div>
         </form>
