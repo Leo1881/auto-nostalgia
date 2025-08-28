@@ -139,11 +139,45 @@ html {
   fill: none !important;
 }
 
+/* Recent Assessments text sizing */
+.customer-dashboard .bg-white.rounded-xl h2 {
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  margin-top: 1rem !important;
+}
+
+.customer-dashboard .bg-white.rounded-xl h3 {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+.customer-dashboard .bg-white.rounded-xl p {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+.customer-dashboard .bg-white.rounded-xl span {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+/* Add margin bottom to assessment items */
+.customer-dashboard .bg-white.rounded-xl .space-y-3 > div {
+  margin-bottom: 0.75rem !important;
+}
+
 .customer-dashboard .grid .bg-primary-red {
   min-height: 100px !important;
   height: auto !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.customer-dashboard .grid .bg-primary-red:active {
+  background-color: #b91c1c !important;
+  transform: translateY(1px) !important;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    0 1px 2px -1px rgba(0, 0, 0, 0.06) !important;
 }
 
 .customer-dashboard .mb-6 {

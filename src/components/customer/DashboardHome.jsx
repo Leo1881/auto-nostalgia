@@ -232,7 +232,7 @@ function DashboardHome() {
 
       {/* Recent Assessments */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6">
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-4">
           Recent Assessments
         </h2>
         <div className="space-y-3 sm:space-y-4">
@@ -242,16 +242,16 @@ function DashboardHome() {
               className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-lg space-y-2 sm:space-y-0"
             >
               <div>
-                <h3 className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
+                <h3 className="font-medium text-gray-900 dark:text-white text-sm">
                   {assessment.vehicle}
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {new Date(assessment.date).toLocaleDateString()}
                 </p>
               </div>
               <div className="flex flex-col sm:text-right space-y-1 sm:space-y-0">
                 <span
-                  className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium w-fit ${
+                  className={`px-2 sm:px-3 py-1 rounded-full text-sm font-medium w-fit ${
                     assessment.status === "Completed"
                       ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
                       : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
@@ -260,7 +260,7 @@ function DashboardHome() {
                   {assessment.status}
                 </span>
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
-                  {assessment.value}
+                  Assessment Value: {assessment.value}
                 </p>
               </div>
             </div>
