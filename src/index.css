@@ -76,6 +76,43 @@ html {
   padding-bottom: 1rem !important;
 }
 
+/* Allow padding on customer dashboard specifically */
+.customer-dashboard .flex-1 {
+  padding: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  .customer-dashboard .flex-1 {
+    padding: 1.5rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .customer-dashboard .flex-1 {
+    padding: 2rem !important;
+  }
+}
+
+/* Allow horizontal padding on customer dashboard content specifically */
+.customer-dashboard .flex-1 .w-full {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+@media (min-width: 640px) {
+  .customer-dashboard .flex-1 .w-full {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .customer-dashboard .flex-1 .w-full {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
 /* Admin panel sign out button styles */
 .min-h-screen header button.bg-red-600 {
   background-color: #dc2626 !important;
