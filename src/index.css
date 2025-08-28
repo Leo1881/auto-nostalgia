@@ -99,6 +99,57 @@ html {
   padding-right: 0.75rem !important;
 }
 
+/* Allow margins and padding on dashboard content */
+.customer-dashboard .space-y-6 > * {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.customer-dashboard .space-y-6 > *:first-child {
+  margin-top: 0 !important;
+}
+
+.customer-dashboard .mt-6 {
+  margin-top: 1.5rem !important;
+}
+
+/* Remove margin top from first button */
+.customer-dashboard .mt-6:first-child {
+  margin-top: 0 !important;
+}
+
+/* Style quick action buttons */
+.customer-dashboard .bg-primary-red {
+  background-color: #d90429ff !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+}
+
+.customer-dashboard .bg-primary-red h3 {
+  color: white !important;
+}
+
+.customer-dashboard .bg-primary-red p {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.customer-dashboard .bg-primary-red svg {
+  color: white !important;
+  stroke: white !important;
+  fill: none !important;
+}
+
+.customer-dashboard .grid .bg-primary-red {
+  min-height: 100px !important;
+  height: auto !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.customer-dashboard .mb-6 {
+  margin-bottom: 1.5rem !important;
+}
+
 @media (min-width: 640px) {
   .customer-dashboard .flex-1 .w-full {
     padding-left: 1rem !important;
@@ -218,6 +269,20 @@ html {
 .customer-dashboard nav ul {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
+}
+
+/* Remove margin top from quick actions grid */
+.customer-dashboard .grid.grid-cols-1.sm\\:grid-cols-2.gap-4.sm\\:gap-6 {
+  margin-top: 0 !important;
+}
+
+/* More specific targeting for quick actions grid */
+.customer-dashboard div[class*="grid grid-cols-1"] {
+  margin-top: 0 !important;
+}
+
+.customer-dashboard .grid {
+  margin-top: 0 !important;
 }
 
 .customer-dashboard .bg-white.rounded-xl div[class*="ml-3"] {

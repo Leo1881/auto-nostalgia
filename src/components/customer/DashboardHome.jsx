@@ -200,37 +200,33 @@ function DashboardHome() {
       {/* Spacer */}
       <div className="mb-6"></div>
 
+      {/* Top spacer for quick actions */}
+      <div className="mt-6"></div>
+
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6">
         {quickActions.map((action, index) => (
-          <div
+          <button
             key={index}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6"
+            onClick={action.action}
+            className="bg-primary-red rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-lg transition-all duration-200 text-left w-full mt-6"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div
-                  className={`p-2 sm:p-3 rounded-lg text-white ${action.color}`}
-                >
-                  {action.icon}
-                </div>
-                <div className="ml-3 sm:ml-4">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
-                    {action.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                    {action.description}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={action.action}
-                className={`px-3 sm:px-4 py-2 rounded-lg text-white font-medium transition-colors duration-200 text-sm ${action.color}`}
+            <div className="flex items-center">
+              <div
+                className={`p-2 sm:p-3 rounded-lg text-white ${action.color}`}
               >
-                Get Started
-              </button>
+                {action.icon}
+              </div>
+              <div className="ml-3 sm:ml-4 flex-1">
+                <h3 className="text-base sm:text-lg font-semibold text-white">
+                  {action.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-white text-opacity-80">
+                  {action.description}
+                </p>
+              </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
 
