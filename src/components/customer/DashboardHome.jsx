@@ -1,7 +1,20 @@
+import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import AddVehicleModal from "./AddVehicleModal";
 
 function DashboardHome() {
+  const [isAddVehicleModalOpen, setIsAddVehicleModalOpen] = useState(false);
   const { profile } = useAuth();
+
+  const handleAddVehicle = (vehicleData) => {
+    console.log("Adding vehicle:", vehicleData);
+    // TODO: Implement vehicle addition logic
+    // This will be connected to Supabase later
+  };
+
+  const handleCloseModal = () => {
+    setIsAddVehicleModalOpen(false);
+  };
 
   // Mock data - in real app, this would come from API
   const stats = {
@@ -68,7 +81,7 @@ function DashboardHome() {
           />
         </svg>
       ),
-      action: () => console.log("Add vehicle"),
+      action: () => setIsAddVehicleModalOpen(true),
       color: "bg-green-500 hover:bg-green-600",
     },
   ];
@@ -267,6 +280,13 @@ function DashboardHome() {
           ))}
         </div>
       </div>
+
+      {/* Add Vehicle Modal */}
+      <AddVehicleModal
+        isOpen={isAddVehicleModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleAddVehicle}
+      />
     </div>
   );
 }
