@@ -104,17 +104,17 @@ function CustomerSidebar({ activeSection, onSectionChange }) {
   ];
 
   return (
-    <aside className="w-full lg:w-64 bg-white dark:bg-gray-800 shadow-sm border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
+    <aside className="w-full lg:w-64 bg-primary-red shadow-sm">
       <nav className="p-4">
         <ul className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-2 overflow-x-auto lg:overflow-x-visible">
           {menuItems.map((item) => (
             <li key={item.id} className="flex-shrink-0 lg:flex-shrink">
               <button
                 onClick={() => onSectionChange(item.id)}
-                className={`flex items-center space-x-2 lg:space-x-3 px-3 lg:px-4 py-2 lg:py-3 rounded-lg transition-all duration-200 text-left whitespace-nowrap ${
+                className={`flex items-center space-x-3 lg:space-x-4 px-3 lg:px-4 py-2 lg:py-3 rounded-lg transition-all duration-200 text-left whitespace-nowrap ${
                   activeSection === item.id
-                    ? "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    ? "bg-white text-primary-red border border-white"
+                    : "text-white hover:bg-red-600"
                 }`}
               >
                 {item.icon}

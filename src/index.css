@@ -138,6 +138,87 @@ html {
   border: none !important;
 }
 
+/* Customer sidebar navigation styles */
+.customer-dashboard aside {
+  background-color: #d90429ff !important;
+  border-color: #dc2626 !important;
+}
+
+.customer-dashboard nav ul {
+  list-style: none !important;
+}
+
+.customer-dashboard nav li {
+  list-style: none !important;
+}
+
+.customer-dashboard nav li::marker {
+  display: none !important;
+}
+
+.customer-dashboard nav button {
+  background-color: #d90429ff !important;
+  color: white !important;
+  border: 1px solid #d90429ff !important;
+}
+
+.customer-dashboard nav button:hover {
+  background-color: #b91c1c !important;
+  border-color: #b91c1c !important;
+}
+
+.customer-dashboard nav button.bg-white {
+  background-color: #b91c1c !important;
+  color: white !important;
+  border-color: #b91c1c !important;
+}
+
+/* Dashboard stats styling */
+.customer-dashboard .bg-white.rounded-xl div[class*="p-1"] {
+  padding: 0.375rem !important;
+}
+
+.customer-dashboard .bg-white.rounded-xl svg {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+.customer-dashboard .bg-white.rounded-xl p[class*="text-xs"] {
+  font-size: 0.75rem !important;
+  line-height: 1rem !important;
+}
+
+.customer-dashboard .bg-white.rounded-xl p.text-base.font-bold {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+/* More specific targeting for dashboard numbers */
+.customer-dashboard
+  .bg-white.rounded-xl
+  .flex.items-center
+  .ml-3
+  .flex.items-center.space-x-2
+  p:last-child {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  font-weight: 700 !important;
+}
+
+/* Navigation button spacing */
+.customer-dashboard nav button span {
+  margin-left: 0.5rem !important;
+}
+
+.customer-dashboard .bg-white.rounded-xl div[class*="ml-3"] {
+  margin-left: 0.75rem !important;
+}
+
+/* Force margin bottom on stats grid */
+.customer-dashboard .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
+  margin-bottom: 1.5rem !important;
+}
+
 /* Password requirements styles */
 .min-h-screen .space-y-1 > div {
   margin-top: 0.25rem !important;

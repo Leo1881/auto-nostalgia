@@ -77,18 +77,18 @@ function DashboardHome() {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6">
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
           Here's what's happening with your vehicle assessments.
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+            <div className="p-1.5 bg-blue-100 dark:bg-blue-900 rounded-lg">
               <svg
-                className="w-6 h-6 text-blue-600 dark:text-blue-400"
+                className="w-4 h-4 text-blue-600 dark:text-blue-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -101,11 +101,11 @@ function DashboardHome() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            <div className="ml-3 flex items-center space-x-2">
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">
                 Total Assessments
               </p>
-              <p className="text-lg font-bold text-gray-900 dark:text-white">
+              <p className="text-xs font-bold text-gray-900 dark:text-white">
                 {stats.totalAssessments}
               </p>
             </div>
@@ -114,9 +114,9 @@ function DashboardHome() {
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+            <div className="p-1.5 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
               <svg
-                className="w-6 h-6 text-yellow-600 dark:text-yellow-400"
+                className="w-4 h-4 text-yellow-600 dark:text-yellow-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -129,11 +129,11 @@ function DashboardHome() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            <div className="ml-3 flex items-center space-x-2">
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">
                 Pending Requests
               </p>
-              <p className="text-lg font-bold text-gray-900 dark:text-white">
+              <p className="text-xs font-bold text-gray-900 dark:text-white">
                 {stats.pendingRequests}
               </p>
             </div>
@@ -142,9 +142,9 @@ function DashboardHome() {
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+            <div className="p-1.5 bg-blue-100 dark:bg-blue-900 rounded-lg">
               <svg
-                className="w-6 h-6 text-green-600 dark:text-green-400"
+                className="w-4 h-4 text-blue-600 dark:text-blue-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -157,11 +157,11 @@ function DashboardHome() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            <div className="ml-3 flex items-center space-x-2">
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">
                 Completed
               </p>
-              <p className="text-lg font-bold text-gray-900 dark:text-white">
+              <p className="text-xs font-bold text-gray-900 dark:text-white">
                 {stats.completedAssessments}
               </p>
             </div>
@@ -170,9 +170,9 @@ function DashboardHome() {
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+            <div className="p-1.5 bg-purple-100 dark:bg-purple-900 rounded-lg">
               <svg
-                className="w-6 h-6 text-purple-600 dark:text-purple-400"
+                className="w-4 h-4 text-purple-600 dark:text-purple-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -185,17 +185,20 @@ function DashboardHome() {
                 />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            <div className="ml-3 flex items-center space-x-2">
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">
                 Total Vehicles
               </p>
-              <p className="text-lg font-bold text-gray-900 dark:text-white">
+              <p className="text-xs font-bold text-gray-900 dark:text-white">
                 {stats.totalVehicles}
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Spacer */}
+      <div className="mb-6"></div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
