@@ -179,7 +179,7 @@ function AdminPanel() {
             <div className="flex items-center space-x-6">
               <button
                 onClick={signOut}
-                className="px-12 py-4 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold border-0"
+                className="px-8 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold border-0 text-sm"
               >
                 Sign Out
               </button>

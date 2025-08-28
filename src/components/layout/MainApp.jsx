@@ -21,7 +21,7 @@ function MainApp() {
             <button
               onClick={handleSignOut}
               disabled={loading}
-              className="px-6 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-full transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-sm"
+              className="px-4 py-1.5 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-full transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
             >
               {loading ? LOADING_TEXT.SIGNING_OUT : "Sign Out"}
             </button>

@@ -149,7 +149,7 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
                 textAlign: "center",
                 fontWeight: "bold",
                 position: "absolute",
-                bottom: "30%",
+                bottom: "28%",
                 left: "50%",
                 transform: "translateX(-50%)",
                 zIndex: 10,
