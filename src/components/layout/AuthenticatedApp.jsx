@@ -2,6 +2,7 @@ import { useAuth } from "../../hooks/useAuth";
 import MainApp from "./MainApp";
 import AdminPanel from "../admin/AdminPanel";
 import CustomerDashboard from "../customer/CustomerDashboard";
+import { VehicleProvider } from "../../contexts/VehicleContext";
 import {
   LOADING_TEXT,
   LOADING_SPINNER_CLASSES,

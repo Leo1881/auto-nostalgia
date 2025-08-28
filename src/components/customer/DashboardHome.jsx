@@ -8,20 +8,21 @@ function DashboardHome() {
 
   const handleAddVehicle = (vehicleData) => {
     console.log("Vehicle added successfully:", vehicleData);
-    // TODO: Refresh vehicle count and list
-    // This will be implemented when we add vehicle listing functionality
+    alert(
+      "Vehicle added successfully! You can view it in the 'My Vehicles' section."
+    );
   };
 
   const handleCloseModal = () => {
     setIsAddVehicleModalOpen(false);
   };
 
-  // Mock data - in real app, this would come from API
+  // Stats data - using mock data for now
   const stats = {
     totalAssessments: 5,
     pendingRequests: 2,
     completedAssessments: 3,
-    totalVehicles: 4,
+    totalVehicles: 4, // Will be updated when we implement proper state management
   };
 
   const recentAssessments = [

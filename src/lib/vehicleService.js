@@ -4,9 +4,27 @@ export const vehicleService = {
   // Get all vehicles for the current user
   async getUserVehicles() {
     try {
+      console.log("🔍 Getting user vehicles...");
+
+      // Get the current session
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError || !session || !session.user) {
+        console.error("Session error:", sessionError);
+        console.log("Session data:", session);
+        throw new Error("User not authenticated - please log in again");
+      }
+
+      const user = session.user;
+      console.log("User authenticated:", user.id);
+
       const { data, error } = await supabase
         .from("vehicles")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -14,6 +32,7 @@ export const vehicleService = {
         throw error;
       }
 
+      console.log("✅ User vehicles fetched:", data);
       return data || [];
     } catch (error) {
       console.error("Error in getUserVehicles:", error);
