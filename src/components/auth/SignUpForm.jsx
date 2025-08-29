@@ -162,7 +162,7 @@ function SignUpForm({ onBack }) {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                       placeholder="Enter your full name"
                       required
                       disabled={loading}
@@ -178,7 +178,7 @@ function SignUpForm({ onBack }) {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                       placeholder="Enter your email"
                       required
                       disabled={loading}
@@ -191,7 +191,7 @@ function SignUpForm({ onBack }) {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                       placeholder="Create a password"
                       required
                       disabled={loading}
@@ -376,7 +376,7 @@ function SignUpForm({ onBack }) {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                       placeholder="Confirm password"
                       required
                       disabled={loading}
@@ -411,7 +411,7 @@ function SignUpForm({ onBack }) {
                           name="phoneNumber"
                           value={formData.phoneNumber}
                           onChange={handleInputChange}
-                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                           placeholder="Phone Number (Optional)"
                           disabled={loading}
                         />
@@ -423,7 +423,7 @@ function SignUpForm({ onBack }) {
                           name="address"
                           value={formData.address}
                           onChange={handleInputChange}
-                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                           placeholder="Street Address (Optional)"
                           disabled={loading}
                         />
@@ -436,7 +436,7 @@ function SignUpForm({ onBack }) {
                             name="city"
                             value={formData.city}
                             onChange={handleInputChange}
-                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
                             placeholder="City (Optional)"
                             disabled={loading}
                           />
@@ -448,7 +448,7 @@ function SignUpForm({ onBack }) {
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
-                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
                             placeholder="State/Province (Optional)"
                             disabled={loading}
                           />
@@ -460,7 +460,7 @@ function SignUpForm({ onBack }) {
                             name="zipCode"
                             value={formData.zipCode}
                             onChange={handleInputChange}
-                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
                             placeholder="Postal Code (Optional)"
                             disabled={loading}
                           />
@@ -503,7 +503,7 @@ function SignUpForm({ onBack }) {
                           name="phoneNumber"
                           value={formData.phoneNumber}
                           onChange={handleInputChange}
-                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                           placeholder="Phone Number"
                           required
                           disabled={loading}
@@ -516,7 +516,7 @@ function SignUpForm({ onBack }) {
                           name="address"
                           value={formData.address}
                           onChange={handleInputChange}
-                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4"
                           placeholder="Street Address"
                           required
                           disabled={loading}
@@ -530,7 +530,7 @@ function SignUpForm({ onBack }) {
                             name="city"
                             value={formData.city}
                             onChange={handleInputChange}
-                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
                             placeholder="City"
                             required
                             disabled={loading}
@@ -543,7 +543,7 @@ function SignUpForm({ onBack }) {
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
-                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
                             placeholder="State/Province"
                             required
                             disabled={loading}
@@ -556,7 +556,7 @@ function SignUpForm({ onBack }) {
                             name="zipCode"
                             value={formData.zipCode}
                             onChange={handleInputChange}
-                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
                             placeholder="Postal Code"
                             required
                             disabled={loading}
@@ -662,7 +662,7 @@ function SignUpForm({ onBack }) {
                   <div className="flex justify-center">
                     <button
                       type="submit"
-                      className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
+                      className="px-6 py-2 bg-red-600 text-white rounded-lg transition-colors duration-200 font-medium hover:bg-red-700"
                       style={{ marginBottom: "18px" }}
                       disabled={loading || success}
                     >
@@ -706,7 +706,7 @@ function SignUpForm({ onBack }) {
               <div className="mt-8 sm:mt-12">
                 <button
                   onClick={onBack}
-                  className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
+                  className="px-6 py-2 bg-red-600 text-white rounded-lg transition-colors duration-200 font-medium hover:bg-red-700"
                 >
                   Login
                 </button>
@@ -720,7 +720,7 @@ function SignUpForm({ onBack }) {
           <div className="flex-1 flex flex-col justify-end items-center">
             <button
               onClick={onBack}
-              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs outline-none cursor-pointer transition-all duration-300 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white hover:shadow-lg active:scale-95 active:bg-red-700 active:text-white mb-2"
+              className="w-40 px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium mb-2"
             >
               Back
             </button>

@@ -24,14 +24,14 @@ function AuthChoicePage({ onLogin, onSignUp }) {
           <div className="flex flex-col items-center space-y-4">
             <button
               onClick={onLogin}
-              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white mb-4 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
+              className="w-40 px-6 py-2 bg-red-600 text-white rounded-lg transition-colors duration-200 font-medium hover:bg-red-700 mb-4"
             >
               Login
             </button>
 
             <button
               onClick={onSignUp}
-              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs outline-none cursor-pointer transition-all duration-300 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white hover:shadow-lg active:scale-95 active:bg-red-700 active:text-white"
+              className="w-40 px-6 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
             >
               Sign Up
             </button>
