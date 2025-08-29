@@ -19,7 +19,7 @@ function CustomerDashboard() {
   const renderContent = () => {
     switch (activeSection) {
       case "dashboard":
-        return <DashboardHome />;
+        return <DashboardHome onSectionChange={setActiveSection} />;
       case "request-assessment":
         return <RequestAssessment />;
       case "my-vehicles":
@@ -29,7 +29,7 @@ function CustomerDashboard() {
       case "profile-settings":
         return <ProfileSettings />;
       default:
-        return <DashboardHome />;
+        return <DashboardHome onSectionChange={setActiveSection} />;
     }
   };
 

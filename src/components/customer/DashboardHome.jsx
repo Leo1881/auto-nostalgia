@@ -1,46 +1,140 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { supabase } from "../../lib/supabase";
 import AddVehicleModal from "./AddVehicleModal";
 
-function DashboardHome() {
+function DashboardHome({ onSectionChange }) {
   const [isAddVehicleModalOpen, setIsAddVehicleModalOpen] = useState(false);
-  const { profile } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalAssessments: 0,
+    pendingRequests: 0,
+    completedAssessments: 0,
+    totalVehicles: 0,
+  });
+  const [recentAssessments, setRecentAssessments] = useState([]);
+  const { profile, user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      loadDashboardData();
+    }
+  }, [user]);
+
+  const loadDashboardData = async () => {
+    setIsLoading(true);
+    try {
+      // Load stats and recent assessments in parallel
+      const [statsData, recentAssessmentsData] = await Promise.all([
+        loadStats(),
+        loadRecentAssessments(),
+      ]);
+
+      setStats(statsData);
+      setRecentAssessments(recentAssessmentsData);
+    } catch (error) {
+      console.error("Error loading dashboard data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadStats = async () => {
+    try {
+      // Get total vehicles
+      const { count: totalVehicles } = await supabase
+        .from("vehicles")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      // Get assessment requests
+      const { data: assessments } = await supabase
+        .from("assessment_requests")
+        .select("*")
+        .eq("user_id", user.id);
+
+      const totalAssessments = assessments?.length || 0;
+      const pendingRequests =
+        assessments?.filter((a) => a.status === "pending").length || 0;
+      const completedAssessments =
+        assessments?.filter((a) => a.status === "completed").length || 0;
+
+      return {
+        totalAssessments,
+        pendingRequests,
+        completedAssessments,
+        totalVehicles: totalVehicles || 0,
+      };
+    } catch (error) {
+      console.error("Error loading stats:", error);
+      return {
+        totalAssessments: 0,
+        pendingRequests: 0,
+        completedAssessments: 0,
+        totalVehicles: 0,
+      };
+    }
+  };
+
+  const loadRecentAssessments = async () => {
+    try {
+      const { data: assessments, error } = await supabase
+        .from("assessment_requests")
+        .select(
+          `
+          *,
+          vehicles (
+            year,
+            make,
+            model,
+            registration_number
+          )
+        `
+        )
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (error) {
+        console.error("Error loading recent assessments:", error);
+        return [];
+      }
+
+      return (
+        assessments?.map((assessment) => ({
+          id: assessment.id,
+          vehicle: `${assessment.vehicles?.year} ${assessment.vehicles?.make} ${assessment.vehicles?.model} (${assessment.vehicles?.registration_number})`,
+          status:
+            assessment.status.charAt(0).toUpperCase() +
+            assessment.status.slice(1),
+          date: assessment.created_at,
+          assessmentType: assessment.assessment_type
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase()),
+          urgency: assessment.urgency,
+        })) || []
+      );
+    } catch (error) {
+      console.error("Error loading recent assessments:", error);
+      return [];
+    }
+  };
 
   const handleAddVehicle = (vehicleData) => {
     console.log("Vehicle added successfully:", vehicleData);
-    alert(
-      "Vehicle added successfully! You can view it in the 'My Vehicles' section."
-    );
+    // Refresh dashboard data after adding vehicle
+    loadDashboardData();
   };
 
   const handleCloseModal = () => {
     setIsAddVehicleModalOpen(false);
   };
 
-  // Stats data - using mock data for now
-  const stats = {
-    totalAssessments: 5,
-    pendingRequests: 2,
-    completedAssessments: 3,
-    totalVehicles: 4, // Will be updated when we implement proper state management
+  const navigateToSection = (section) => {
+    if (onSectionChange) {
+      onSectionChange(section);
+    }
   };
-
-  const recentAssessments = [
-    {
-      id: 1,
-      vehicle: "1967 Ford Mustang",
-      status: "Completed",
-      date: "2024-01-15",
-      value: "$45,000",
-    },
-    {
-      id: 2,
-      vehicle: "1972 Chevrolet Camaro",
-      status: "Pending",
-      date: "2024-01-20",
-      value: "Pending",
-    },
-  ];
 
   const quickActions = [
     {
@@ -61,7 +155,7 @@ function DashboardHome() {
           />
         </svg>
       ),
-      action: () => console.log("Request assessment"),
+      action: () => navigateToSection("request-assessment"),
       color: "bg-red-600 hover:bg-red-700",
     },
     {
@@ -86,6 +180,46 @@ function DashboardHome() {
       color: "bg-red-600 hover:bg-red-700",
     },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+            <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+          </div>
+        </div>
+
+        {/* Stats Grid Loading */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/4"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Quick Actions Loading */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6">
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow-sm p-4 sm:p-6 h-24"
+            >
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -249,37 +383,68 @@ function DashboardHome() {
         <h2 className="text-sm font-bold text-[#333333ff] mb-4">
           Recent Assessments
         </h2>
-        <div className="space-y-3 sm:space-y-4">
-          {recentAssessments.map((assessment) => (
-            <div
-              key={assessment.id}
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
+        {recentAssessments.length === 0 ? (
+          <div className="text-center py-8">
+            <svg
+              className="w-12 h-12 text-gray-400 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <div>
-                <h3 className="font-medium text-[#333333ff] text-sm">
-                  {assessment.vehicle}
-                </h3>
-                <p className="text-sm text-[#333333ff]">
-                  {new Date(assessment.date).toLocaleDateString()}
-                </p>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+            <p className="text-gray-600">No assessment requests yet.</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Start by requesting your first assessment.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3 sm:space-y-4">
+            {recentAssessments.map((assessment) => (
+              <div
+                key={assessment.id}
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
+              >
+                <div>
+                  <h3 className="font-medium text-[#333333ff] text-sm">
+                    {assessment.vehicle}
+                  </h3>
+                  <p className="text-sm text-[#333333ff]">
+                    {new Date(assessment.date).toLocaleDateString()}
+                  </p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    {assessment.assessmentType}
+                  </p>
+                </div>
+                <div className="flex flex-col sm:text-right space-y-1 sm:space-y-0">
+                  <span
+                    className={`px-2 sm:px-3 py-1 rounded-full text-sm font-medium w-fit ${
+                      assessment.status === "Completed"
+                        ? "bg-green-100 text-green-800"
+                        : assessment.status === "Pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : assessment.status === "Approved"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
+                    {assessment.status}
+                  </span>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Priority:{" "}
+                    {assessment.urgency.charAt(0).toUpperCase() +
+                      assessment.urgency.slice(1)}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col sm:text-right space-y-1 sm:space-y-0">
-                <span
-                  className={`px-2 sm:px-3 py-1 rounded-full text-sm font-medium w-fit ${
-                    assessment.status === "Completed"
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-                  }`}
-                >
-                  {assessment.status}
-                </span>
-                <p className="text-sm font-medium text-[#333333ff]">
-                  Assessment Value: {assessment.value}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Add Vehicle Modal */}

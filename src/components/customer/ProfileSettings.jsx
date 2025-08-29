@@ -17,7 +17,7 @@ function ProfileSettings() {
     city: "",
     state: "",
     zipCode: "",
-    country: "Australia",
+    country: "South Africa",
   });
 
   useEffect(() => {
@@ -25,6 +25,13 @@ function ProfileSettings() {
       loadUserProfile();
     }
   }, [user]);
+
+  // Clear message when component unmounts or user navigates away
+  useEffect(() => {
+    return () => {
+      setMessage({ type: "", text: "" });
+    };
+  }, []);
 
   const loadUserProfile = async () => {
     setIsLoading(true);
@@ -55,13 +62,19 @@ function ProfileSettings() {
             city: "",
             state: "",
             zipCode: "",
-            country: "Australia",
+            country: "South Africa",
           });
         } else {
           setMessage({ type: "error", text: "Failed to load profile data" });
         }
       } else if (data) {
         console.log("Profile data loaded:", data);
+        console.log("Phone from DB:", data.phone);
+        console.log("Address from DB:", data.address);
+        console.log("City from DB:", data.city);
+        console.log("State from DB:", data.state);
+        console.log("Zip code from DB:", data.zip_code);
+        console.log("Country from DB:", data.country);
 
         // Split full_name into first and last name if it exists
         let firstName = "";
@@ -81,7 +94,7 @@ function ProfileSettings() {
           city: data.city || "",
           state: data.state || "",
           zipCode: data.zip_code || "",
-          country: data.country || "Australia",
+          country: data.country || "South Africa",
         });
       }
     } catch (error) {
@@ -124,6 +137,12 @@ function ProfileSettings() {
     };
 
     console.log("Saving profile data:", profileData);
+    console.log("Phone being saved:", formData.phone);
+    console.log("Address being saved:", formData.address);
+    console.log("City being saved:", formData.city);
+    console.log("State being saved:", formData.state);
+    console.log("Zip code being saved:", formData.zipCode);
+    console.log("Country being saved:", formData.country);
 
     try {
       const { data, error } = await supabase
@@ -185,7 +204,7 @@ function ProfileSettings() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Personal Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -198,7 +217,7 @@ function ProfileSettings() {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                   placeholder="Enter your first name"
                 />
               </div>
@@ -212,7 +231,7 @@ function ProfileSettings() {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                   placeholder="Enter your last name"
                 />
               </div>
@@ -226,7 +245,7 @@ function ProfileSettings() {
                   name="email"
                   value={formData.email}
                   disabled
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 cursor-not-allowed"
                   placeholder="Your email address"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -243,7 +262,7 @@ function ProfileSettings() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                   placeholder="Enter your phone number"
                 />
               </div>
@@ -252,7 +271,7 @@ function ProfileSettings() {
 
           {/* Address Information */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Address Information
             </h3>
             <div className="space-y-4">
@@ -265,7 +284,7 @@ function ProfileSettings() {
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                   placeholder="Enter your street address"
                 />
               </div>
@@ -280,7 +299,7 @@ function ProfileSettings() {
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                     placeholder="Enter your city"
                   />
                 </div>
@@ -294,7 +313,7 @@ function ProfileSettings() {
                     name="state"
                     value={formData.state}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                     placeholder="Enter your state"
                   />
                 </div>
@@ -308,7 +327,7 @@ function ProfileSettings() {
                     name="zipCode"
                     value={formData.zipCode}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                     placeholder="Enter your postal code"
                   />
                 </div>
@@ -322,8 +341,9 @@ function ProfileSettings() {
                   name="country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
                 >
+                  <option value="South Africa">South Africa</option>
                   <option value="Australia">Australia</option>
                   <option value="New Zealand">New Zealand</option>
                   <option value="United States">United States</option>
