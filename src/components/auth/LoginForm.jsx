@@ -59,7 +59,7 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col px-8 pt-8 pb-6 sm:pb-8 font-quicksand">
+    <div className="min-h-screen bg-white flex flex-col px-8 pt-8 pb-6 sm:pb-8 font-quicksand">
       <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col justify-between">
         {/* Container 1: Logo */}
         <div className="flex-1 flex items-center justify-center">
