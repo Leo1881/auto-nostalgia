@@ -104,18 +104,19 @@ function CustomerSidebar({ activeSection, onSectionChange }) {
   ];
 
   return (
-    <aside className="w-full lg:w-64 bg-primary-red shadow-sm">
-      <nav className="p-4">
-        <ul className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-2 overflow-x-auto lg:overflow-x-visible">
+    <aside className="w-full lg:w-64 bg-red-600 shadow-sm">
+      <nav className="p-0">
+        <ul className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-0 overflow-x-auto lg:overflow-x-visible">
           {menuItems.map((item) => (
-            <li key={item.id} className="flex-shrink-0 lg:flex-shrink">
+            <li key={item.id} className="flex-shrink-0 lg:flex-shrink h-12">
               <button
                 onClick={() => onSectionChange(item.id)}
-                className={`flex items-center space-x-3 lg:space-x-4 p-1 h-6 rounded-lg transition-all duration-200 text-left whitespace-nowrap ${
+                className={`flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-full transition-all duration-200 text-left whitespace-nowrap no-underline ${
                   activeSection === item.id
-                    ? "bg-white text-primary-red border border-white"
-                    : "text-white hover:bg-red-600"
+                    ? "bg-red-700 text-white"
+                    : "bg-red-600 text-white hover:bg-red-700"
                 }`}
+                style={{ textDecoration: "none" }}
               >
                 {item.icon}
                 <span className="font-medium text-sm lg:text-base">
