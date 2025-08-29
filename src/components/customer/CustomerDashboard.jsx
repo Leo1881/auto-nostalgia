@@ -41,12 +41,12 @@ function CustomerDashboard() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <h1 className="text-[16px] font-medium text-white">
-                Welcome back, {profile?.fullName || "Customer"}
+                Welcome back, {profile?.full_name?.split(" ")[0] || "Customer"}
               </h1>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4">
               <span className="hidden sm:block text-sm text-[#333333ff]">
-                Welcome, {profile?.fullName || "Customer"}
+                Welcome, {profile?.full_name?.split(" ")[0] || "Customer"}
               </span>
               <button
                 onClick={handleSignOut}
