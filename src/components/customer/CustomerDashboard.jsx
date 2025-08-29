@@ -70,7 +70,7 @@ function CustomerDashboard() {
 
         {/* Content Area */}
         <main className="flex-1 p-6 sm:p-8 lg:p-10">
-          <div className="w-full px-4 sm:px-6 lg:px-8">{renderContent()}</div>
+          <div className="w-full">{renderContent()}</div>
         </main>
       </div>
     </div>

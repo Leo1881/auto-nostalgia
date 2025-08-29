@@ -14,6 +14,10 @@ function MyVehicles() {
     try {
       setLoading(true);
       setError(null);
+
+      // TEMPORARY: Add delay so you can see the loading state
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 second delay
+
       const userVehicles = await vehicleService.getUserVehicles();
       setVehicles(userVehicles);
     } catch (err) {
@@ -228,34 +232,69 @@ function MyVehicles() {
           {vehicles.map((vehicle, index) => (
             <div
               key={vehicle.id}
-              className="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg p-6 hover:shadow-2xl hover:scale-105 transition-all duration-300 transform w-full max-w-sm"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="vehicle-card group bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 transform w-full max-w-sm"
+              style={{
+                animationDelay: `${index * 100}ms`,
+                padding: "0px",
+              }}
             >
               {/* Vehicle Header */}
-              <div className="flex justify-between items-start mb-6">
+              <div
+                className="flex justify-between items-center mb-6"
+                style={{
+                  padding: "0px",
+                  paddingLeft: "0px",
+                  paddingRight: "0px",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  backgroundColor: "#1f2937",
+                }}
+              >
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary-red transition-colors duration-200">
+                  <h3
+                    className="text-xl font-bold mb-1 group-hover:text-primary-red transition-colors duration-200"
+                    style={{ color: "white" }}
+                  >
                     {vehicle.year} {vehicle.make} {vehicle.model}
                   </h3>
                   {vehicle.variant && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "white" }}
+                    >
                       {vehicle.variant}
                     </p>
                   )}
                 </div>
-                <span
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-sm ${getConditionColor(
-                    vehicle.condition
-                  )}`}
+                <div
+                  className="w-16 h-16 bg-gray-400 rounded-lg flex items-center justify-center"
+                  style={{
+                    backgroundColor: "#6b7280",
+                    minWidth: "64px",
+                    minHeight: "64px",
+                    marginRight: "32px",
+                  }}
                 >
-                  {getConditionLabel(vehicle.condition)}
-                </span>
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
               </div>
 
               {/* Vehicle Details */}
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-3">
+                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
                     <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
                       Registration
                     </p>
@@ -263,7 +302,7 @@ function MyVehicles() {
                       {vehicle.registration_number}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl p-3 border border-green-200 dark:border-green-700">
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl border border-green-200 dark:border-green-700">
                     <p className="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide mb-1">
                       Color
                     </p>
@@ -271,7 +310,7 @@ function MyVehicles() {
                       {vehicle.color}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-3 border border-purple-200 dark:border-purple-700">
+                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl border border-purple-200 dark:border-purple-700">
                     <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">
                       Mileage
                     </p>
@@ -279,7 +318,7 @@ function MyVehicles() {
                       {vehicle.mileage?.toLocaleString()} km
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl p-3 border border-orange-200 dark:border-orange-700">
+                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl border border-orange-200 dark:border-orange-700">
                     <p className="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wide mb-1">
                       Body Type
                     </p>
@@ -321,7 +360,7 @@ function MyVehicles() {
                     </h4>
                     <div className="grid grid-cols-1 gap-3">
                       {vehicle.engine_size && (
-                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                           <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                             Engine
                           </span>
@@ -331,7 +370,7 @@ function MyVehicles() {
                         </div>
                       )}
                       {vehicle.transmission && (
-                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                           <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                             Transmission
                           </span>
@@ -342,7 +381,7 @@ function MyVehicles() {
                         </div>
                       )}
                       {vehicle.fuel_type && (
-                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                           <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
                             Fuel Type
                           </span>

@@ -95,8 +95,8 @@ html {
 
 /* Allow horizontal padding on customer dashboard content specifically */
 .customer-dashboard .flex-1 .w-full {
-  padding-left: 0.75rem !important;
-  padding-right: 0.75rem !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 /* Force gap between vehicle cards */
@@ -136,6 +136,67 @@ html {
 .w-8.h-8.bg-red-600.rounded-full span {
   color: white !important;
   font-weight: bold !important;
+}
+
+/* Remove all padding from vehicle cards and their children */
+.vehicle-card,
+.vehicle-card *,
+.vehicle-card * * {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Force remove padding from all elements with p-3 class inside vehicle cards */
+.vehicle-card .p-3 {
+  padding: 0 !important;
+}
+
+/* Force remove padding from all elements with rounded-xl class inside vehicle cards */
+.vehicle-card .rounded-xl {
+  padding: 0 !important;
+}
+
+/* Force remove padding from all elements with bg-gradient-to-r class inside vehicle cards */
+.vehicle-card .bg-gradient-to-r {
+  padding: 0 !important;
+}
+
+/* Nuclear option - remove ALL padding from everything inside vehicle cards */
+.vehicle-card,
+.vehicle-card div,
+.vehicle-card span,
+.vehicle-card p,
+.vehicle-card h3,
+.vehicle-card h4,
+.vehicle-card button {
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Specifically target vehicle header div */
+.vehicle-card .flex.justify-between.items-start.mb-6 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* More aggressive targeting for vehicle header */
+.vehicle-card > div:first-child {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Target any div with flex and justify-between inside vehicle cards */
+.vehicle-card div[class*="flex"][class*="justify-between"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Force margin on vehicle image placeholder */
+.vehicle-card .w-16.h-16.bg-gray-400.rounded-lg {
+  margin-right: 12px !important;
 }
 
 /* Allow margins and padding on dashboard content */
