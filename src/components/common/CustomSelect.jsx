@@ -49,23 +49,21 @@ const CustomSelect = ({
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <div
-        className={`form-input cursor-pointer custom-select-container bg-transparent ${
+        className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm outline-none px-6 bg-white text-[#333333ff] transition-all duration-300 ease-in-out mb-4 cursor-pointer flex items-center justify-between ${
           disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
         onClick={toggleDropdown}
         style={{
-          outline: "none",
-          WebkitTapHighlightColor: "transparent",
           borderRadius: isOpen ? "24px 24px 0 0" : "24px",
-          height: "48px !important",
-          minHeight: "48px",
-          maxHeight: "48px",
+          borderTop: "2px solid #333333ff",
+          borderLeft: "2px solid #333333ff",
+          borderRight: "2px solid #333333ff",
+          borderBottom: isOpen ? "none" : "2px solid #333333ff",
         }}
       >
         <span
-          className={selectedOption ? "" : ""}
+          className={selectedOption ? "text-[#333333ff]" : "text-gray-500"}
           style={{
-            color: selectedOption ? "#374151" : "#6b7280",
             fontWeight: selectedOption ? "500" : "400",
           }}
         >
@@ -79,9 +77,10 @@ const CustomSelect = ({
           stroke="currentColor"
           viewBox="0 0 24 24"
           style={{
-            color: selectedOption ? "#374151" : "#6b7280",
-            width: "24px",
-            height: "24px",
+            color: selectedOption ? "#333333ff" : "#6b7280",
+            width: "20px",
+            height: "20px",
+            transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
           }}
         >
           <path
@@ -102,28 +101,31 @@ const CustomSelect = ({
           borderRadius: "0 0 24px 24px",
           boxShadow:
             "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-          width: "280px",
-          left: "50%",
+          width: "100%",
+          left: "0",
           top: "100%",
           transformOrigin: "top",
           transform: isOpen
-            ? "translateX(-50%) translateY(0) scaleY(1)"
-            : "translateX(-50%) translateY(0) scaleY(0)",
+            ? "translateY(0) scaleY(1)"
+            : "translateY(-10px) scaleY(0.95)",
           backgroundColor: "white",
-          border: "2px solid #d1d5db",
+          border: "2px solid #333333ff",
           borderTop: "none",
+          borderBottom: "2px solid #333333ff",
+          borderLeft: "2px solid #333333ff",
+          borderRight: "2px solid #333333ff",
         }}
       >
         {options.map((option) => (
           <div
             key={option.value}
-            className={`px-6 py-4 cursor-pointer transition-all duration-200 ease-in-out ${
+            className={`px-4 py-2 cursor-pointer transition-all duration-200 ease-in-out ${
               selectedOption?.value === option.value
                 ? "bg-red-50 border-l-4 border-red-500"
                 : "hover:bg-gray-50 hover:scale-[1.02]"
             }`}
             style={{
-              padding: "16px 24px",
+              padding: "8px 16px",
               transition: "all 0.2s ease-in-out",
             }}
             onClick={() => handleSelect(option)}

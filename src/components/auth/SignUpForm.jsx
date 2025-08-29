@@ -184,7 +184,7 @@ function SignUpForm({ onBack }) {
                       required
                       disabled={loading}
                     />
-                    <div className="mt-2 ml-6 space-y-1 mb-4">
+                    <div className="ml-6 space-y-1 mb-4">
                       <div
                         className={`flex items-center text-xs ${
                           passwordRequirements.length
@@ -403,9 +403,6 @@ function SignUpForm({ onBack }) {
                           placeholder="Phone Number"
                           required
                           disabled={loading}
-                          style={{
-                            marginTop: "16px",
-                          }}
                         />
                       </div>
 
