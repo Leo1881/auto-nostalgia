@@ -248,6 +248,7 @@ function MyVehicles() {
                   paddingTop: "0px",
                   paddingBottom: "0px",
                   backgroundColor: "#1f2937",
+                  marginTop: "0px",
                 }}
               >
                 <div className="flex-1">
@@ -302,15 +303,15 @@ function MyVehicles() {
                       {vehicle.registration_number}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl border border-green-200 dark:border-green-700">
-                    <p className="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide mb-1">
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
+                    <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
                       Color
                     </p>
                     <p className="font-bold text-green-900 dark:text-green-100">
                       {vehicle.color}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl border border-purple-200 dark:border-purple-700">
+                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
                     <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">
                       Mileage
                     </p>
@@ -318,7 +319,7 @@ function MyVehicles() {
                       {vehicle.mileage?.toLocaleString()} km
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl border border-orange-200 dark:border-orange-700">
+                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl">
                     <p className="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wide mb-1">
                       Body Type
                     </p>
@@ -329,33 +330,37 @@ function MyVehicles() {
                         : "Not specified"}
                     </p>
                   </div>
+                  <div className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl">
+                    <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide mb-1">
+                      Added
+                    </p>
+                    <p className="font-bold text-red-900 dark:text-red-100">
+                      {formatDate(vehicle.created_at)}
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl">
+                    <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide mb-1">
+                      VIN
+                    </p>
+                    <p className="font-bold text-indigo-900 dark:text-indigo-100">
+                      {vehicle.vin}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Technical Details */}
                 {(vehicle.engine_size ||
                   vehicle.transmission ||
                   vehicle.fuel_type) && (
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-2 text-primary-red"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
+                  <div
+                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4 border-t border-gray-200 dark:border-gray-700"
+                    style={{
+                      borderTopWidth: "2px",
+                      marginTop: "16px",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">
                       Technical Details
                     </h4>
                     <div className="grid grid-cols-1 gap-3">
@@ -399,26 +404,20 @@ function MyVehicles() {
                 {(vehicle.modifications ||
                   vehicle.service_history ||
                   vehicle.description) && (
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-2 text-primary-red"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
+                  <div
+                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4 border-t border-gray-200 dark:border-gray-700"
+                    style={{
+                      borderTopWidth: "2px",
+                      marginTop: "16px",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">
                       Additional Information
                     </h4>
                     <div className="space-y-3">
                       {vehicle.modifications && (
-                        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 border border-yellow-200 dark:border-yellow-700">
+                        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
                           <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-1">
                             Modifications
                           </p>
@@ -428,7 +427,7 @@ function MyVehicles() {
                         </div>
                       )}
                       {vehicle.service_history && (
-                        <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-3 border border-indigo-200 dark:border-indigo-700">
+                        <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-3">
                           <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-1">
                             Service History
                           </p>
@@ -438,7 +437,7 @@ function MyVehicles() {
                         </div>
                       )}
                       {vehicle.description && (
-                        <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-3 border border-teal-200 dark:border-teal-700">
+                        <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-3">
                           <p className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1">
                             Notes
                           </p>
@@ -450,44 +449,6 @@ function MyVehicles() {
                     </div>
                   </div>
                 )}
-
-                {/* Footer */}
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
-                    <span className="flex items-center">
-                      <svg
-                        className="w-3 h-3 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      Added: {formatDate(vehicle.created_at)}
-                    </span>
-                    <span className="flex items-center">
-                      <svg
-                        className="w-3 h-3 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      VIN: {vehicle.vin}
-                    </span>
-                  </div>
-                </div>
               </div>
 
               {/* Action Buttons */}
