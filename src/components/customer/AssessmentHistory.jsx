@@ -57,27 +57,74 @@ function AssessmentHistory() {
   const loadAssessmentHistory = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      // First get assessment requests
+      const { data: assessmentsData, error: assessmentsError } = await supabase
         .from("assessment_requests")
-        .select(
-          `
-          *,
-          vehicles (
-            year,
-            make,
-            model,
-            registration_number
-          )
-        `
-        )
+        .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Error loading assessment history:", error);
-      } else {
-        setAssessments(data || []);
+      if (assessmentsError) {
+        console.error("Error loading assessment history:", assessmentsError);
+        return;
       }
+
+      // Get vehicle data for each assessment
+      const vehicleIds = [
+        ...new Set(assessmentsData?.map((assessment) => assessment.vehicle_id) || []),
+      ];
+
+      const { data: vehiclesData, error: vehiclesError } = await supabase
+        .from("vehicles")
+        .select("id, year, make, model, registration_number")
+        .in("id", vehicleIds);
+
+      if (vehiclesError) {
+        console.error("Error loading vehicles:", vehiclesError);
+        return;
+      }
+
+      // Get assessor profile data for approved assessments
+      const assessorIds = [
+        ...new Set(
+          assessmentsData
+            ?.filter((assessment) => assessment.assigned_assessor_id)
+            .map((assessment) => assessment.assigned_assessor_id) || []
+        ),
+      ];
+
+      let assessorsData = [];
+      if (assessorIds.length > 0) {
+        const { data: assessors, error: assessorsError } = await supabase
+          .from("profiles")
+          .select("id, full_name, phone, email")
+          .in("id", assessorIds);
+
+        if (assessorsError) {
+          console.error("Error loading assessors:", assessorsError);
+        } else {
+          assessorsData = assessors || [];
+        }
+      }
+
+      // Combine the data
+      const vehiclesMap = {};
+      vehiclesData?.forEach((vehicle) => {
+        vehiclesMap[vehicle.id] = vehicle;
+      });
+
+      const assessorsMap = {};
+      assessorsData?.forEach((assessor) => {
+        assessorsMap[assessor.id] = assessor;
+      });
+
+      const combinedData = assessmentsData?.map((assessment) => ({
+        ...assessment,
+        vehicles: vehiclesMap[assessment.vehicle_id],
+        assessor: assessorsMap[assessment.assigned_assessor_id],
+      })) || [];
+
+      setAssessments(combinedData);
     } catch (error) {
       console.error("Error loading assessment history:", error);
     } finally {
@@ -477,6 +524,48 @@ function AssessmentHistory() {
                     </div>
                   </div>
                 </div>
+
+                {/* Assessor Information for Approved Assessments */}
+                {assessment.status === "approved" && assessment.assessor && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <div className="bg-green-50 rounded-lg p-3">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span className="text-sm font-medium text-green-800">Assigned Assessor</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div>
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Name:</span> {assessment.assessor.full_name}
+                          </p>
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Phone:</span> {assessment.assessor.phone || "Not provided"}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Email:</span> {assessment.assessor.email}
+                          </p>
+                          {assessment.scheduled_date && (
+                            <p className="text-sm text-gray-700">
+                              <span className="font-medium">Scheduled:</span> {formatDate(assessment.scheduled_date)}
+                              {assessment.scheduled_time && ` at ${assessment.scheduled_time}`}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      {assessment.assessment_location && (
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-700">
+                            <span className="font-medium">Location:</span> {assessment.assessment_location}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Additional Notes */}
                 {assessment.additional_notes && (

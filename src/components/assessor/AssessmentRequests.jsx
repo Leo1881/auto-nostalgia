@@ -3,6 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
 import CustomSelect from "../common/CustomSelect";
 import RequestDetailModal from "./RequestDetailModal";
+import ScheduleAssessmentModal from "./ScheduleAssessmentModal";
 
 function AssessmentRequests() {
   const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +17,8 @@ function AssessmentRequests() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [pendingAcceptRequest, setPendingAcceptRequest] = useState(null);
   const { user, profile } = useAuth();
 
   const statusOptions = [
@@ -80,13 +83,10 @@ function AssessmentRequests() {
         return;
       }
 
-      console.log("Raw assessment requests:", requestsData);
-
       // Get vehicle data for each request
       const vehicleIds = [
         ...new Set(requestsData?.map((req) => req.vehicle_id) || []),
       ];
-      console.log("Vehicle IDs to fetch:", vehicleIds);
 
       const { data: vehiclesData, error: vehiclesError } = await supabase
         .from("vehicles")
@@ -95,12 +95,8 @@ function AssessmentRequests() {
 
       if (vehiclesError) {
         console.error("Error loading vehicles:", vehiclesError);
-        console.error("Vehicle error details:", vehiclesError);
         return;
       }
-
-      console.log("Vehicle data:", vehiclesData);
-      console.log("Vehicle error (should be null):", vehiclesError);
 
       // Then get profile data for each user
       const userIds = [
@@ -133,8 +129,6 @@ function AssessmentRequests() {
           profiles: profilesMap[request.user_id],
           vehicles: vehiclesMap[request.vehicle_id],
         })) || [];
-
-      console.log("Combined data:", combinedData);
 
       // Filter by assessor's province
       const assessorProvince = profile?.province || profile?.location;
@@ -215,35 +209,20 @@ function AssessmentRequests() {
     setFilteredRequests(filtered);
   };
 
-  const handleAcceptRequest = async (requestId) => {
+  const handleAcceptRequest = async (request) => {
     if (!confirm("Are you sure you want to accept this assessment request?")) {
       return;
     }
 
-    setIsProcessing(true);
-    try {
-      const { error } = await supabase
-        .from("assessment_requests")
-        .update({
-          status: "approved",
-          assigned_assessor_id: user.id,
-          assigned_at: new Date().toISOString(),
-        })
-        .eq("id", requestId);
+    // Set the pending request and open scheduling modal
+    setPendingAcceptRequest(request);
+    setIsScheduleModalOpen(true);
+  };
 
-      if (error) {
-        console.error("Error accepting request:", error);
-        alert("Failed to accept request. Please try again.");
-      } else {
-        // Refresh the requests list
-        await loadAssessmentRequests();
-      }
-    } catch (error) {
-      console.error("Error accepting request:", error);
-      alert("Failed to accept request. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
+  const handleScheduleSuccess = async () => {
+    // Refresh the requests list after successful scheduling
+    await loadAssessmentRequests();
+    setPendingAcceptRequest(null);
   };
 
   const handleRejectRequest = async (requestId) => {
@@ -574,7 +553,7 @@ function AssessmentRequests() {
                       {request.status === "pending" && (
                         <>
                           <button
-                            onClick={() => handleAcceptRequest(request.id)}
+                            onClick={() => handleAcceptRequest(request)}
                             disabled={isProcessing}
                             className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
@@ -638,6 +617,17 @@ function AssessmentRequests() {
           setSelectedRequest(null);
         }}
         request={selectedRequest}
+      />
+
+      {/* Schedule Assessment Modal */}
+      <ScheduleAssessmentModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => {
+          setIsScheduleModalOpen(false);
+          setPendingAcceptRequest(null);
+        }}
+        request={pendingAcceptRequest}
+        onScheduleSuccess={handleScheduleSuccess}
       />
     </div>
   );

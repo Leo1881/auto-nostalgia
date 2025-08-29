@@ -78,42 +78,88 @@ function DashboardHome({ onSectionChange }) {
 
   const loadRecentAssessments = async () => {
     try {
-      const { data: assessments, error } = await supabase
+      // First get assessment requests
+      const { data: assessmentsData, error: assessmentsError } = await supabase
         .from("assessment_requests")
-        .select(
-          `
-          *,
-          vehicles (
-            year,
-            make,
-            model,
-            registration_number
-          )
-        `
-        )
+        .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(5);
 
-      if (error) {
-        console.error("Error loading recent assessments:", error);
+      if (assessmentsError) {
+        console.error("Error loading recent assessments:", assessmentsError);
         return [];
       }
 
-      return (
-        assessments?.map((assessment) => ({
-          id: assessment.id,
-          vehicle: `${assessment.vehicles?.year} ${assessment.vehicles?.make} ${assessment.vehicles?.model} (${assessment.vehicles?.registration_number})`,
-          status:
-            assessment.status.charAt(0).toUpperCase() +
-            assessment.status.slice(1),
-          date: assessment.created_at,
-          assessmentType: assessment.assessment_type
-            .replace(/_/g, " ")
-            .replace(/\b\w/g, (l) => l.toUpperCase()),
-          urgency: assessment.urgency,
-        })) || []
-      );
+      // Get vehicle data for each assessment
+      const vehicleIds = [
+        ...new Set(assessmentsData?.map((assessment) => assessment.vehicle_id) || []),
+      ];
+
+      const { data: vehiclesData, error: vehiclesError } = await supabase
+        .from("vehicles")
+        .select("id, year, make, model, registration_number")
+        .in("id", vehicleIds);
+
+      if (vehiclesError) {
+        console.error("Error loading vehicles:", vehiclesError);
+        return [];
+      }
+
+      // Get assessor profile data for approved assessments
+      const assessorIds = [
+        ...new Set(
+          assessmentsData
+            ?.filter((assessment) => assessment.assigned_assessor_id)
+            .map((assessment) => assessment.assigned_assessor_id) || []
+        ),
+      ];
+
+      let assessorsData = [];
+      if (assessorIds.length > 0) {
+        const { data: assessors, error: assessorsError } = await supabase
+          .from("profiles")
+          .select("id, full_name, phone, email")
+          .in("id", assessorIds);
+
+        if (assessorsError) {
+          console.error("Error loading assessors:", assessorsError);
+        } else {
+          assessorsData = assessors || [];
+        }
+      }
+
+      // Combine the data
+      const vehiclesMap = {};
+      vehiclesData?.forEach((vehicle) => {
+        vehiclesMap[vehicle.id] = vehicle;
+      });
+
+      const assessorsMap = {};
+      assessorsData?.forEach((assessor) => {
+        assessorsMap[assessor.id] = assessor;
+      });
+
+      const combinedData = assessmentsData?.map((assessment) => ({
+        ...assessment,
+        vehicles: vehiclesMap[assessment.vehicle_id],
+        assessor: assessorsMap[assessment.assigned_assessor_id],
+      })) || [];
+
+      // Transform the data for display
+      return combinedData?.map((assessment) => ({
+        id: assessment.id,
+        vehicle: `${assessment.vehicles?.year} ${assessment.vehicles?.make} ${assessment.vehicles?.model} (${assessment.vehicles?.registration_number})`,
+        status:
+          assessment.status.charAt(0).toUpperCase() +
+          assessment.status.slice(1),
+        date: assessment.created_at,
+        assessmentType: assessment.assessment_type
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (l) => l.toUpperCase()),
+        urgency: assessment.urgency,
+        assessor: assessment.assessor, // Include assessor data
+      })) || [];
     } catch (error) {
       console.error("Error loading recent assessments:", error);
       return [];
@@ -408,9 +454,9 @@ function DashboardHome({ onSectionChange }) {
             {recentAssessments.map((assessment) => (
               <div
                 key={assessment.id}
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
+                className="flex flex-col sm:flex-row sm:items-start sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
               >
-                <div>
+                <div className="flex-1">
                   <h3 className="font-medium text-[#333333ff] text-sm">
                     {assessment.vehicle}
                   </h3>
@@ -420,6 +466,24 @@ function DashboardHome({ onSectionChange }) {
                   <p className="text-xs text-gray-600 mt-1">
                     {assessment.assessmentType}
                   </p>
+                  
+                  {/* Assessor Information for Approved Assessments */}
+                  {assessment.status === "Approved" && assessment.assessor && (
+                    <div className="mt-2 p-2 bg-green-50 rounded border border-green-200">
+                      <div className="flex items-center space-x-1 mb-1">
+                        <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span className="text-xs font-medium text-green-800">Assigned Assessor</span>
+                      </div>
+                      <p className="text-xs text-gray-700">
+                        <span className="font-medium">Name:</span> {assessment.assessor.full_name}
+                      </p>
+                      <p className="text-xs text-gray-700">
+                        <span className="font-medium">Phone:</span> {assessment.assessor.phone || "Not provided"}
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col sm:text-right space-y-1 sm:space-y-0">
                   <span
