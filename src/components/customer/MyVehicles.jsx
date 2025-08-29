@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { vehicleService } from "../../lib/vehicleService";
+import EditVehicleModal from "./EditVehicleModal";
 
 function MyVehicles() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingVehicle, setEditingVehicle] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchVehicles();
@@ -32,6 +35,24 @@ function MyVehicles() {
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
+  };
+
+  const handleEditVehicle = (vehicle) => {
+    setEditingVehicle(vehicle);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+    setEditingVehicle(null);
+  };
+
+  const handleVehicleUpdated = (updatedVehicle) => {
+    setVehicles((prevVehicles) =>
+      prevVehicles.map((vehicle) =>
+        vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle
+      )
+    );
   };
 
   const getConditionColor = (condition) => {
@@ -325,7 +346,7 @@ function MyVehicles() {
                 {(vehicle.engine_size ||
                   vehicle.transmission ||
                   vehicle.fuel_type) && (
-                  <div className="pt-4 pb-4 mt-4 mb-4">
+                  <div className="pt-4 mt-4">
                     <h4 className="text-sm font-bold text-[#333333ff] mb-3">
                       Technical Details
                     </h4>
@@ -370,7 +391,7 @@ function MyVehicles() {
                 {(vehicle.modifications ||
                   vehicle.service_history ||
                   vehicle.description) && (
-                  <div className="pt-4 pb-4 mt-4 mb-4">
+                  <div className="pt-4 pb-4 mb-4">
                     <h4 className="text-sm font-bold text-[#333333ff] mb-3">
                       Additional Information
                     </h4>
@@ -411,7 +432,10 @@ function MyVehicles() {
 
                 {/* Action Buttons */}
                 <div className="mt-3 flex space-x-3">
-                  <button className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center">
+                  <button
+                    onClick={() => handleEditVehicle(vehicle)}
+                    className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center"
+                  >
                     <svg
                       className="w-4 h-4 mr-2"
                       fill="none"
@@ -449,6 +473,14 @@ function MyVehicles() {
           ))}
         </div>
       )}
+
+      {/* Edit Vehicle Modal */}
+      <EditVehicleModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        onSubmit={handleVehicleUpdated}
+        vehicle={editingVehicle}
+      />
     </div>
   );
 }
