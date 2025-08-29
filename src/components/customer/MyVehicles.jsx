@@ -59,9 +59,9 @@ function MyVehicles() {
     return (
       <div className="space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 sm:p-8">
+        <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-gradient-to-r from-primary-red to-red-600 rounded-xl">
+            <div className="p-2 bg-red-600 rounded-xl">
               <svg
                 className="w-6 h-6 text-white"
                 fill="none"
@@ -77,10 +77,10 @@ function MyVehicles() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold text-[#333333ff]">
                 My Vehicles
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-[#333333ff]">
                 Manage your vehicle profiles and details
               </p>
             </div>
@@ -88,18 +88,18 @@ function MyVehicles() {
         </div>
 
         {/* Loading State */}
-        <div className="bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 sm:p-12">
+        <div className="bg-white rounded-xl shadow-sm p-8">
           <div className="text-center">
             <div className="relative">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 dark:border-gray-700 mx-auto mb-6"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 mx-auto mb-6"></div>
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-primary-red"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-red-600"></div>
               </div>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-lg font-semibold text-[#333333ff] mb-2">
               Loading Your Vehicles
             </h3>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-[#333333ff]">
               Fetching your vehicle collection...
             </p>
           </div>
@@ -112,9 +112,9 @@ function MyVehicles() {
     return (
       <div className="space-y-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 sm:p-8">
+        <div className="bg-white rounded-xl shadow-sm p-6">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 bg-gradient-to-r from-primary-red to-red-600 rounded-xl">
+            <div className="p-2 bg-red-600 rounded-xl">
               <svg
                 className="w-6 h-6 text-white"
                 fill="none"
@@ -130,10 +130,10 @@ function MyVehicles() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold text-[#333333ff]">
                 My Vehicles
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-[#333333ff]">
                 Manage your vehicle profiles and details
               </p>
             </div>
@@ -141,11 +141,11 @@ function MyVehicles() {
         </div>
 
         {/* Error State */}
-        <div className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-2xl shadow-lg border border-red-200 dark:border-red-700 p-8 sm:p-12">
+        <div className="bg-white rounded-xl shadow-sm p-8">
           <div className="text-center">
-            <div className="p-4 bg-red-100 dark:bg-red-900/30 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+            <div className="p-4 bg-red-100 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
               <svg
-                className="w-10 h-10 text-red-600 dark:text-red-400"
+                className="w-10 h-10 text-red-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -158,15 +158,13 @@ function MyVehicles() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-red-900 dark:text-red-100 mb-3">
+            <h3 className="text-xl font-semibold text-[#333333ff] mb-3">
               Error Loading Vehicles
             </h3>
-            <p className="text-red-700 dark:text-red-300 mb-6 max-w-md mx-auto">
-              {error}
-            </p>
+            <p className="text-[#333333ff] mb-6 max-w-md mx-auto">{error}</p>
             <button
               onClick={fetchVehicles}
-              className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
             >
               Try Again
             </button>
@@ -179,13 +177,14 @@ function MyVehicles() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg p-6 sm:p-8">
+      <div className="bg-white rounded-xl shadow-sm p-6">
         <div className="flex justify-between items-center">
           <div className="text-left">
-            <p className="text-gray-600 dark:text-gray-400">
-              Manage your vehicle profiles
-              <br />
-              and details
+            <h1 className="text-xl font-bold text-[#333333ff] mb-2">
+              My Vehicles
+            </h1>
+            <p className="text-sm text-[#333333ff]">
+              Manage your vehicle profiles and details
             </p>
           </div>
           <div className="flex items-center">
@@ -199,11 +198,11 @@ function MyVehicles() {
       </div>
 
       {vehicles.length === 0 ? (
-        <div className="bg-gradient-to-r from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8 sm:p-12">
+        <div className="bg-white rounded-xl shadow-sm p-8">
           <div className="text-center">
-            <div className="p-6 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+            <div className="p-6 bg-gray-100 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
               <svg
-                className="w-12 h-12 text-gray-400 dark:text-gray-500"
+                className="w-12 h-12 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -216,71 +215,39 @@ function MyVehicles() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+            <h3 className="text-xl font-semibold text-[#333333ff] mb-3">
               No Vehicles Yet
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-md mx-auto">
+            <p className="text-[#333333ff] mb-4 max-w-md mx-auto">
               You haven't added any vehicles to your profile yet.
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-500">
+            <p className="text-sm text-[#333333ff]">
               Go to the dashboard to add your first vehicle.
             </p>
           </div>
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vehicles.map((vehicle, index) => (
             <div
               key={vehicle.id}
-              className="vehicle-card group bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 transform w-full max-w-sm"
-              style={{
-                animationDelay: `${index * 100}ms`,
-                padding: "0px",
-              }}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 w-full"
             >
               {/* Vehicle Details Card */}
-              <div
-                className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-4"
-                style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
-              >
+              <div className="p-6 space-y-4">
                 {/* Vehicle Header */}
-                <div
-                  className="flex justify-between items-center mb-6"
-                  style={{
-                    padding: "0px",
-                    paddingLeft: "0px",
-                    paddingRight: "0px",
-                    paddingTop: "0px",
-                    paddingBottom: "0px",
-                    backgroundColor: "#1f2937",
-                    marginTop: "0px",
-                  }}
-                >
+                <div className="flex justify-between items-center mb-4">
                   <div className="flex-1">
-                    <h3
-                      className="text-xl font-bold mb-1 group-hover:text-primary-red transition-colors duration-200"
-                      style={{ color: "white" }}
-                    >
+                    <h3 className="text-xl font-bold mb-1 text-[#333333ff]">
                       {vehicle.year} {vehicle.make} {vehicle.model}
                     </h3>
                     {vehicle.variant && (
-                      <p
-                        className="text-sm font-medium"
-                        style={{ color: "white" }}
-                      >
+                      <p className="text-sm font-medium text-[#333333ff]">
                         {vehicle.variant}
                       </p>
                     )}
                   </div>
-                  <div
-                    className="w-16 h-16 bg-gray-400 rounded-lg flex items-center justify-center"
-                    style={{
-                      backgroundColor: "#6b7280",
-                      minWidth: "64px",
-                      minHeight: "64px",
-                      marginRight: "32px",
-                    }}
-                  >
+                  <div className="w-16 h-16 bg-red-600 rounded-lg flex items-center justify-center">
                     <svg
                       className="w-8 h-8 text-white"
                       fill="none"
@@ -297,60 +264,60 @@ function MyVehicles() {
                   </div>
                 </div>
 
-                <h4 className="text-xs font-bold text-gray-900 dark:text-white mb-3">
+                <h4 className="text-sm font-bold text-[#333333ff] mb-3">
                   Vehicle Details
                 </h4>
-                <div className="grid grid-cols-2 gap-4 px-4">
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
-                    <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                    <span className="text-xs font-medium text-[#333333ff]">
                       Registration
-                    </p>
-                    <p className="text-sm font-bold text-blue-900 dark:text-blue-100">
+                    </span>
+                    <span className="text-xs font-bold text-[#333333ff]">
                       {vehicle.registration_number}
-                    </p>
+                    </span>
                   </div>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl text-right">
-                    <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
+                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                    <span className="text-xs font-medium text-[#333333ff]">
                       Color
-                    </p>
-                    <p className="text-sm font-bold text-green-900 dark:text-green-100">
+                    </span>
+                    <span className="text-xs font-bold text-[#333333ff]">
                       {vehicle.color}
-                    </p>
+                    </span>
                   </div>
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl">
-                    <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">
+                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                    <span className="text-xs font-medium text-[#333333ff]">
                       Mileage
-                    </p>
-                    <p className="text-sm font-bold text-purple-900 dark:text-purple-100">
+                    </span>
+                    <span className="text-xs font-bold text-[#333333ff]">
                       {vehicle.mileage?.toLocaleString()} km
-                    </p>
+                    </span>
                   </div>
-                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl text-right">
-                    <p className="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wide mb-1">
+                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                    <span className="text-xs font-medium text-[#333333ff]">
                       Body Type
-                    </p>
-                    <p className="text-sm font-bold text-orange-900 dark:text-orange-100">
+                    </span>
+                    <span className="text-xs font-bold text-[#333333ff]">
                       {vehicle.body_type
                         ? vehicle.body_type.charAt(0).toUpperCase() +
                           vehicle.body_type.slice(1)
                         : "Not specified"}
-                    </p>
+                    </span>
                   </div>
-                  <div className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl">
-                    <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide mb-1">
+                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                    <span className="text-xs font-medium text-[#333333ff]">
                       Added
-                    </p>
-                    <p className="text-sm font-bold text-red-900 dark:text-red-100">
+                    </span>
+                    <span className="text-xs font-bold text-[#333333ff]">
                       {formatDate(vehicle.created_at)}
-                    </p>
+                    </span>
                   </div>
-                  <div className="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl text-right">
-                    <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide mb-1">
+                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                    <span className="text-xs font-medium text-[#333333ff]">
                       VIN
-                    </p>
-                    <p className="text-sm font-bold text-indigo-900 dark:text-indigo-100">
+                    </span>
+                    <span className="text-xs font-bold text-[#333333ff]">
                       {vehicle.vin}
-                    </p>
+                    </span>
                   </div>
                 </div>
 
@@ -358,44 +325,38 @@ function MyVehicles() {
                 {(vehicle.engine_size ||
                   vehicle.transmission ||
                   vehicle.fuel_type) && (
-                  <div
-                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4"
-                    style={{
-                      marginTop: "16px",
-                      marginBottom: "16px",
-                    }}
-                  >
-                    <h4 className="text-xs font-bold text-gray-900 dark:text-white mb-3">
+                  <div className="pt-4 pb-4 mt-4 mb-4">
+                    <h4 className="text-sm font-bold text-[#333333ff] mb-3">
                       Technical Details
                     </h4>
                     <div className="grid grid-cols-1 gap-3">
                       {vehicle.engine_size && (
-                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                          <span className="text-xs font-medium text-[#333333ff]">
                             Engine
                           </span>
-                          <span className="text-xs font-bold text-gray-900 dark:text-white">
+                          <span className="text-xs font-bold text-[#333333ff]">
                             {vehicle.engine_size}
                           </span>
                         </div>
                       )}
                       {vehicle.transmission && (
-                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                          <span className="text-xs font-medium text-[#333333ff]">
                             Transmission
                           </span>
-                          <span className="text-xs font-bold text-gray-900 dark:text-white">
+                          <span className="text-xs font-bold text-[#333333ff]">
                             {vehicle.transmission.charAt(0).toUpperCase() +
                               vehicle.transmission.slice(1)}
                           </span>
                         </div>
                       )}
                       {vehicle.fuel_type && (
-                        <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                          <span className="text-xs font-medium text-[#333333ff]">
                             Fuel Type
                           </span>
-                          <span className="text-xs font-bold text-gray-900 dark:text-white">
+                          <span className="text-xs font-bold text-[#333333ff]">
                             {vehicle.fuel_type.charAt(0).toUpperCase() +
                               vehicle.fuel_type.slice(1)}
                           </span>
@@ -409,43 +370,37 @@ function MyVehicles() {
                 {(vehicle.modifications ||
                   vehicle.service_history ||
                   vehicle.description) && (
-                  <div
-                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4"
-                    style={{
-                      marginTop: "16px",
-                      marginBottom: "16px",
-                    }}
-                  >
-                    <h4 className="text-xs font-bold text-gray-900 dark:text-white mb-3">
+                  <div className="pt-4 pb-4 mt-4 mb-4">
+                    <h4 className="text-sm font-bold text-[#333333ff] mb-3">
                       Additional Information
                     </h4>
                     <div className="space-y-3">
                       {vehicle.modifications && (
-                        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-1">
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-[#333333ff] mb-1">
                             Modifications
                           </p>
-                          <p className="text-xs text-yellow-800 dark:text-yellow-200 line-clamp-2">
+                          <p className="text-xs text-[#333333ff] line-clamp-2">
                             {vehicle.modifications}
                           </p>
                         </div>
                       )}
                       {vehicle.service_history && (
-                        <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-1">
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-[#333333ff] mb-1">
                             Service History
                           </p>
-                          <p className="text-xs text-indigo-800 dark:text-indigo-200 line-clamp-2">
+                          <p className="text-xs text-[#333333ff] line-clamp-2">
                             {vehicle.service_history}
                           </p>
                         </div>
                       )}
                       {vehicle.description && (
-                        <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1">
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-[#333333ff] mb-1">
                             Notes
                           </p>
-                          <p className="text-xs text-teal-800 dark:text-teal-200 line-clamp-2">
+                          <p className="text-xs text-[#333333ff] line-clamp-2">
                             {vehicle.description}
                           </p>
                         </div>
@@ -456,7 +411,7 @@ function MyVehicles() {
 
                 {/* Action Buttons */}
                 <div className="mt-3 flex space-x-3">
-                  <button className="flex-1 px-4 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center border-0">
+                  <button className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center">
                     <svg
                       className="w-4 h-4 mr-2"
                       fill="none"
@@ -472,7 +427,7 @@ function MyVehicles() {
                     </svg>
                     Edit
                   </button>
-                  <button className="flex-1 px-4 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center border-0">
+                  <button className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center">
                     <svg
                       className="w-4 h-4 mr-2"
                       fill="none"
