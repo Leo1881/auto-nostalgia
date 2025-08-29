@@ -111,7 +111,7 @@ function CustomerSidebar({ activeSection, onSectionChange }) {
             <li key={item.id} className="flex-shrink-0 lg:flex-shrink">
               <button
                 onClick={() => onSectionChange(item.id)}
-                className={`flex items-center space-x-3 lg:space-x-4 px-3 lg:px-4 py-2 lg:py-3 rounded-lg transition-all duration-200 text-left whitespace-nowrap ${
+                className={`flex items-center space-x-3 lg:space-x-4 p-1 h-6 rounded-lg transition-all duration-200 text-left whitespace-nowrap ${
                   activeSection === item.id
                     ? "bg-white text-primary-red border border-white"
                     : "text-white hover:bg-red-600"

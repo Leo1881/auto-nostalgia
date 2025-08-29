@@ -225,7 +225,7 @@ function DashboardHome() {
             onClick={action.action}
             className="bg-primary-red rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-lg transition-all duration-200 text-left w-full mt-6"
           >
-            <div className="flex items-center">
+            <div className="flex items-center pl-2 sm:pl-4">
               <div
                 className={`p-2 sm:p-3 rounded-lg text-white ${action.color}`}
               >

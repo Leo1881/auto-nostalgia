@@ -19,22 +19,19 @@ function AuthChoicePage({ onLogin, onSignUp }) {
       </div>
 
       {/* Choice Buttons - Flexible container */}
-      <div
-        className="flex items-center justify-center"
-        style={{ paddingBottom: window.innerWidth < 640 ? "48px" : "64px" }}
-      >
+      <div className="flex items-center justify-center pb-12 sm:pb-16">
         <div className="w-full max-w-md px-4 sm:px-6">
           <div className="flex flex-col items-center space-y-4">
             <button
               onClick={onLogin}
-              className="auth-button auth-button-primary w-full sm:w-auto"
+              className="w-64 h-12 rounded-3xl font-quicksand font-bold text-base border-none outline-none cursor-pointer transition-all duration-200 shadow-md bg-red-600 text-white mb-4 hover:scale-105 hover:bg-red-700 w-full sm:w-auto"
             >
               Login
             </button>
 
             <button
               onClick={onSignUp}
-              className="auth-button auth-button-secondary w-full sm:w-auto"
+              className="w-64 h-12 rounded-3xl font-quicksand font-bold text-base border-none outline-none cursor-pointer transition-all duration-200 shadow-md bg-white text-red-600 border-3 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white w-full sm:w-auto"
             >
               Sign Up
             </button>
