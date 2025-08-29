@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { vehicleService } from "../../lib/vehicleService";
 import EditVehicleModal from "./EditVehicleModal";
+import DeleteVehicleModal from "./DeleteVehicleModal";
 
 function MyVehicles() {
   const [vehicles, setVehicles] = useState([]);
@@ -8,6 +9,8 @@ function MyVehicles() {
   const [error, setError] = useState(null);
   const [editingVehicle, setEditingVehicle] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deletingVehicle, setDeletingVehicle] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     fetchVehicles();
@@ -52,6 +55,22 @@ function MyVehicles() {
       prevVehicles.map((vehicle) =>
         vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle
       )
+    );
+  };
+
+  const handleDeleteVehicle = (vehicle) => {
+    setDeletingVehicle(vehicle);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+    setDeletingVehicle(null);
+  };
+
+  const handleVehicleDeleted = (vehicleId) => {
+    setVehicles((prevVehicles) =>
+      prevVehicles.filter((vehicle) => vehicle.id !== vehicleId)
     );
   };
 
@@ -451,7 +470,10 @@ function MyVehicles() {
                     </svg>
                     Edit
                   </button>
-                  <button className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center">
+                  <button
+                    onClick={() => handleDeleteVehicle(vehicle)}
+                    className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center"
+                  >
                     <svg
                       className="w-4 h-4 mr-2"
                       fill="none"
@@ -480,6 +502,14 @@ function MyVehicles() {
         onClose={handleEditModalClose}
         onSubmit={handleVehicleUpdated}
         vehicle={editingVehicle}
+      />
+
+      {/* Delete Vehicle Modal */}
+      <DeleteVehicleModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleDeleteModalClose}
+        onConfirm={handleVehicleDeleted}
+        vehicle={deletingVehicle}
       />
     </div>
   );
