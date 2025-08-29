@@ -2,6 +2,7 @@ import { useAuth } from "../../hooks/useAuth";
 import MainApp from "./MainApp";
 import AdminPanel from "../admin/AdminPanel";
 import CustomerDashboard from "../customer/CustomerDashboard";
+import AssessorDashboard from "../assessor/AssessorDashboard";
 import { VehicleProvider } from "../../contexts/VehicleContext";
 import {
   LOADING_TEXT,
@@ -40,10 +41,10 @@ function AuthenticatedApp() {
     return <CustomerDashboard />;
   }
 
-  // Route assessors to main app (for now)
+  // Route assessors to assessor dashboard
   if (profile?.role === "assessor") {
-    console.log("Routing to MainApp");
-    return <MainApp />;
+    console.log("Routing to AssessorDashboard");
+    return <AssessorDashboard />;
   }
 
   // Default fallback to main app

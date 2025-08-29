@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
 import CustomSelect from "../common/CustomSelect";
-import AssessmentDetailModal from "./AssessmentDetailModal";
-import RescheduleModal from "./RescheduleModal";
+import RequestDetailModal from "./RequestDetailModal";
 
-function AssessmentHistory() {
-  const { user } = useAuth();
+function AssessmentRequests() {
   const [isLoading, setIsLoading] = useState(true);
-  const [assessments, setAssessments] = useState([]);
-  const [filteredAssessments, setFilteredAssessments] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
+  const [selectedUrgency, setSelectedUrgency] = useState("all");
   const [sortBy, setSortBy] = useState("created_at");
   const [sortOrder, setSortOrder] = useState("desc");
-  const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
-  const [isCancelling, setIsCancelling] = useState(false);
+  const { user, profile } = useAuth();
 
   const statusOptions = [
     { value: "all", label: "All Statuses" },
     { value: "pending", label: "Pending" },
     { value: "approved", label: "Approved" },
     { value: "rejected", label: "Rejected" },
-    { value: "completed", label: "Completed" },
-    { value: "cancelled", label: "Cancelled" },
   ];
 
   const typeOptions = [
@@ -37,6 +34,14 @@ function AssessmentHistory() {
     { value: "comprehensive", label: "Comprehensive Assessment" },
   ];
 
+  const urgencyOptions = [
+    { value: "all", label: "All Priorities" },
+    { value: "low", label: "Low Priority" },
+    { value: "normal", label: "Normal Priority" },
+    { value: "high", label: "High Priority" },
+    { value: "urgent", label: "Urgent Priority" },
+  ];
+
   const sortOptions = [
     { value: "created_at", label: "Date Created" },
     { value: "preferred_date", label: "Preferred Date" },
@@ -46,65 +51,135 @@ function AssessmentHistory() {
 
   useEffect(() => {
     if (user) {
-      loadAssessmentHistory();
+      loadAssessmentRequests();
     }
   }, [user]);
 
   useEffect(() => {
-    filterAndSortAssessments();
-  }, [assessments, selectedStatus, selectedType, sortBy, sortOrder]);
+    filterAndSortRequests();
+  }, [
+    requests,
+    selectedStatus,
+    selectedType,
+    selectedUrgency,
+    sortBy,
+    sortOrder,
+  ]);
 
-  const loadAssessmentHistory = async () => {
+  const loadAssessmentRequests = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      // First get assessment requests
+      const { data: requestsData, error: requestsError } = await supabase
         .from("assessment_requests")
-        .select(
-          `
-          *,
-          vehicles (
-            year,
-            make,
-            model,
-            registration_number
-          )
-        `
-        )
-        .eq("user_id", user.id)
+        .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Error loading assessment history:", error);
-      } else {
-        setAssessments(data || []);
+      if (requestsError) {
+        console.error("Error loading assessment requests:", requestsError);
+        return;
       }
+
+      console.log("Raw assessment requests:", requestsData);
+
+      // Get vehicle data for each request
+      const vehicleIds = [
+        ...new Set(requestsData?.map((req) => req.vehicle_id) || []),
+      ];
+      console.log("Vehicle IDs to fetch:", vehicleIds);
+
+      const { data: vehiclesData, error: vehiclesError } = await supabase
+        .from("vehicles")
+        .select("id, year, make, model, registration_number, vin, mileage")
+        .in("id", vehicleIds);
+
+      if (vehiclesError) {
+        console.error("Error loading vehicles:", vehiclesError);
+        console.error("Vehicle error details:", vehiclesError);
+        return;
+      }
+
+      console.log("Vehicle data:", vehiclesData);
+      console.log("Vehicle error (should be null):", vehiclesError);
+
+      // Then get profile data for each user
+      const userIds = [
+        ...new Set(requestsData?.map((req) => req.user_id) || []),
+      ];
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, full_name, phone, email, province, city")
+        .in("id", userIds);
+
+      if (profilesError) {
+        console.error("Error loading profiles:", profilesError);
+        return;
+      }
+
+      // Combine the data
+      const profilesMap = {};
+      profilesData?.forEach((profile) => {
+        profilesMap[profile.id] = profile;
+      });
+
+      const vehiclesMap = {};
+      vehiclesData?.forEach((vehicle) => {
+        vehiclesMap[vehicle.id] = vehicle;
+      });
+
+      const combinedData =
+        requestsData?.map((request) => ({
+          ...request,
+          profiles: profilesMap[request.user_id],
+          vehicles: vehiclesMap[request.vehicle_id],
+        })) || [];
+
+      console.log("Combined data:", combinedData);
+
+      // Filter by assessor's province
+      const assessorProvince = profile?.province || profile?.location;
+      const requestsInProvince =
+        combinedData?.filter((request) => {
+          const customerProvince = request.profiles?.province;
+          return !assessorProvince || customerProvince === assessorProvince;
+        }) || [];
+
+      setRequests(requestsInProvince);
     } catch (error) {
-      console.error("Error loading assessment history:", error);
+      console.error("Error loading assessment requests:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filterAndSortAssessments = () => {
-    let filtered = [...assessments];
+  const filterAndSortRequests = () => {
+    let filtered = [...requests];
 
     // Filter by status
     if (selectedStatus !== "all") {
       filtered = filtered.filter(
-        (assessment) => assessment.status === selectedStatus
+        (request) => request.status === selectedStatus
       );
     }
 
     // Filter by type
     if (selectedType !== "all") {
       filtered = filtered.filter(
-        (assessment) => assessment.assessment_type === selectedType
+        (request) => request.assessment_type === selectedType
+      );
+    }
+
+    // Filter by urgency
+    if (selectedUrgency !== "all") {
+      filtered = filtered.filter(
+        (request) => request.urgency === selectedUrgency
       );
     }
 
     // Sort
     filtered.sort((a, b) => {
       let aValue, bValue;
+      let urgencyOrder, statusOrder;
 
       switch (sortBy) {
         case "created_at":
@@ -116,18 +191,12 @@ function AssessmentHistory() {
           bValue = new Date(b.preferred_date);
           break;
         case "urgency":
-          const urgencyOrder = { low: 1, normal: 2, high: 3, urgent: 4 };
+          urgencyOrder = { low: 1, normal: 2, high: 3, urgent: 4 };
           aValue = urgencyOrder[a.urgency] || 0;
           bValue = urgencyOrder[b.urgency] || 0;
           break;
         case "status":
-          const statusOrder = {
-            pending: 1,
-            approved: 2,
-            completed: 3,
-            rejected: 4,
-            cancelled: 5,
-          };
+          statusOrder = { pending: 1, approved: 2, rejected: 3 };
           aValue = statusOrder[a.status] || 0;
           bValue = statusOrder[b.status] || 0;
           break;
@@ -143,89 +212,78 @@ function AssessmentHistory() {
       }
     });
 
-    setFilteredAssessments(filtered);
+    setFilteredRequests(filtered);
   };
 
-  const handleViewDetails = (assessment) => {
-    setSelectedAssessment(assessment);
-    setIsDetailModalOpen(true);
-  };
-
-  const handleCancelRequest = async (assessmentId) => {
-    if (!confirm("Are you sure you want to cancel this assessment request?")) {
+  const handleAcceptRequest = async (requestId) => {
+    if (!confirm("Are you sure you want to accept this assessment request?")) {
       return;
     }
 
-    setIsCancelling(true);
+    setIsProcessing(true);
     try {
       const { error } = await supabase
         .from("assessment_requests")
-        .update({ status: "cancelled" })
-        .eq("id", assessmentId);
+        .update({
+          status: "approved",
+          assigned_assessor_id: user.id,
+          assigned_at: new Date().toISOString(),
+        })
+        .eq("id", requestId);
 
       if (error) {
-        console.error("Error cancelling assessment request:", error);
-        alert("Failed to cancel assessment request. Please try again.");
+        console.error("Error accepting request:", error);
+        alert("Failed to accept request. Please try again.");
       } else {
-        // Refresh the assessment list
-        await loadAssessmentHistory();
-        setIsDetailModalOpen(false);
-        setSelectedAssessment(null);
+        // Refresh the requests list
+        await loadAssessmentRequests();
       }
     } catch (error) {
-      console.error("Error cancelling assessment request:", error);
-      alert("Failed to cancel assessment request. Please try again.");
+      console.error("Error accepting request:", error);
+      alert("Failed to accept request. Please try again.");
     } finally {
-      setIsCancelling(false);
+      setIsProcessing(false);
     }
   };
 
-  const handleRescheduleRequest = (assessment) => {
-    setSelectedAssessment(assessment);
-    setIsRescheduleModalOpen(true);
-  };
+  const handleRejectRequest = async (requestId) => {
+    const reason = prompt(
+      "Please provide a reason for rejecting this request:"
+    );
+    if (!reason) {
+      return;
+    }
 
-  const handleRescheduleSuccess = async () => {
-    // Refresh the assessment list
-    await loadAssessmentHistory();
-    setIsRescheduleModalOpen(false);
-    setSelectedAssessment(null);
-  };
+    setIsProcessing(true);
+    try {
+      const { error } = await supabase
+        .from("assessment_requests")
+        .update({
+          status: "rejected",
+          rejection_reason: reason,
+          assigned_assessor_id: user.id,
+          assigned_at: new Date().toISOString(),
+        })
+        .eq("id", requestId);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "approved":
-        return "bg-blue-100 text-blue-800";
-      case "completed":
-        return "bg-green-100 text-green-800";
-      case "rejected":
-        return "bg-red-100 text-red-800";
-      case "cancelled":
-        return "bg-gray-100 text-gray-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+      if (error) {
+        console.error("Error rejecting request:", error);
+        alert("Failed to reject request. Please try again.");
+      } else {
+        // Refresh the requests list
+        await loadAssessmentRequests();
+      }
+    } catch (error) {
+      console.error("Error rejecting request:", error);
+      alert("Failed to reject request. Please try again.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  const getUrgencyColor = (urgency) => {
-    switch (urgency) {
-      case "low":
-        return "bg-green-100 text-green-800";
-      case "normal":
-        return "bg-blue-100 text-blue-800";
-      case "high":
-        return "bg-orange-100 text-orange-800";
-      case "urgent":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const formatAssessmentType = (type) => {
-    return type.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const handleViewDetails = (request) => {
+    setSelectedRequest(request);
+    setIsDetailModalOpen(true);
   };
 
   const formatDate = (dateString) => {
@@ -246,6 +304,38 @@ function AssessmentHistory() {
     });
   };
 
+  const formatAssessmentType = (type) => {
+    return type.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "approved":
+        return "bg-green-100 text-green-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getUrgencyColor = (urgency) => {
+    switch (urgency) {
+      case "low":
+        return "bg-green-100 text-green-800";
+      case "normal":
+        return "bg-blue-100 text-blue-800";
+      case "high":
+        return "bg-orange-100 text-orange-800";
+      case "urgent":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4 sm:space-y-6">
@@ -258,7 +348,7 @@ function AssessmentHistory() {
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
           <div className="animate-pulse space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-gray-200 rounded"></div>
+              <div key={i} className="h-32 bg-gray-200 rounded"></div>
             ))}
           </div>
         </div>
@@ -271,16 +361,22 @@ function AssessmentHistory() {
       {/* Header */}
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
         <h1 className="text-xl font-bold text-[#333333ff] mb-2">
-          Assessment History
+          Assessment Requests
         </h1>
         <p className="text-sm text-[#333333ff]">
-          View all your past vehicle assessments and their results.
+          View and manage assessment requests in your province.
         </p>
+        {profile?.province && (
+          <p className="text-sm text-gray-600 mt-2">
+            Operating in:{" "}
+            <span className="font-medium">{profile.province}</span>
+          </p>
+        )}
       </div>
 
       {/* Filters and Sorting */}
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Status
@@ -301,6 +397,17 @@ function AssessmentHistory() {
               value={selectedType}
               onChange={setSelectedType}
               placeholder="Filter by type"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Priority
+            </label>
+            <CustomSelect
+              options={urgencyOptions}
+              value={selectedUrgency}
+              onChange={setSelectedUrgency}
+              placeholder="Filter by priority"
             />
           </div>
           <div>
@@ -344,9 +451,9 @@ function AssessmentHistory() {
         </div>
       </div>
 
-      {/* Assessment List */}
+      {/* Requests List */}
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
-        {filteredAssessments.length === 0 ? (
+        {filteredRequests.length === 0 ? (
           <div className="text-center py-12">
             <svg
               className="w-16 h-16 text-gray-400 mx-auto mb-4"
@@ -362,25 +469,25 @@ function AssessmentHistory() {
               />
             </svg>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {assessments.length === 0
-                ? "No Assessments Found"
-                : "No Assessments Match Filters"}
+              {requests.length === 0
+                ? "No Assessment Requests Found"
+                : "No Requests Match Filters"}
             </h3>
             <p className="text-gray-600">
-              {assessments.length === 0
-                ? "You haven't submitted any assessment requests yet."
+              {requests.length === 0
+                ? "There are no assessment requests in your province yet."
                 : "Try adjusting your filters to see more results."}
             </p>
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredAssessments.map((assessment) => (
+            {filteredRequests.map((request) => (
               <div
-                key={assessment.id}
+                key={request.id}
                 className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
               >
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0">
-                  {/* Vehicle and Assessment Info */}
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0">
+                  {/* Vehicle and Customer Info */}
                   <div className="flex-1">
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0">
@@ -402,33 +509,38 @@ function AssessmentHistory() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {assessment.vehicles?.year}{" "}
-                          {assessment.vehicles?.make}{" "}
-                          {assessment.vehicles?.model}
+                          {request.vehicles?.year} {request.vehicles?.make}{" "}
+                          {request.vehicles?.model}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Registration:{" "}
-                          {assessment.vehicles?.registration_number}
+                          Registration: {request.vehicles?.registration_number}
                         </p>
                         <p className="text-sm text-gray-600">
-                          {formatAssessmentType(assessment.assessment_type)}
+                          Customer: {request.profiles?.full_name}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Location: {request.profiles?.city},{" "}
+                          {request.profiles?.province}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {formatAssessmentType(request.assessment_type)}
                         </p>
                         <div className="flex items-center space-x-2 mt-2">
                           <span
                             className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
-                              assessment.status
+                              request.status
                             )}`}
                           >
-                            {assessment.status.charAt(0).toUpperCase() +
-                              assessment.status.slice(1)}
+                            {request.status.charAt(0).toUpperCase() +
+                              request.status.slice(1)}
                           </span>
                           <span
                             className={`px-2 py-1 text-xs font-medium rounded-full ${getUrgencyColor(
-                              assessment.urgency
+                              request.urgency
                             )}`}
                           >
-                            {assessment.urgency.charAt(0).toUpperCase() +
-                              assessment.urgency.slice(1)}{" "}
+                            {request.urgency.charAt(0).toUpperCase() +
+                              request.urgency.slice(1)}{" "}
                             Priority
                           </span>
                         </div>
@@ -437,53 +549,78 @@ function AssessmentHistory() {
                   </div>
 
                   {/* Dates and Actions */}
-                  <div className="flex flex-col items-end space-y-2">
+                  <div className="flex flex-col items-end space-y-3">
                     <div className="text-right">
                       <p className="text-sm text-gray-600">
-                        Requested: {formatDateTime(assessment.created_at)}
+                        Requested: {formatDateTime(request.created_at)}
                       </p>
-                      {assessment.preferred_date && (
+                      {request.preferred_date && (
                         <p className="text-sm text-gray-600">
-                          Preferred: {formatDate(assessment.preferred_date)}
-                          {assessment.preferred_time &&
-                            ` at ${assessment.preferred_time}`}
+                          Preferred: {formatDate(request.preferred_date)}
+                          {request.preferred_time &&
+                            ` at ${request.preferred_time}`}
                         </p>
                       )}
                     </div>
+
+                    {/* Action Buttons */}
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => handleViewDetails(assessment)}
+                        onClick={() => handleViewDetails(request)}
                         className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
                       >
                         View Details
                       </button>
-                      {assessment.status === "pending" && (
+                      {request.status === "pending" && (
                         <>
                           <button
-                            onClick={() => handleRescheduleRequest(assessment)}
-                            className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+                            onClick={() => handleAcceptRequest(request.id)}
+                            disabled={isProcessing}
+                            className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            Reschedule
+                            {isProcessing ? "Processing..." : "Accept"}
                           </button>
                           <button
-                            onClick={() => handleCancelRequest(assessment.id)}
-                            disabled={isCancelling}
-                            className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={() => handleRejectRequest(request.id)}
+                            disabled={isProcessing}
+                            className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            {isCancelling ? "Cancelling..." : "Cancel"}
+                            {isProcessing ? "Processing..." : "Reject"}
                           </button>
                         </>
                       )}
                     </div>
+
+                    {request.status === "approved" && (
+                      <div className="text-sm text-green-600 font-medium">
+                        ✓ Accepted
+                      </div>
+                    )}
+
+                    {request.status === "rejected" && (
+                      <div className="text-sm text-red-600 font-medium">
+                        ✗ Rejected
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Additional Notes */}
-                {assessment.additional_notes && (
+                {request.additional_notes && (
                   <div className="mt-3 pt-3 border-t border-gray-100">
                     <p className="text-sm text-gray-600">
                       <span className="font-medium">Notes:</span>{" "}
-                      {assessment.additional_notes}
+                      {request.additional_notes}
+                    </p>
+                  </div>
+                )}
+
+                {/* Rejection Reason */}
+                {request.rejection_reason && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <p className="text-sm text-red-600">
+                      <span className="font-medium">Rejection Reason:</span>{" "}
+                      {request.rejection_reason}
                     </p>
                   </div>
                 )}
@@ -493,29 +630,17 @@ function AssessmentHistory() {
         )}
       </div>
 
-      {/* Assessment Detail Modal */}
-      <AssessmentDetailModal
+      {/* Request Detail Modal */}
+      <RequestDetailModal
         isOpen={isDetailModalOpen}
         onClose={() => {
           setIsDetailModalOpen(false);
-          setSelectedAssessment(null);
+          setSelectedRequest(null);
         }}
-        assessment={selectedAssessment}
-        onCancelRequest={handleCancelRequest}
-      />
-
-      {/* Reschedule Modal */}
-      <RescheduleModal
-        isOpen={isRescheduleModalOpen}
-        onClose={() => {
-          setIsRescheduleModalOpen(false);
-          setSelectedAssessment(null);
-        }}
-        assessment={selectedAssessment}
-        onRescheduleSuccess={handleRescheduleSuccess}
+        request={selectedRequest}
       />
     </div>
   );
 }
 
-export default AssessmentHistory;
+export default AssessmentRequests;

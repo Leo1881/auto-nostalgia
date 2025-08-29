@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
+import CustomSelect from "../common/CustomSelect";
 
 function ProfileSettings() {
   const { user } = useAuth();
@@ -131,6 +132,7 @@ function ProfileSettings() {
       address: formData.address,
       city: formData.city,
       state: formData.state,
+      province: formData.state, // Also save to province field for matching
       zip_code: formData.zipCode,
       country: formData.country,
       updated_at: new Date().toISOString(),
@@ -306,15 +308,27 @@ function ProfileSettings() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    State/Province
+                    Province
                   </label>
-                  <input
-                    type="text"
-                    name="state"
+                  <CustomSelect
                     value={formData.state}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900"
-                    placeholder="Enter your state"
+                    onChange={(value) =>
+                      handleInputChange({
+                        target: { name: "state", value },
+                      })
+                    }
+                    options={[
+                      { value: "Eastern Cape", label: "Eastern Cape" },
+                      { value: "Free State", label: "Free State" },
+                      { value: "Gauteng", label: "Gauteng" },
+                      { value: "KwaZulu-Natal", label: "KwaZulu-Natal" },
+                      { value: "Limpopo", label: "Limpopo" },
+                      { value: "Mpumalanga", label: "Mpumalanga" },
+                      { value: "Northern Cape", label: "Northern Cape" },
+                      { value: "North West", label: "North West" },
+                      { value: "Western Cape", label: "Western Cape" },
+                    ]}
+                    placeholder="Select your province"
                   />
                 </div>
 

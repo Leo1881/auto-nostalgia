@@ -77,6 +77,7 @@ function SignUpForm({ onBack }) {
       address: formData.address,
       city: formData.city,
       state: formData.state,
+      province: formData.state, // Also save to province field for matching
       zipCode: formData.zipCode,
       country: formData.country,
     });
@@ -443,13 +444,31 @@ function SignUpForm({ onBack }) {
                         </div>
 
                         <div>
-                          <input
-                            type="text"
-                            name="state"
+                          <CustomSelect
                             value={formData.state}
-                            onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                            placeholder="State/Province (Optional)"
+                            onChange={(value) =>
+                              handleInputChange({
+                                target: { name: "state", value },
+                              })
+                            }
+                            options={[
+                              { value: "Eastern Cape", label: "Eastern Cape" },
+                              { value: "Free State", label: "Free State" },
+                              { value: "Gauteng", label: "Gauteng" },
+                              {
+                                value: "KwaZulu-Natal",
+                                label: "KwaZulu-Natal",
+                              },
+                              { value: "Limpopo", label: "Limpopo" },
+                              { value: "Mpumalanga", label: "Mpumalanga" },
+                              {
+                                value: "Northern Cape",
+                                label: "Northern Cape",
+                              },
+                              { value: "North West", label: "North West" },
+                              { value: "Western Cape", label: "Western Cape" },
+                            ]}
+                            placeholder="Province (Optional)"
                             disabled={loading}
                           />
                         </div>
@@ -538,13 +557,31 @@ function SignUpForm({ onBack }) {
                         </div>
 
                         <div>
-                          <input
-                            type="text"
-                            name="state"
+                          <CustomSelect
                             value={formData.state}
-                            onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                            placeholder="State/Province"
+                            onChange={(value) =>
+                              handleInputChange({
+                                target: { name: "state", value },
+                              })
+                            }
+                            options={[
+                              { value: "Eastern Cape", label: "Eastern Cape" },
+                              { value: "Free State", label: "Free State" },
+                              { value: "Gauteng", label: "Gauteng" },
+                              {
+                                value: "KwaZulu-Natal",
+                                label: "KwaZulu-Natal",
+                              },
+                              { value: "Limpopo", label: "Limpopo" },
+                              { value: "Mpumalanga", label: "Mpumalanga" },
+                              {
+                                value: "Northern Cape",
+                                label: "Northern Cape",
+                              },
+                              { value: "North West", label: "North West" },
+                              { value: "Western Cape", label: "Western Cape" },
+                            ]}
+                            placeholder="Province"
                             required
                             disabled={loading}
                           />
