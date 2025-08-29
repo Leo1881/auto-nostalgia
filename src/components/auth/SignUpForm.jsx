@@ -679,7 +679,7 @@ function SignUpForm({ onBack }) {
           ) : (
             // Success State - Styled
             <div className="text-center">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-8">
+              <div className="bg-white rounded-xl shadow-lg p-4 sm:p-8">
                 <div className="mb-6">
                   <div
                     className="mb-1"
@@ -701,6 +701,16 @@ function SignUpForm({ onBack }) {
                   </h1>
                 </div>
               </div>
+
+              {/* Login Button - Inside success state */}
+              <div className="mt-8 sm:mt-12">
+                <button
+                  onClick={onBack}
+                  className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
+                >
+                  Login
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -713,18 +723,6 @@ function SignUpForm({ onBack }) {
               className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs outline-none cursor-pointer transition-all duration-300 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white hover:shadow-lg active:scale-95 active:bg-red-700 active:text-white mb-2"
             >
               Back
-            </button>
-          </div>
-        )}
-
-        {/* Container 3: Login Button - Only show when in success state */}
-        {success && (
-          <div className="flex-1 flex flex-col justify-end items-center">
-            <button
-              onClick={onBack}
-              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
-            >
-              Login
             </button>
           </div>
         )}
