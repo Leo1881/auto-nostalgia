@@ -1,6 +1,6 @@
 function AuthChoicePage({ onLogin, onSignUp }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col p-4 sm:p-8 font-quicksand">
+    <div className="min-h-screen bg-white flex flex-col p-4 sm:p-8 font-quicksand">
       {/* Logo and Title - Flexible container */}
       <div className="flex-1 flex items-center justify-center py-4 sm:py-8">
         <div className="w-full max-w-md px-4 sm:px-6 text-center">
@@ -12,7 +12,7 @@ function AuthChoicePage({ onLogin, onSignUp }) {
             />
           </div>
 
-          <p className="text-gray-600 dark:text-gray-300 font-bold text-base sm:text-lg px-2">
+          <p className="text-[#333333ff] font-bold text-base sm:text-lg px-2">
             Valuing the Classics, One Detail at a Time.
           </p>
         </div>
