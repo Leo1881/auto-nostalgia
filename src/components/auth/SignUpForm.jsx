@@ -104,8 +104,8 @@ function SignUpForm({ onBack }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex flex-col p-4 sm:p-8 font-quicksand">
-      <div className="w-full max-w-md mx-auto px-4 sm:px-6 flex-1 flex flex-col justify-between">
+    <div className="min-h-screen bg-white flex flex-col px-4 pt-6 pb-6 sm:pb-8 font-quicksand">
+      <div className="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-between">
         {/* Container 1: Logo */}
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -125,33 +125,37 @@ function SignUpForm({ onBack }) {
           {!success ? (
             <>
               {/* Form State */}
-              <div className="text-center mb-8" style={{ marginTop: "-32px" }}>
-                <h1 className="text-2xl font-bold text-white mb-2">
+              <div className="text-center mb-8">
+                <h1 className="text-xl font-bold text-[#333333ff] mb-2">
                   Create Account
                 </h1>
-                <p className="text-white">Start your nostalgia journey</p>
+                <p className="text-sm text-[#333333ff]">
+                  Start your nostalgia journey
+                </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">
+              <div className="p-4">
                 {error && (
                   <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                     {error}
                   </div>
                 )}
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col w-full max-w-[800px] mx-auto"
+                >
                   <div>
                     <input
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="form-input"
+                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
                       placeholder="Enter your full name"
                       required
                       disabled={loading}
                       style={{
                         marginTop: "16px",
-                        color: "#333333ff",
                       }}
                     />
                   </div>
@@ -162,13 +166,10 @@ function SignUpForm({ onBack }) {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="form-input"
+                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
                       placeholder="Enter your email"
                       required
                       disabled={loading}
-                      style={{
-                        color: "#333333ff",
-                      }}
                     />
                   </div>
 
@@ -178,13 +179,10 @@ function SignUpForm({ onBack }) {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className="form-input"
+                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
                       placeholder="Create a password"
                       required
                       disabled={loading}
-                      style={{
-                        color: "#333333ff",
-                      }}
                     />
                     <div className="mt-2 ml-6 space-y-1 mb-4">
                       <div
@@ -366,13 +364,10 @@ function SignUpForm({ onBack }) {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className="form-input"
+                      className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
                       placeholder="Confirm password"
                       required
                       disabled={loading}
-                      style={{
-                        color: "#333333ff",
-                      }}
                     />
                   </div>
 
@@ -404,13 +399,12 @@ function SignUpForm({ onBack }) {
                           name="phoneNumber"
                           value={formData.phoneNumber}
                           onChange={handleInputChange}
-                          className="form-input"
+                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
                           placeholder="Phone Number"
                           required
                           disabled={loading}
                           style={{
                             marginTop: "16px",
-                            color: "#333333ff",
                           }}
                         />
                       </div>
@@ -488,11 +482,7 @@ function SignUpForm({ onBack }) {
                   <div className="flex justify-center">
                     <button
                       type="submit"
-                      className={`${
-                        loading
-                          ? BUTTON_STATES.PRIMARY.LOADING
-                          : BUTTON_STATES.PRIMARY.NORMAL
-                      } w-full sm:w-auto`}
+                      className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
                       style={{ marginBottom: "18px" }}
                       disabled={loading || success}
                     >
@@ -540,10 +530,7 @@ function SignUpForm({ onBack }) {
           <div className="flex-1 flex flex-col justify-end items-center">
             <button
               onClick={onBack}
-              className="auth-button auth-button-secondary w-full sm:w-auto"
-              style={{
-                marginBottom: window.innerWidth < 640 ? "48px" : "32px",
-              }}
+              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs outline-none cursor-pointer transition-all duration-300 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white hover:shadow-lg active:scale-95 active:bg-red-700 active:text-white mb-2"
             >
               Back
             </button>
@@ -555,10 +542,7 @@ function SignUpForm({ onBack }) {
           <div className="flex-1 flex flex-col justify-end items-center">
             <button
               onClick={onBack}
-              className="auth-button auth-button-primary w-full sm:w-auto"
-              style={{
-                marginBottom: window.innerWidth < 640 ? "48px" : "32px",
-              }}
+              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
             >
               Login
             </button>

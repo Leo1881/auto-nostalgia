@@ -12,7 +12,7 @@ function AuthChoicePage({ onLogin, onSignUp }) {
             />
           </div>
 
-          <p className="text-[#333333ff] font-bold text-base sm:text-lg px-2">
+          <p className="text-[#333333ff] font-bold text-sm px-2">
             Valuing the Classics, One Detail at a Time.
           </p>
         </div>
@@ -24,14 +24,14 @@ function AuthChoicePage({ onLogin, onSignUp }) {
           <div className="flex flex-col items-center space-y-4">
             <button
               onClick={onLogin}
-              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-200 shadow-md bg-red-600 text-white mb-4 hover:scale-105 hover:bg-red-700"
+              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white mb-4 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
             >
               Login
             </button>
 
             <button
               onClick={onSignUp}
-              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm outline-none cursor-pointer transition-all duration-200 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white"
+              className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs outline-none cursor-pointer transition-all duration-300 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white hover:shadow-lg active:scale-95 active:bg-red-700 active:text-white"
             >
               Sign Up
             </button>

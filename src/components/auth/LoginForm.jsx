@@ -59,8 +59,8 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col px-8 pt-8 pb-6 sm:pb-8 font-quicksand">
-      <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col justify-between">
+    <div className="min-h-screen bg-white flex flex-col px-4 pt-6 pb-6 sm:pb-8 font-quicksand">
+      <div className="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-between">
         {/* Container 1: Logo */}
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
@@ -75,29 +75,33 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
         {/* Container 2: Text and Input Fields */}
         <div className="flex-1 flex flex-col justify-center">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
-            <p className="text-white">Sign in to your account</p>
+            <h1 className="text-xl font-bold text-[#333333ff] mb-2">
+              Welcome Back
+            </h1>
+            <p className="text-sm text-[#333333ff]">Sign in to your account</p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="p-4">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col w-full max-w-[800px] mx-auto"
+            >
               <div>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`form-input ${
+                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4 ${
                     error
                       ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                      : ""
+                      : "focus:border-red-600 focus:ring-red-500"
                   }`}
                   placeholder="Enter your email"
                   required
                   disabled={loading}
                   style={{
                     marginTop: "16px",
-                    color: "#333333ff",
                   }}
                 />
               </div>
@@ -108,29 +112,21 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`form-input ${
+                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4 ${
                     error
                       ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                      : ""
+                      : "focus:border-red-600 focus:ring-red-500"
                   }`}
                   placeholder="Enter your password"
                   required
                   disabled={loading}
-                  style={{
-                    color: "#333333ff",
-                  }}
                 />
               </div>
 
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className={`${
-                    loading
-                      ? BUTTON_STATES.PRIMARY.LOADING
-                      : BUTTON_STATES.PRIMARY.NORMAL
-                  } w-full sm:w-auto`}
-                  style={{ marginBottom: "0px" }}
+                  className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800"
                   disabled={loading}
                 >
                   {loading ? LOADING_TEXT.SIGNING_IN : "Sign In"}
@@ -164,8 +160,7 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
         <div className="flex-1 flex flex-col justify-end items-center">
           <button
             onClick={onBack}
-            className="auth-button auth-button-secondary w-full sm:w-auto"
-            style={{ marginBottom: "8px" }}
+            className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs outline-none cursor-pointer transition-all duration-300 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white hover:shadow-lg active:scale-95 active:bg-red-700 active:text-white mb-2"
           >
             Back
           </button>
@@ -173,7 +168,7 @@ function LoginForm({ onBack, onAuthenticated, onForgotPassword }) {
           <div className="text-center" style={{ marginBottom: "64px" }}>
             <button
               onClick={onForgotPassword}
-              className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
+              className="text-xs text-[#333333ff] hover:text-red-600 transition-colors duration-200"
               style={{
                 background: "none",
                 border: "none",
