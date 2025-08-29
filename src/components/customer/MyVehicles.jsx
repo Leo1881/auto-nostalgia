@@ -287,20 +287,37 @@ function MyVehicles() {
                       </p>
                     )}
                   </div>
-                  <div className="w-16 h-16 bg-red-600 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  <div className="w-16 h-16 rounded-lg overflow-hidden">
+                    {vehicle.thumbnail_url ? (
+                      <img
+                        src={vehicle.thumbnail_url}
+                        alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          e.target.nextSibling.style.display = "flex";
+                        }}
                       />
-                    </svg>
+                    ) : null}
+                    <div
+                      className={`w-full h-full ${
+                        vehicle.thumbnail_url ? "hidden" : "flex"
+                      } items-center justify-center bg-red-600`}
+                    >
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
 

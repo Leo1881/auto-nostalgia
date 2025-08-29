@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { vehicleService } from "../../lib/vehicleService";
 import { supabase } from "../../lib/supabase";
+import ImageUpload from "../common/ImageUpload";
 
 function AddVehicleModal({ isOpen, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +41,10 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
         [name]: "",
       }));
     }
+  };
+
+  const handleImageSelect = (file) => {
+    setSelectedImage(file);
   };
 
   const validateForm = () => {
@@ -118,7 +124,10 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
       }
 
       // Add the vehicle to the database
-      const newVehicle = await vehicleService.addVehicle(formData);
+      const newVehicle = await vehicleService.addVehicle(
+        formData,
+        selectedImage
+      );
 
       // Call the onSubmit callback with the new vehicle data
       if (onSubmit) {
@@ -148,6 +157,7 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
         serviceHistory: "",
         description: "",
       });
+      setSelectedImage(null);
     } catch (error) {
       console.error("Error adding vehicle:", error);
       console.error("Error details:", {
@@ -409,6 +419,18 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Vehicle Image */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Vehicle Image
+            </h3>
+            <ImageUpload
+              onImageSelect={handleImageSelect}
+              label="Upload Vehicle Photo"
+              className="max-w-md"
+            />
           </div>
 
           {/* Technical Details */}

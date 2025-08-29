@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { vehicleService } from "../../lib/vehicleService";
 import { supabase } from "../../lib/supabase";
+import ImageUpload from "../common/ImageUpload";
 
 function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // Populate form with vehicle data when modal opens
   useEffect(() => {
@@ -65,6 +67,10 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
         [name]: "",
       }));
     }
+  };
+
+  const handleImageSelect = (file) => {
+    setSelectedImage(file);
   };
 
   const validateForm = () => {
@@ -144,7 +150,8 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
       // Update the vehicle in the database
       const updatedVehicle = await vehicleService.updateVehicle(
         vehicle.id,
-        formData
+        formData,
+        selectedImage
       );
 
       // Call the onSubmit callback with the updated vehicle data
@@ -165,36 +172,57 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-[#333333ff]">Edit Vehicle</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 transition-colors"
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4"
+      style={{
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+      }}
+    >
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            Edit Vehicle
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Basic Information */}
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Basic Information */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Basic Information
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Make *
                 </label>
                 <input
@@ -202,20 +230,20 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="make"
                   value={formData.make}
                   onChange={handleInputChange}
-                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
                     errors.make
                       ? "border-red-500"
-                      : "border-[#333333ff] focus:border-red-600"
-                  }`}
+                      : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="e.g., Ford"
                 />
                 {errors.make && (
-                  <p className="text-red-500 text-xs mt-1">{errors.make}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.make}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Model *
                 </label>
                 <input
@@ -223,20 +251,20 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="model"
                   value={formData.model}
                   onChange={handleInputChange}
-                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
                     errors.model
                       ? "border-red-500"
-                      : "border-[#333333ff] focus:border-red-600"
-                  }`}
+                      : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="e.g., Mustang"
                 />
                 {errors.model && (
-                  <p className="text-red-500 text-xs mt-1">{errors.model}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.model}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Variant
                 </label>
                 <input
@@ -244,13 +272,13 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="variant"
                   value={formData.variant}
                   onChange={handleInputChange}
-                  className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="e.g., GT, SE"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Year *
                 </label>
                 <input
@@ -258,22 +286,22 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="year"
                   value={formData.year}
                   onChange={handleInputChange}
-                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
                     errors.year
                       ? "border-red-500"
-                      : "border-[#333333ff] focus:border-red-600"
-                  }`}
+                      : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="e.g., 1967"
                   min="1900"
                   max={new Date().getFullYear() + 1}
                 />
                 {errors.year && (
-                  <p className="text-red-500 text-xs mt-1">{errors.year}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.year}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Registration Number *
                 </label>
                 <input
@@ -281,22 +309,22 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="registration"
                   value={formData.registration}
                   onChange={handleInputChange}
-                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
                     errors.registration
                       ? "border-red-500"
-                      : "border-[#333333ff] focus:border-red-600"
-                  }`}
+                      : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="e.g., ABC123"
                 />
                 {errors.registration && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="text-red-500 text-sm mt-1">
                     {errors.registration}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   VIN *
                 </label>
                 <input
@@ -304,21 +332,21 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="vin"
                   value={formData.vin}
                   onChange={handleInputChange}
-                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
                     errors.vin
                       ? "border-red-500"
-                      : "border-[#333333ff] focus:border-red-600"
-                  }`}
+                      : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="17-character VIN"
                   maxLength="17"
                 />
                 {errors.vin && (
-                  <p className="text-red-500 text-xs mt-1">{errors.vin}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.vin}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Color *
                 </label>
                 <input
@@ -326,20 +354,20 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="color"
                   value={formData.color}
                   onChange={handleInputChange}
-                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
                     errors.color
                       ? "border-red-500"
-                      : "border-[#333333ff] focus:border-red-600"
-                  }`}
+                      : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="e.g., Red"
                 />
                 {errors.color && (
-                  <p className="text-red-500 text-xs mt-1">{errors.color}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.color}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Mileage (km) *
                 </label>
                 <input
@@ -347,24 +375,42 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="mileage"
                   value={formData.mileage}
                   onChange={handleInputChange}
-                  className={`w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
                     errors.mileage
                       ? "border-red-500"
-                      : "border-[#333333ff] focus:border-red-600"
-                  }`}
+                      : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
                   placeholder="e.g., 50000"
                   min="0"
                 />
                 {errors.mileage && (
-                  <p className="text-red-500 text-xs mt-1">{errors.mileage}</p>
+                  <p className="text-red-500 text-sm mt-1">{errors.mileage}</p>
                 )}
               </div>
             </div>
+          </div>
 
-            {/* Technical Details */}
+          {/* Vehicle Image */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Vehicle Image
+            </h3>
+            <ImageUpload
+              onImageSelect={handleImageSelect}
+              currentImageUrl={vehicle?.main_image_url}
+              label="Update Vehicle Photo"
+              className="max-w-md"
+            />
+          </div>
+
+          {/* Technical Details */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Technical Details
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Engine Size
                 </label>
                 <input
@@ -372,20 +418,20 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                   name="engineSize"
                   value={formData.engineSize}
                   onChange={handleInputChange}
-                  className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="e.g., 5.0L V8"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Transmission
                 </label>
                 <select
                   name="transmission"
                   value={formData.transmission}
                   onChange={handleInputChange}
-                  className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Select transmission</option>
                   <option value="manual">Manual</option>
@@ -395,14 +441,14 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Fuel Type
                 </label>
                 <select
                   name="fuelType"
                   value={formData.fuelType}
                   onChange={handleInputChange}
-                  className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Select fuel type</option>
                   <option value="petrol">Petrol</option>
@@ -414,14 +460,14 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Body Type
                 </label>
                 <select
                   name="bodyType"
                   value={formData.bodyType}
                   onChange={handleInputChange}
-                  className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Select body type</option>
                   <option value="sedan">Sedan</option>
@@ -437,14 +483,14 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Number of Doors
                 </label>
                 <select
                   name="numberOfDoors"
                   value={formData.numberOfDoors}
                   onChange={handleInputChange}
-                  className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Select number of doors</option>
                   <option value="2">2</option>
@@ -455,14 +501,14 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Condition
                 </label>
                 <select
                   name="condition"
                   value={formData.condition}
                   onChange={handleInputChange}
-                  className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="">Select condition</option>
                   <option value="excellent">Excellent</option>
@@ -472,68 +518,76 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
                 </select>
               </div>
             </div>
+          </div>
 
-            {/* Additional Information */}
+          {/* Additional Information */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Additional Information
+            </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Modifications
                 </label>
                 <textarea
                   name="modifications"
                   value={formData.modifications}
                   onChange={handleInputChange}
-                  className="w-full h-20 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 py-3 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600 resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
+                  rows="3"
                   placeholder="Describe any modifications made to the vehicle..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Service History
                 </label>
                 <textarea
                   name="serviceHistory"
                   value={formData.serviceHistory}
                   onChange={handleInputChange}
-                  className="w-full h-20 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 py-3 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600 resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
+                  rows="3"
                   placeholder="Describe the service and maintenance history..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#333333ff] mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Additional Notes
                 </label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="w-full h-20 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 py-3 bg-white text-[#333333ff] transition-all duration-200 focus:border-red-600 resize-none"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
+                  rows="3"
                   placeholder="Any additional notes or description..."
                 />
               </div>
             </div>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex justify-end space-x-4 pt-4">
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-40 h-10 rounded-3xl font-quicksand font-bold text-xs outline-none cursor-pointer transition-all duration-300 shadow-md bg-white text-red-600 border-2 border-red-600 hover:scale-105 hover:bg-red-600 hover:text-white hover:shadow-lg active:scale-95 active:bg-red-700 active:text-white"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-40 h-10 rounded-3xl font-quicksand font-bold text-sm border-none outline-none cursor-pointer transition-all duration-300 shadow-md bg-red-600 text-white hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95 active:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Updating..." : "Update Vehicle"}
-              </button>
-            </div>
-          </form>
-        </div>
+          {/* Action Buttons */}
+          <div className="flex justify-end space-x-4 pt-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-medium transition-all duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? "Updating..." : "Update Vehicle"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { imageService } from "./imageService.js";
 
 export const vehicleService = {
   // Get all vehicles for the current user
@@ -41,7 +42,7 @@ export const vehicleService = {
   },
 
   // Add a new vehicle
-  async addVehicle(vehicleData) {
+  async addVehicle(vehicleData, imageFile = null) {
     try {
       console.log("Starting addVehicle with data:", vehicleData);
 
@@ -100,6 +101,37 @@ export const vehicleService = {
         throw error;
       }
 
+      // Upload image if provided
+      if (imageFile) {
+        try {
+          const { mainImageUrl, thumbnailUrl } =
+            await imageService.uploadVehicleImage(imageFile, user.id, data.id);
+
+          // Update vehicle with image URLs
+          const { error: updateError } = await supabase
+            .from("vehicles")
+            .update({
+              main_image_url: mainImageUrl,
+              thumbnail_url: thumbnailUrl,
+            })
+            .eq("id", data.id);
+
+          if (updateError) {
+            console.error(
+              "Error updating vehicle with image URLs:",
+              updateError
+            );
+            // Don't throw error here, vehicle was created successfully
+          } else {
+            data.main_image_url = mainImageUrl;
+            data.thumbnail_url = thumbnailUrl;
+          }
+        } catch (imageError) {
+          console.error("Error uploading image:", imageError);
+          // Don't throw error here, vehicle was created successfully
+        }
+      }
+
       console.log("Vehicle added successfully:", data);
       return data;
     } catch (error) {
@@ -115,7 +147,7 @@ export const vehicleService = {
   },
 
   // Update an existing vehicle
-  async updateVehicle(vehicleId, vehicleData) {
+  async updateVehicle(vehicleId, vehicleData, imageFile = null) {
     try {
       const {
         data: { session },
@@ -164,6 +196,39 @@ export const vehicleService = {
         throw error;
       }
 
+      // Upload new image if provided
+      if (imageFile) {
+        try {
+          const { mainImageUrl, thumbnailUrl } =
+            await imageService.uploadVehicleImage(
+              imageFile,
+              user.id,
+              vehicleId
+            );
+
+          // Update vehicle with new image URLs
+          const { error: updateError } = await supabase
+            .from("vehicles")
+            .update({
+              main_image_url: mainImageUrl,
+              thumbnail_url: thumbnailUrl,
+            })
+            .eq("id", vehicleId);
+
+          if (updateError) {
+            console.error(
+              "Error updating vehicle with image URLs:",
+              updateError
+            );
+          } else {
+            data.main_image_url = mainImageUrl;
+            data.thumbnail_url = thumbnailUrl;
+          }
+        } catch (imageError) {
+          console.error("Error uploading image:", imageError);
+        }
+      }
+
       return data;
     } catch (error) {
       console.error("Error in updateVehicle:", error);
@@ -184,6 +249,14 @@ export const vehicleService = {
       }
 
       const user = session.user;
+
+      // Delete associated images first
+      try {
+        await imageService.deleteImage(user.id, vehicleId);
+      } catch (imageError) {
+        console.error("Error deleting vehicle images:", imageError);
+        // Continue with vehicle deletion even if image deletion fails
+      }
 
       const { error } = await supabase
         .from("vehicles")
