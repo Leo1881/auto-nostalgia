@@ -18,6 +18,12 @@ function SignUpForm({ onBack }) {
     phoneNumber: "",
     location: "",
     contactMethod: "",
+    // Additional profile fields
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "South Africa",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -67,6 +73,12 @@ function SignUpForm({ onBack }) {
       phoneNumber: formData.phoneNumber,
       location: formData.location,
       contactMethod: formData.contactMethod,
+      // Additional profile fields
+      address: formData.address,
+      city: formData.city,
+      state: formData.state,
+      zipCode: formData.zipCode,
+      country: formData.country,
     });
 
     if (result.error) {
@@ -390,6 +402,98 @@ function SignUpForm({ onBack }) {
                     />
                   </div>
 
+                  {/* Conditional Profile Fields - Customer */}
+                  {formData.role === "customer" && (
+                    <>
+                      <div>
+                        <input
+                          type="tel"
+                          name="phoneNumber"
+                          value={formData.phoneNumber}
+                          onChange={handleInputChange}
+                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                          placeholder="Phone Number (Optional)"
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div>
+                        <input
+                          type="text"
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                          placeholder="Street Address (Optional)"
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <input
+                            type="text"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleInputChange}
+                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            placeholder="City (Optional)"
+                            disabled={loading}
+                          />
+                        </div>
+
+                        <div>
+                          <input
+                            type="text"
+                            name="state"
+                            value={formData.state}
+                            onChange={handleInputChange}
+                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            placeholder="State/Province (Optional)"
+                            disabled={loading}
+                          />
+                        </div>
+
+                        <div>
+                          <input
+                            type="text"
+                            name="zipCode"
+                            value={formData.zipCode}
+                            onChange={handleInputChange}
+                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            placeholder="Postal Code (Optional)"
+                            disabled={loading}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-4">
+                        <CustomSelect
+                          value={formData.country}
+                          onChange={(value) =>
+                            handleInputChange({
+                              target: { name: "country", value },
+                            })
+                          }
+                          options={[
+                            { value: "South Africa", label: "South Africa" },
+                            { value: "Australia", label: "Australia" },
+                            { value: "New Zealand", label: "New Zealand" },
+                            { value: "United States", label: "United States" },
+                            { value: "Canada", label: "Canada" },
+                            {
+                              value: "United Kingdom",
+                              label: "United Kingdom",
+                            },
+                            { value: "Other", label: "Other" },
+                          ]}
+                          placeholder="Country"
+                          disabled={loading}
+                        />
+                      </div>
+                    </>
+                  )}
+
                   {/* Conditional Assessor Fields */}
                   {formData.role === "assessor" && (
                     <>
@@ -402,6 +506,85 @@ function SignUpForm({ onBack }) {
                           className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
                           placeholder="Phone Number"
                           required
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div>
+                        <input
+                          type="text"
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200 mb-4"
+                          placeholder="Street Address"
+                          required
+                          disabled={loading}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <input
+                            type="text"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleInputChange}
+                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            placeholder="City"
+                            required
+                            disabled={loading}
+                          />
+                        </div>
+
+                        <div>
+                          <input
+                            type="text"
+                            name="state"
+                            value={formData.state}
+                            onChange={handleInputChange}
+                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            placeholder="State/Province"
+                            required
+                            disabled={loading}
+                          />
+                        </div>
+
+                        <div>
+                          <input
+                            type="text"
+                            name="zipCode"
+                            value={formData.zipCode}
+                            onChange={handleInputChange}
+                            className="w-full h-10 rounded-3xl font-quicksand font-medium text-sm border-2 border-[#333333ff] outline-none px-6 bg-white text-[#333333ff] transition-all duration-200"
+                            placeholder="Postal Code"
+                            required
+                            disabled={loading}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-4">
+                        <CustomSelect
+                          value={formData.country}
+                          onChange={(value) =>
+                            handleInputChange({
+                              target: { name: "country", value },
+                            })
+                          }
+                          options={[
+                            { value: "South Africa", label: "South Africa" },
+                            { value: "Australia", label: "Australia" },
+                            { value: "New Zealand", label: "New Zealand" },
+                            { value: "United States", label: "United States" },
+                            { value: "Canada", label: "Canada" },
+                            {
+                              value: "United Kingdom",
+                              label: "United Kingdom",
+                            },
+                            { value: "Other", label: "Other" },
+                          ]}
+                          placeholder="Country"
                           disabled={loading}
                         />
                       </div>
