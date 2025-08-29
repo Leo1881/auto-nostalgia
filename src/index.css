@@ -161,21 +161,6 @@ html {
   padding: 0 !important;
 }
 
-/* Nuclear option - remove ALL padding from everything inside vehicle cards */
-.vehicle-card,
-.vehicle-card div,
-.vehicle-card span,
-.vehicle-card p,
-.vehicle-card h3,
-.vehicle-card h4,
-.vehicle-card button {
-  padding: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
 /* Specifically target vehicle header div */
 .vehicle-card .flex.justify-between.items-start.mb-6 {
   padding-left: 0 !important;
@@ -223,6 +208,113 @@ html {
 .vehicle-card .vehicle-divider.pt-4.pb-4.mt-4.mb-4.border-t {
   margin: 16px 0 !important;
   border-top-width: 2px !important;
+}
+
+/* Force smaller font sizes for vehicle card data */
+.vehicle-card .text-sm.font-bold {
+  font-size: 0.75rem !important;
+  line-height: 1rem !important;
+}
+
+.vehicle-card .text-xs.font-bold {
+  font-size: 0.625rem !important;
+  line-height: 0.875rem !important;
+}
+
+.vehicle-card .text-xs.font-medium {
+  font-size: 0.625rem !important;
+  line-height: 0.875rem !important;
+}
+
+.vehicle-card .text-xs.font-semibold {
+  font-size: 0.625rem !important;
+  line-height: 0.875rem !important;
+}
+
+/* Force smaller font sizes for modifications, service history, and notes text */
+.vehicle-card .text-xs.text-yellow-800,
+.vehicle-card .text-xs.text-indigo-800,
+.vehicle-card .text-xs.text-teal-800 {
+  font-size: 0.625rem !important;
+  line-height: 0.875rem !important;
+}
+
+/* Target the dark mode versions too */
+.vehicle-card .text-xs.text-yellow-200,
+.vehicle-card .text-xs.text-indigo-200,
+.vehicle-card .text-xs.text-teal-200 {
+  font-size: 0.625rem !important;
+  line-height: 0.875rem !important;
+}
+
+/* Force padding on vehicle card buttons */
+.vehicle-card button {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  border: none !important;
+}
+
+/* More specific targeting for vehicle card buttons */
+.vehicle-card .flex.space-x-3 button {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  border: none !important;
+}
+
+/* Force padding only on vehicle details content (not buttons) */
+.vehicle-card .grid.grid-cols-2.gap-4.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+/* Force padding on additional info sections but exclude button container */
+.vehicle-card .space-y-3:not(.flex) {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+.vehicle-card .vehicle-divider {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+/* Remove padding from additional information content */
+.vehicle-card .space-y-3 .bg-yellow-50,
+.vehicle-card .space-y-3 .bg-indigo-50,
+.vehicle-card .space-y-3 .bg-teal-50 {
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Force remove padding from p-3 class in additional information */
+.vehicle-card .space-y-3 .p-3 {
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Target specific additional info boxes */
+.vehicle-card .bg-yellow-50.dark\\:bg-yellow-900\\/20.rounded-lg.p-3,
+.vehicle-card .bg-indigo-50.dark\\:bg-indigo-900\\/20.rounded-lg.p-3,
+.vehicle-card .bg-teal-50.dark\\:bg-teal-900\\/20.rounded-lg.p-3 {
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Force padding on vehicle details heading */
+.vehicle-card h4.text-xs.font-bold.text-gray-900.dark\\:text-white.mb-3 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
 /* Allow margins and padding on dashboard content */

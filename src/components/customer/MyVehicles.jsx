@@ -238,76 +238,82 @@ function MyVehicles() {
                 padding: "0px",
               }}
             >
-              {/* Vehicle Header */}
+              {/* Vehicle Details Card */}
               <div
-                className="flex justify-between items-center mb-6"
-                style={{
-                  padding: "0px",
-                  paddingLeft: "0px",
-                  paddingRight: "0px",
-                  paddingTop: "0px",
-                  paddingBottom: "0px",
-                  backgroundColor: "#1f2937",
-                  marginTop: "0px",
-                }}
+                className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-4"
+                style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
               >
-                <div className="flex-1">
-                  <h3
-                    className="text-xl font-bold mb-1 group-hover:text-primary-red transition-colors duration-200"
-                    style={{ color: "white" }}
-                  >
-                    {vehicle.year} {vehicle.make} {vehicle.model}
-                  </h3>
-                  {vehicle.variant && (
-                    <p
-                      className="text-sm font-medium"
-                      style={{ color: "white" }}
-                    >
-                      {vehicle.variant}
-                    </p>
-                  )}
-                </div>
+                {/* Vehicle Header */}
                 <div
-                  className="w-16 h-16 bg-gray-400 rounded-lg flex items-center justify-center"
+                  className="flex justify-between items-center mb-6"
                   style={{
-                    backgroundColor: "#6b7280",
-                    minWidth: "64px",
-                    minHeight: "64px",
-                    marginRight: "32px",
+                    padding: "0px",
+                    paddingLeft: "0px",
+                    paddingRight: "0px",
+                    paddingTop: "0px",
+                    paddingBottom: "0px",
+                    backgroundColor: "#1f2937",
+                    marginTop: "0px",
                   }}
                 >
-                  <svg
-                    className="w-8 h-8 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  <div className="flex-1">
+                    <h3
+                      className="text-xl font-bold mb-1 group-hover:text-primary-red transition-colors duration-200"
+                      style={{ color: "white" }}
+                    >
+                      {vehicle.year} {vehicle.make} {vehicle.model}
+                    </h3>
+                    {vehicle.variant && (
+                      <p
+                        className="text-sm font-medium"
+                        style={{ color: "white" }}
+                      >
+                        {vehicle.variant}
+                      </p>
+                    )}
+                  </div>
+                  <div
+                    className="w-16 h-16 bg-gray-400 rounded-lg flex items-center justify-center"
+                    style={{
+                      backgroundColor: "#6b7280",
+                      minWidth: "64px",
+                      minHeight: "64px",
+                      marginRight: "32px",
+                    }}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
                 </div>
-              </div>
 
-              {/* Vehicle Details */}
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <h4 className="text-xs font-bold text-gray-900 dark:text-white mb-3">
+                  Vehicle Details
+                </h4>
+                <div className="grid grid-cols-2 gap-4 px-4">
                   <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl">
                     <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
                       Registration
                     </p>
-                    <p className="font-bold text-blue-900 dark:text-blue-100">
+                    <p className="text-sm font-bold text-blue-900 dark:text-blue-100">
                       {vehicle.registration_number}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl">
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl text-right">
                     <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">
                       Color
                     </p>
-                    <p className="font-bold text-green-900 dark:text-green-100">
+                    <p className="text-sm font-bold text-green-900 dark:text-green-100">
                       {vehicle.color}
                     </p>
                   </div>
@@ -315,15 +321,15 @@ function MyVehicles() {
                     <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">
                       Mileage
                     </p>
-                    <p className="font-bold text-purple-900 dark:text-purple-100">
+                    <p className="text-sm font-bold text-purple-900 dark:text-purple-100">
                       {vehicle.mileage?.toLocaleString()} km
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl">
+                  <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl text-right">
                     <p className="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-wide mb-1">
                       Body Type
                     </p>
-                    <p className="font-bold text-orange-900 dark:text-orange-100">
+                    <p className="text-sm font-bold text-orange-900 dark:text-orange-100">
                       {vehicle.body_type
                         ? vehicle.body_type.charAt(0).toUpperCase() +
                           vehicle.body_type.slice(1)
@@ -334,15 +340,15 @@ function MyVehicles() {
                     <p className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wide mb-1">
                       Added
                     </p>
-                    <p className="font-bold text-red-900 dark:text-red-100">
+                    <p className="text-sm font-bold text-red-900 dark:text-red-100">
                       {formatDate(vehicle.created_at)}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl">
+                  <div className="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl text-right">
                     <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide mb-1">
                       VIN
                     </p>
-                    <p className="font-bold text-indigo-900 dark:text-indigo-100">
+                    <p className="text-sm font-bold text-indigo-900 dark:text-indigo-100">
                       {vehicle.vin}
                     </p>
                   </div>
@@ -353,33 +359,32 @@ function MyVehicles() {
                   vehicle.transmission ||
                   vehicle.fuel_type) && (
                   <div
-                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4 border-t border-gray-200 dark:border-gray-700"
+                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4"
                     style={{
-                      borderTopWidth: "2px",
                       marginTop: "16px",
                       marginBottom: "16px",
                     }}
                   >
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">
+                    <h4 className="text-xs font-bold text-gray-900 dark:text-white mb-3">
                       Technical Details
                     </h4>
                     <div className="grid grid-cols-1 gap-3">
                       {vehicle.engine_size && (
                         <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
                             Engine
                           </span>
-                          <span className="text-sm font-bold text-gray-900 dark:text-white">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white">
                             {vehicle.engine_size}
                           </span>
                         </div>
                       )}
                       {vehicle.transmission && (
                         <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
                             Transmission
                           </span>
-                          <span className="text-sm font-bold text-gray-900 dark:text-white">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white">
                             {vehicle.transmission.charAt(0).toUpperCase() +
                               vehicle.transmission.slice(1)}
                           </span>
@@ -387,10 +392,10 @@ function MyVehicles() {
                       )}
                       {vehicle.fuel_type && (
                         <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
                             Fuel Type
                           </span>
-                          <span className="text-sm font-bold text-gray-900 dark:text-white">
+                          <span className="text-xs font-bold text-gray-900 dark:text-white">
                             {vehicle.fuel_type.charAt(0).toUpperCase() +
                               vehicle.fuel_type.slice(1)}
                           </span>
@@ -405,14 +410,13 @@ function MyVehicles() {
                   vehicle.service_history ||
                   vehicle.description) && (
                   <div
-                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4 border-t border-gray-200 dark:border-gray-700"
+                    className="vehicle-divider pt-4 pb-4 mt-4 mb-4"
                     style={{
-                      borderTopWidth: "2px",
                       marginTop: "16px",
                       marginBottom: "16px",
                     }}
                   >
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">
+                    <h4 className="text-xs font-bold text-gray-900 dark:text-white mb-3">
                       Additional Information
                     </h4>
                     <div className="space-y-3">
@@ -421,7 +425,7 @@ function MyVehicles() {
                           <p className="text-xs font-semibold text-yellow-700 dark:text-yellow-300 mb-1">
                             Modifications
                           </p>
-                          <p className="text-sm text-yellow-800 dark:text-yellow-200 line-clamp-2">
+                          <p className="text-xs text-yellow-800 dark:text-yellow-200 line-clamp-2">
                             {vehicle.modifications}
                           </p>
                         </div>
@@ -431,7 +435,7 @@ function MyVehicles() {
                           <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-1">
                             Service History
                           </p>
-                          <p className="text-sm text-indigo-800 dark:text-indigo-200 line-clamp-2">
+                          <p className="text-xs text-indigo-800 dark:text-indigo-200 line-clamp-2">
                             {vehicle.service_history}
                           </p>
                         </div>
@@ -441,7 +445,7 @@ function MyVehicles() {
                           <p className="text-xs font-semibold text-teal-700 dark:text-teal-300 mb-1">
                             Notes
                           </p>
-                          <p className="text-sm text-teal-800 dark:text-teal-200 line-clamp-2">
+                          <p className="text-xs text-teal-800 dark:text-teal-200 line-clamp-2">
                             {vehicle.description}
                           </p>
                         </div>
@@ -449,42 +453,42 @@ function MyVehicles() {
                     </div>
                   </div>
                 )}
-              </div>
 
-              {/* Action Buttons */}
-              <div className="mt-6 flex space-x-3">
-                <button className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
-                  </svg>
-                  Edit
-                </button>
-                <button className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
-                  Delete
-                </button>
+                {/* Action Buttons */}
+                <div className="mt-3 flex space-x-3">
+                  <button className="flex-1 px-4 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center border-0">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    Edit
+                  </button>
+                  <button className="flex-1 px-4 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center border-0">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}
