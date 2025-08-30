@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
+import CompleteAssessmentModal from "./CompleteAssessmentModal";
 
 function MySchedule() {
   const [isLoading, setIsLoading] = useState(true);
@@ -8,6 +9,8 @@ function MySchedule() {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -119,6 +122,17 @@ function MySchedule() {
       default:
         return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const handleCompleteAssessment = (assessment) => {
+    setSelectedAssessment(assessment);
+    setIsCompletionModalOpen(true);
+  };
+
+  const handleCompletionSuccess = async () => {
+    // Refresh the schedule after successful completion
+    await loadScheduledAssessments();
+    setSelectedAssessment(null);
   };
 
   const filteredAssessments = scheduledAssessments.filter((assessment) => {
@@ -385,23 +399,61 @@ function MySchedule() {
                       </div>
                     </div>
 
-                    {assessment.assessment_notes && (
-                      <div className="mt-3">
-                        <p className="text-sm font-medium text-gray-700">
-                          Notes
-                        </p>
-                        <p className="text-sm text-gray-900">
-                          {assessment.assessment_notes}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+                                         {assessment.assessment_notes && (
+                       <div className="mt-3">
+                         <p className="text-sm font-medium text-gray-700">
+                           Notes
+                         </p>
+                         <p className="text-sm text-gray-900">
+                           {assessment.assessment_notes}
+                         </p>
+                       </div>
+                     )}
+
+                     {/* Action Buttons */}
+                     <div className="mt-4 pt-3 border-t border-gray-200">
+                       {assessment.status === "approved" && (
+                         <button
+                           onClick={() => handleCompleteAssessment(assessment)}
+                           className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                         >
+                           Complete Assessment
+                         </button>
+                       )}
+                       {assessment.status === "completed" && assessment.vehicle_value && (
+                         <div className="bg-blue-50 rounded-lg p-3">
+                           <p className="text-sm font-medium text-blue-800">
+                             Assessment Completed
+                           </p>
+                           <p className="text-sm text-blue-700">
+                             Vehicle Value: R{assessment.vehicle_value.toLocaleString()}
+                           </p>
+                           {assessment.completion_date && (
+                             <p className="text-sm text-blue-700">
+                               Completed: {new Date(assessment.completion_date).toLocaleDateString()}
+                             </p>
+                           )}
+                         </div>
+                       )}
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             ))}
           </div>
         )}
       </div>
+
+      {/* Complete Assessment Modal */}
+      <CompleteAssessmentModal
+        isOpen={isCompletionModalOpen}
+        onClose={() => {
+          setIsCompletionModalOpen(false);
+          setSelectedAssessment(null);
+        }}
+        assessment={selectedAssessment}
+        onCompletionSuccess={handleCompletionSuccess}
+      />
     </div>
   );
 }

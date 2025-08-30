@@ -234,13 +234,42 @@ function AssessmentDetailModal({
             </div>
           )}
 
-          {/* Assessment Notes (if completed) */}
-          {assessment.assessment_notes && (
+          {/* Assessment Results (if completed) */}
+          {assessment.status === "completed" && (
             <div className="bg-blue-50 rounded-lg p-4">
               <h3 className="text-lg font-semibold text-blue-900 mb-3">
                 Assessment Results
               </h3>
-              <p className="text-blue-900">{assessment.assessment_notes}</p>
+              <div className="space-y-3">
+                {assessment.vehicle_value && (
+                  <div>
+                    <p className="text-sm font-medium text-blue-800">
+                      Estimated Vehicle Value
+                    </p>
+                    <p className="text-lg font-bold text-blue-900">
+                      R{assessment.vehicle_value.toLocaleString()}
+                    </p>
+                  </div>
+                )}
+                {assessment.completion_date && (
+                  <div>
+                    <p className="text-sm font-medium text-blue-800">
+                      Assessment Completed
+                    </p>
+                    <p className="text-blue-900">
+                      {new Date(assessment.completion_date).toLocaleDateString()}
+                    </p>
+                  </div>
+                )}
+                {assessment.assessment_notes && (
+                  <div>
+                    <p className="text-sm font-medium text-blue-800">
+                      Assessment Notes
+                    </p>
+                    <p className="text-blue-900">{assessment.assessment_notes}</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
