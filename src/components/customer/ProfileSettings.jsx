@@ -306,7 +306,7 @@ function ProfileSettings() {
                   />
                 </div>
 
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Province
                   </label>
@@ -329,6 +329,7 @@ function ProfileSettings() {
                       { value: "Western Cape", label: "Western Cape" },
                     ]}
                     placeholder="Select your province"
+                    className="w-full"
                   />
                 </div>
 

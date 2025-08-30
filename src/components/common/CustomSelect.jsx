@@ -62,10 +62,16 @@ const CustomSelect = ({
         }}
       >
         <span
-          className={selectedOption ? "text-gray-900" : "text-gray-500"}
+          className={`${
+            selectedOption ? "text-gray-900" : "text-gray-500"
+          } truncate`}
           style={{
             fontWeight: selectedOption ? "500" : "400",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
+          title={selectedOption ? selectedOption.label : placeholder}
         >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
@@ -92,7 +98,7 @@ const CustomSelect = ({
         </svg>
       </div>
       <div
-        className={`absolute z-10 w-full bg-white shadow-xl max-h-60 transition-all duration-300 ease-in-out ${
+        className={`absolute z-10 w-full bg-white shadow-xl max-h-40 overflow-y-auto transition-all duration-300 ease-in-out ${
           isOpen
             ? "opacity-100 transform translate-y-0 scale-y-100"
             : "opacity-0 transform translate-y-0 scale-y-0 pointer-events-none"
@@ -102,6 +108,7 @@ const CustomSelect = ({
           boxShadow:
             "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
           width: "100%",
+          maxHeight: "160px",
           left: "0",
           top: "100%",
           transformOrigin: "top",
@@ -131,13 +138,17 @@ const CustomSelect = ({
             onClick={() => handleSelect(option)}
           >
             <span
-              className={`font-medium ${
+              className={`font-medium break-words ${
                 selectedOption?.value === option.value
                   ? "text-red-600"
                   : "text-gray-700"
               }`}
               style={{
                 fontWeight: "500",
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+                whiteSpace: "normal",
+                lineHeight: "1.4",
               }}
             >
               {option.label}

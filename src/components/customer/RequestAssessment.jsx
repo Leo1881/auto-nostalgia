@@ -282,7 +282,7 @@ function RequestAssessment() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Vehicle Selection */}
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select Vehicle *
               </label>
@@ -294,11 +294,12 @@ function RequestAssessment() {
                 value={formData.vehicleId}
                 onChange={(value) => handleSelectChange("vehicleId", value)}
                 placeholder="Choose a vehicle"
+                className="w-full"
               />
             </div>
 
             {/* Assessment Type */}
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Assessment Type *
               </label>
@@ -309,6 +310,7 @@ function RequestAssessment() {
                   handleSelectChange("assessmentType", value)
                 }
                 placeholder="Select assessment type"
+                className="w-full"
               />
             </div>
 
@@ -327,7 +329,7 @@ function RequestAssessment() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
                 />
               </div>
-              <div>
+              <div className="relative">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Preferred Time
                 </label>
@@ -338,12 +340,13 @@ function RequestAssessment() {
                     handleSelectChange("preferredTime", value)
                   }
                   placeholder="Select time"
+                  className="w-full"
                 />
               </div>
             </div>
 
             {/* Urgency Level */}
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Urgency Level
               </label>
@@ -352,6 +355,7 @@ function RequestAssessment() {
                 value={formData.urgency}
                 onChange={(value) => handleSelectChange("urgency", value)}
                 placeholder="Select urgency"
+                className="w-full"
               />
             </div>
 

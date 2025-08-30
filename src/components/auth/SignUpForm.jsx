@@ -443,7 +443,7 @@ function SignUpForm({ onBack }) {
                           />
                         </div>
 
-                        <div>
+                        <div className="relative">
                           <CustomSelect
                             value={formData.state}
                             onChange={(value) =>
@@ -470,6 +470,7 @@ function SignUpForm({ onBack }) {
                             ]}
                             placeholder="Province (Optional)"
                             disabled={loading}
+                            className="w-full"
                           />
                         </div>
 
@@ -486,7 +487,7 @@ function SignUpForm({ onBack }) {
                         </div>
                       </div>
 
-                      <div className="mt-4">
+                      <div className="mt-4 relative">
                         <CustomSelect
                           value={formData.country}
                           onChange={(value) =>
@@ -508,6 +509,7 @@ function SignUpForm({ onBack }) {
                           ]}
                           placeholder="Country"
                           disabled={loading}
+                          className="w-full"
                         />
                       </div>
                     </>
@@ -556,7 +558,7 @@ function SignUpForm({ onBack }) {
                           />
                         </div>
 
-                        <div>
+                        <div className="relative">
                           <CustomSelect
                             value={formData.state}
                             onChange={(value) =>
@@ -584,6 +586,7 @@ function SignUpForm({ onBack }) {
                             placeholder="Province"
                             required
                             disabled={loading}
+                            className="w-full"
                           />
                         </div>
 
@@ -601,7 +604,7 @@ function SignUpForm({ onBack }) {
                         </div>
                       </div>
 
-                      <div className="mt-4">
+                      <div className="mt-4 relative">
                         <CustomSelect
                           value={formData.country}
                           onChange={(value) =>
@@ -623,10 +626,11 @@ function SignUpForm({ onBack }) {
                           ]}
                           placeholder="Country"
                           disabled={loading}
+                          className="w-full"
                         />
                       </div>
 
-                      <div>
+                      <div className="relative">
                         <CustomSelect
                           value={formData.location}
                           onChange={(value) =>
@@ -647,10 +651,11 @@ function SignUpForm({ onBack }) {
                           ]}
                           placeholder="Location"
                           disabled={loading}
+                          className="w-full"
                         />
                       </div>
 
-                      <div>
+                      <div className="relative">
                         <CustomSelect
                           value={formData.contactMethod}
                           onChange={(value) =>
@@ -665,6 +670,7 @@ function SignUpForm({ onBack }) {
                           ]}
                           placeholder="Preferred Contact Method"
                           disabled={loading}
+                          className="w-full"
                         />
                       </div>
 

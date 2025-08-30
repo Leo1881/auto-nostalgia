@@ -131,10 +131,11 @@ function AssessmentRequests() {
         })) || [];
 
       // Filter by assessor's province
-      const assessorProvince = profile?.province || profile?.location;
+      const assessorProvince = profile?.province || profile?.state;
       const requestsInProvince =
         combinedData?.filter((request) => {
-          const customerProvince = request.profiles?.province;
+          const customerProvince =
+            request.profiles?.province || request.profiles?.state;
           return !assessorProvince || customerProvince === assessorProvince;
         }) || [];
 
@@ -356,7 +357,7 @@ function AssessmentRequests() {
       {/* Filters and Sorting */}
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Status
             </label>
@@ -365,9 +366,10 @@ function AssessmentRequests() {
               value={selectedStatus}
               onChange={setSelectedStatus}
               placeholder="Filter by status"
+              className="w-full"
             />
           </div>
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Assessment Type
             </label>
@@ -376,9 +378,10 @@ function AssessmentRequests() {
               value={selectedType}
               onChange={setSelectedType}
               placeholder="Filter by type"
+              className="w-full"
             />
           </div>
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Priority
             </label>
@@ -387,9 +390,10 @@ function AssessmentRequests() {
               value={selectedUrgency}
               onChange={setSelectedUrgency}
               placeholder="Filter by priority"
+              className="w-full"
             />
           </div>
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Sort By
             </label>
@@ -398,6 +402,7 @@ function AssessmentRequests() {
               value={sortBy}
               onChange={setSortBy}
               placeholder="Sort by"
+              className="w-full"
             />
           </div>
           <div>
