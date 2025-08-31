@@ -93,7 +93,9 @@ function DashboardHome({ onSectionChange }) {
 
       // Get vehicle data for each assessment
       const vehicleIds = [
-        ...new Set(assessmentsData?.map((assessment) => assessment.vehicle_id) || []),
+        ...new Set(
+          assessmentsData?.map((assessment) => assessment.vehicle_id) || []
+        ),
       ];
 
       const { data: vehiclesData, error: vehiclesError } = await supabase
@@ -140,26 +142,29 @@ function DashboardHome({ onSectionChange }) {
         assessorsMap[assessor.id] = assessor;
       });
 
-      const combinedData = assessmentsData?.map((assessment) => ({
-        ...assessment,
-        vehicles: vehiclesMap[assessment.vehicle_id],
-        assessor: assessorsMap[assessment.assigned_assessor_id],
-      })) || [];
+      const combinedData =
+        assessmentsData?.map((assessment) => ({
+          ...assessment,
+          vehicles: vehiclesMap[assessment.vehicle_id],
+          assessor: assessorsMap[assessment.assigned_assessor_id],
+        })) || [];
 
       // Transform the data for display
-      return combinedData?.map((assessment) => ({
-        id: assessment.id,
-        vehicle: `${assessment.vehicles?.year} ${assessment.vehicles?.make} ${assessment.vehicles?.model} (${assessment.vehicles?.registration_number})`,
-        status:
-          assessment.status.charAt(0).toUpperCase() +
-          assessment.status.slice(1),
-        date: assessment.created_at,
-        assessmentType: assessment.assessment_type
-          .replace(/_/g, " ")
-          .replace(/\b\w/g, (l) => l.toUpperCase()),
-        urgency: assessment.urgency,
-        assessor: assessment.assessor, // Include assessor data
-      })) || [];
+      return (
+        combinedData?.map((assessment) => ({
+          id: assessment.id,
+          vehicle: `${assessment.vehicles?.year} ${assessment.vehicles?.make} ${assessment.vehicles?.model} (${assessment.vehicles?.registration_number})`,
+          status:
+            assessment.status.charAt(0).toUpperCase() +
+            assessment.status.slice(1),
+          date: assessment.created_at,
+          assessmentType: assessment.assessment_type
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase()),
+          urgency: assessment.urgency,
+          assessor: assessment.assessor, // Include assessor data
+        })) || []
+      );
     } catch (error) {
       console.error("Error loading recent assessments:", error);
       return [];
@@ -406,9 +411,7 @@ function DashboardHome({ onSectionChange }) {
             className="bg-red-600 rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-lg transition-all duration-200 text-left w-full h-24 flex items-center"
           >
             <div className="flex items-center pl-2 sm:pl-4 w-full h-full">
-              <div
-                className={`p-2 sm:p-3 rounded-lg text-white ${action.color}`}
-              >
+              <div className={`rounded-lg text-white ${action.color}`}>
                 {action.icon}
               </div>
               <div className="ml-3 sm:ml-4 flex-1">
@@ -466,21 +469,35 @@ function DashboardHome({ onSectionChange }) {
                   <p className="text-xs text-gray-600 mt-1">
                     {assessment.assessmentType}
                   </p>
-                  
+
                   {/* Assessor Information for Approved Assessments */}
                   {assessment.status === "Approved" && assessment.assessor && (
                     <div className="mt-2 p-2 bg-green-50 rounded border border-green-200">
                       <div className="flex items-center space-x-1 mb-1">
-                        <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        <svg
+                          className="w-3 h-3 text-green-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
                         </svg>
-                        <span className="text-xs font-medium text-green-800">Assigned Assessor</span>
+                        <span className="text-xs font-medium text-green-800">
+                          Assigned Assessor
+                        </span>
                       </div>
                       <p className="text-xs text-gray-700">
-                        <span className="font-medium">Name:</span> {assessment.assessor.full_name}
+                        <span className="font-medium">Name:</span>{" "}
+                        {assessment.assessor.full_name}
                       </p>
                       <p className="text-xs text-gray-700">
-                        <span className="font-medium">Phone:</span> {assessment.assessor.phone || "Not provided"}
+                        <span className="font-medium">Phone:</span>{" "}
+                        {assessment.assessor.phone || "Not provided"}
                       </p>
                     </div>
                   )}

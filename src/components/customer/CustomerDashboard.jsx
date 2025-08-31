@@ -51,7 +51,7 @@ function CustomerDashboard() {
               <button
                 onClick={handleSignOut}
                 disabled={loading}
-                className="px-3 py-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
               >
                 {loading ? LOADING_TEXT.SIGNING_OUT : "Sign Out"}
               </button>
