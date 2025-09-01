@@ -104,14 +104,14 @@ function AssessorSidebar({ activeSection, onSectionChange }) {
   ];
 
   return (
-    <aside className="w-full lg:w-64 bg-red-600 shadow-sm">
+    <aside className="w-full lg:w-64 lg:min-h-screen bg-red-600 shadow-sm">
       <nav className="p-0">
         <ul className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-0 overflow-x-auto lg:overflow-x-visible">
           {menuItems.map((item) => (
             <li key={item.id} className="flex-shrink-0 lg:flex-shrink h-12">
               <button
                 onClick={() => onSectionChange(item.id)}
-                className={`flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-full transition-all duration-200 text-left whitespace-nowrap no-underline ${
+                className={`flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-full w-full transition-all duration-200 text-left whitespace-nowrap no-underline ${
                   activeSection === item.id
                     ? "bg-red-700 text-white"
                     : "bg-red-600 text-white hover:bg-red-700"
