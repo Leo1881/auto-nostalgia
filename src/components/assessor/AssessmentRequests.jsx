@@ -22,10 +22,8 @@ function AssessmentRequests() {
   const { user, profile } = useAuth();
 
   const statusOptions = [
-    { value: "all", label: "All Statuses" },
+    { value: "all", label: "All Pending Requests" },
     { value: "pending", label: "Pending" },
-    { value: "approved", label: "Approved" },
-    { value: "rejected", label: "Rejected" },
   ];
 
   const typeOptions = [
@@ -130,13 +128,17 @@ function AssessmentRequests() {
           vehicles: vehiclesMap[request.vehicle_id],
         })) || [];
 
-      // Filter by assessor's province
+      // Filter by assessor's province and only show pending requests
       const assessorProvince = profile?.province || profile?.state;
       const requestsInProvince =
         combinedData?.filter((request) => {
           const customerProvince =
             request.profiles?.province || request.profiles?.state;
-          return !assessorProvince || customerProvince === assessorProvince;
+          // Only show pending requests that match the assessor's province
+          return (
+            request.status === "pending" &&
+            (!assessorProvince || customerProvince === assessorProvince)
+          );
         }) || [];
 
       setRequests(requestsInProvince);
