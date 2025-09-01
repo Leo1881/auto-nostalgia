@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { vehicleService } from "../../lib/vehicleService";
 import EditVehicleModal from "./EditVehicleModal";
 import DeleteVehicleModal from "./DeleteVehicleModal";
+import ImageGallery from "../common/ImageGallery";
 
 function MyVehicles() {
   const [vehicles, setVehicles] = useState([]);
@@ -35,6 +36,30 @@ function MyVehicles() {
   };
 
   console.log("📊 MyVehicles render:", { vehicles, loading, error });
+
+  // Debug image data for each vehicle
+  console.log("🚗 All vehicles:", vehicles);
+  vehicles.forEach((vehicle, index) => {
+    console.log(`🚗 Vehicle ${index + 1} FULL DATA:`, {
+      id: vehicle.id,
+      registration: vehicle.registration_number,
+      make: vehicle.make,
+      model: vehicle.model,
+      year: vehicle.year,
+      image_1_url: vehicle.image_1_url,
+      image_2_url: vehicle.image_2_url,
+      image_3_url: vehicle.image_3_url,
+      image_4_url: vehicle.image_4_url,
+      image_5_url: vehicle.image_5_url,
+      image_6_url: vehicle.image_6_url,
+      thumbnail_1_url: vehicle.thumbnail_1_url,
+      thumbnail_2_url: vehicle.thumbnail_2_url,
+      thumbnail_3_url: vehicle.thumbnail_3_url,
+      thumbnail_4_url: vehicle.thumbnail_4_url,
+      thumbnail_5_url: vehicle.thumbnail_5_url,
+      thumbnail_6_url: vehicle.thumbnail_6_url,
+    });
+  });
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
@@ -268,44 +293,254 @@ function MyVehicles() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {vehicles.map((vehicle, index) => (
-            <div
-              key={vehicle.id}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 w-full"
-            >
-              {/* Vehicle Details Card */}
-              <div className="p-6 space-y-4">
-                {/* Vehicle Header */}
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-1 text-[#333333ff]">
-                      {vehicle.year} {vehicle.make} {vehicle.model}
-                    </h3>
-                    {vehicle.variant && (
-                      <p className="text-sm font-medium text-[#333333ff]">
-                        {vehicle.variant}
-                      </p>
-                    )}
+          {vehicles.map((vehicle, index) => {
+            console.log(`🎨 Rendering vehicle ${index + 1}:`, {
+              id: vehicle.id,
+              make: vehicle.make,
+              model: vehicle.model,
+              registration: vehicle.registration_number,
+              hasImage: !!vehicle.image_1_url,
+            });
+            return (
+              <div
+                key={vehicle.id}
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 w-full"
+              >
+                {/* Vehicle Details Card */}
+                <div className="p-6 space-y-4">
+                  {/* Vehicle Header */}
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold mb-1 text-[#333333ff]">
+                        {vehicle.year} {vehicle.make} {vehicle.model}
+                      </h3>
+                      {vehicle.variant && (
+                        <p className="text-sm font-medium text-[#333333ff]">
+                          {vehicle.variant}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-16 h-16 rounded-lg overflow-hidden">
+                      {vehicle.image_1_url ? (
+                        <img
+                          src={vehicle.image_1_url}
+                          alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            e.target.nextSibling.style.display = "flex";
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className={`w-full h-full ${
+                          vehicle.image_1_url ? "hidden" : "flex"
+                        } items-center justify-center bg-red-600`}
+                      >
+                        <svg
+                          className="w-8 h-8 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-16 h-16 rounded-lg overflow-hidden">
-                    {vehicle.thumbnail_url ? (
-                      <img
-                        src={vehicle.thumbnail_url}
-                        alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.nextSibling.style.display = "flex";
-                        }}
-                      />
-                    ) : null}
-                    <div
-                      className={`w-full h-full ${
-                        vehicle.thumbnail_url ? "hidden" : "flex"
-                      } items-center justify-center bg-red-600`}
+
+                  <h4 className="text-sm font-bold text-[#333333ff] mb-3">
+                    Vehicle Details
+                  </h4>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                      <span className="text-xs font-medium text-[#333333ff]">
+                        Registration
+                      </span>
+                      <span className="text-xs font-bold text-[#333333ff]">
+                        {vehicle.registration_number}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                      <span className="text-xs font-medium text-[#333333ff]">
+                        Color
+                      </span>
+                      <span className="text-xs font-bold text-[#333333ff]">
+                        {vehicle.color}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                      <span className="text-xs font-medium text-[#333333ff]">
+                        Mileage
+                      </span>
+                      <span className="text-xs font-bold text-[#333333ff]">
+                        {vehicle.mileage?.toLocaleString()} km
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                      <span className="text-xs font-medium text-[#333333ff]">
+                        Body Type
+                      </span>
+                      <span className="text-xs font-bold text-[#333333ff]">
+                        {vehicle.body_type
+                          ? vehicle.body_type.charAt(0).toUpperCase() +
+                            vehicle.body_type.slice(1)
+                          : "Not specified"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                      <span className="text-xs font-medium text-[#333333ff]">
+                        Added
+                      </span>
+                      <span className="text-xs font-bold text-[#333333ff]">
+                        {formatDate(vehicle.created_at)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                      <span className="text-xs font-medium text-[#333333ff]">
+                        VIN
+                      </span>
+                      <span className="text-xs font-bold text-[#333333ff]">
+                        {vehicle.vin}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Vehicle Images */}
+                  <div className="pt-4 mt-4">
+                    {(() => {
+                      const imageUrls = [
+                        vehicle.image_1_url,
+                        vehicle.image_2_url,
+                        vehicle.image_3_url,
+                        vehicle.image_4_url,
+                        vehicle.image_5_url,
+                        vehicle.image_6_url,
+                      ];
+                      const filteredImages = imageUrls.filter(
+                        (url) => url && url.trim() !== ""
+                      );
+                      console.log(
+                        `🔍 Vehicle ${vehicle.make} ${vehicle.model} (${vehicle.registration_number}):`,
+                        {
+                          id: vehicle.id,
+                          rawImageUrls: imageUrls,
+                          filteredImages: filteredImages,
+                          hasImage1: !!vehicle.image_1_url,
+                          image1Url: vehicle.image_1_url,
+                        }
+                      );
+                      return (
+                        <ImageGallery
+                          images={filteredImages}
+                          vehicleId={vehicle.id}
+                          userId={vehicle.user_id}
+                        />
+                      );
+                    })()}
+                  </div>
+
+                  {/* Technical Details */}
+                  {(vehicle.engine_size ||
+                    vehicle.transmission ||
+                    vehicle.fuel_type) && (
+                    <div className="pt-4 mt-4">
+                      <h4 className="text-sm font-bold text-[#333333ff] mb-3">
+                        Technical Details
+                      </h4>
+                      <div className="grid grid-cols-1 gap-3">
+                        {vehicle.engine_size && (
+                          <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                            <span className="text-xs font-medium text-[#333333ff]">
+                              Engine
+                            </span>
+                            <span className="text-xs font-bold text-[#333333ff]">
+                              {vehicle.engine_size}
+                            </span>
+                          </div>
+                        )}
+                        {vehicle.transmission && (
+                          <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                            <span className="text-xs font-medium text-[#333333ff]">
+                              Transmission
+                            </span>
+                            <span className="text-xs font-bold text-[#333333ff]">
+                              {vehicle.transmission.charAt(0).toUpperCase() +
+                                vehicle.transmission.slice(1)}
+                            </span>
+                          </div>
+                        )}
+                        {vehicle.fuel_type && (
+                          <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                            <span className="text-xs font-medium text-[#333333ff]">
+                              Fuel Type
+                            </span>
+                            <span className="text-xs font-bold text-[#333333ff]">
+                              {vehicle.fuel_type.charAt(0).toUpperCase() +
+                                vehicle.fuel_type.slice(1)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Additional Info */}
+                  {(vehicle.modifications ||
+                    vehicle.service_history ||
+                    vehicle.description) && (
+                    <div className="pt-4 pb-4 mb-4">
+                      <h4 className="text-sm font-bold text-[#333333ff] mb-3">
+                        Additional Information
+                      </h4>
+                      <div className="space-y-3">
+                        {vehicle.modifications && (
+                          <div className="bg-gray-50 rounded-lg p-3">
+                            <p className="text-xs font-semibold text-[#333333ff] mb-1">
+                              Modifications
+                            </p>
+                            <p className="text-xs text-[#333333ff] line-clamp-2">
+                              {vehicle.modifications}
+                            </p>
+                          </div>
+                        )}
+                        {vehicle.service_history && (
+                          <div className="bg-gray-50 rounded-lg p-3">
+                            <p className="text-xs font-semibold text-[#333333ff] mb-1">
+                              Service History
+                            </p>
+                            <p className="text-xs text-[#333333ff] line-clamp-2">
+                              {vehicle.service_history}
+                            </p>
+                          </div>
+                        )}
+                        {vehicle.description && (
+                          <div className="bg-gray-50 rounded-lg p-3">
+                            <p className="text-xs font-semibold text-[#333333ff] mb-1">
+                              Notes
+                            </p>
+                            <p className="text-xs text-[#333333ff] line-clamp-2">
+                              {vehicle.description}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="mt-3 flex space-x-3">
+                    <button
+                      onClick={() => handleEditVehicle(vehicle)}
+                      className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center"
                     >
                       <svg
-                        className="w-8 h-8 text-white"
+                        className="w-4 h-4 mr-2"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -314,202 +549,35 @@ function MyVehicles() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                         />
                       </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <h4 className="text-sm font-bold text-[#333333ff] mb-3">
-                  Vehicle Details
-                </h4>
-                <div className="grid grid-cols-1 gap-3">
-                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                    <span className="text-xs font-medium text-[#333333ff]">
-                      Registration
-                    </span>
-                    <span className="text-xs font-bold text-[#333333ff]">
-                      {vehicle.registration_number}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                    <span className="text-xs font-medium text-[#333333ff]">
-                      Color
-                    </span>
-                    <span className="text-xs font-bold text-[#333333ff]">
-                      {vehicle.color}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                    <span className="text-xs font-medium text-[#333333ff]">
-                      Mileage
-                    </span>
-                    <span className="text-xs font-bold text-[#333333ff]">
-                      {vehicle.mileage?.toLocaleString()} km
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                    <span className="text-xs font-medium text-[#333333ff]">
-                      Body Type
-                    </span>
-                    <span className="text-xs font-bold text-[#333333ff]">
-                      {vehicle.body_type
-                        ? vehicle.body_type.charAt(0).toUpperCase() +
-                          vehicle.body_type.slice(1)
-                        : "Not specified"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                    <span className="text-xs font-medium text-[#333333ff]">
-                      Added
-                    </span>
-                    <span className="text-xs font-bold text-[#333333ff]">
-                      {formatDate(vehicle.created_at)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                    <span className="text-xs font-medium text-[#333333ff]">
-                      VIN
-                    </span>
-                    <span className="text-xs font-bold text-[#333333ff]">
-                      {vehicle.vin}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Technical Details */}
-                {(vehicle.engine_size ||
-                  vehicle.transmission ||
-                  vehicle.fuel_type) && (
-                  <div className="pt-4 mt-4">
-                    <h4 className="text-sm font-bold text-[#333333ff] mb-3">
-                      Technical Details
-                    </h4>
-                    <div className="grid grid-cols-1 gap-3">
-                      {vehicle.engine_size && (
-                        <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                          <span className="text-xs font-medium text-[#333333ff]">
-                            Engine
-                          </span>
-                          <span className="text-xs font-bold text-[#333333ff]">
-                            {vehicle.engine_size}
-                          </span>
-                        </div>
-                      )}
-                      {vehicle.transmission && (
-                        <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                          <span className="text-xs font-medium text-[#333333ff]">
-                            Transmission
-                          </span>
-                          <span className="text-xs font-bold text-[#333333ff]">
-                            {vehicle.transmission.charAt(0).toUpperCase() +
-                              vehicle.transmission.slice(1)}
-                          </span>
-                        </div>
-                      )}
-                      {vehicle.fuel_type && (
-                        <div className="flex justify-between items-center bg-gray-50 rounded-lg p-3">
-                          <span className="text-xs font-medium text-[#333333ff]">
-                            Fuel Type
-                          </span>
-                          <span className="text-xs font-bold text-[#333333ff]">
-                            {vehicle.fuel_type.charAt(0).toUpperCase() +
-                              vehicle.fuel_type.slice(1)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Additional Info */}
-                {(vehicle.modifications ||
-                  vehicle.service_history ||
-                  vehicle.description) && (
-                  <div className="pt-4 pb-4 mb-4">
-                    <h4 className="text-sm font-bold text-[#333333ff] mb-3">
-                      Additional Information
-                    </h4>
-                    <div className="space-y-3">
-                      {vehicle.modifications && (
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-[#333333ff] mb-1">
-                            Modifications
-                          </p>
-                          <p className="text-xs text-[#333333ff] line-clamp-2">
-                            {vehicle.modifications}
-                          </p>
-                        </div>
-                      )}
-                      {vehicle.service_history && (
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-[#333333ff] mb-1">
-                            Service History
-                          </p>
-                          <p className="text-xs text-[#333333ff] line-clamp-2">
-                            {vehicle.service_history}
-                          </p>
-                        </div>
-                      )}
-                      {vehicle.description && (
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-[#333333ff] mb-1">
-                            Notes
-                          </p>
-                          <p className="text-xs text-[#333333ff] line-clamp-2">
-                            {vehicle.description}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="mt-3 flex space-x-3">
-                  <button
-                    onClick={() => handleEditVehicle(vehicle)}
-                    className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center"
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteVehicle(vehicle)}
+                      className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteVehicle(vehicle)}
-                    className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center"
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                    Delete
-                  </button>
+                      <svg
+                        className="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

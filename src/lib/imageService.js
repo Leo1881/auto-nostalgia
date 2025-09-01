@@ -43,10 +43,12 @@ class ImageService {
   }
 
   // Upload image to Supabase Storage
-  async uploadImage(file, userId, vehicleId, isThumbnail = false) {
+  async uploadImage(file, userId, vehicleId, imageNumber, isThumbnail = false) {
     try {
       const fileExt = file.name.split(".").pop();
-      const fileName = isThumbnail ? "thumbnail" : "main";
+      const fileName = isThumbnail
+        ? `thumbnail_${imageNumber}`
+        : `image_${imageNumber}`;
       const filePath = `${userId}/${vehicleId}/${fileName}.${fileExt}`;
 
       const { data, error } = await supabase.storage
@@ -73,8 +75,8 @@ class ImageService {
     }
   }
 
-  // Upload both main image and thumbnail
-  async uploadVehicleImage(file, userId, vehicleId) {
+  // Upload a single vehicle image (main + thumbnail)
+  async uploadVehicleImage(file, userId, vehicleId, imageNumber) {
     try {
       // Compress the original image
       const compressedFile = await this.compressImage(file);
@@ -87,12 +89,14 @@ class ImageService {
         compressedFile,
         userId,
         vehicleId,
+        imageNumber,
         false
       );
       const thumbnailUrl = await this.uploadImage(
         thumbnailFile,
         userId,
         vehicleId,
+        imageNumber,
         true
       );
 
@@ -106,11 +110,35 @@ class ImageService {
     }
   }
 
-  // Delete image from storage
-  async deleteImage(userId, vehicleId) {
+  // Upload multiple vehicle images
+  async uploadMultipleVehicleImages(files, userId, vehicleId) {
     try {
-      const mainPath = `${userId}/${vehicleId}/main.jpg`;
-      const thumbnailPath = `${userId}/${vehicleId}/thumbnail.jpg`;
+      const results = [];
+
+      for (let i = 0; i < Math.min(files.length, 6); i++) {
+        if (files[i]) {
+          const result = await this.uploadVehicleImage(
+            files[i],
+            userId,
+            vehicleId,
+            i + 1
+          );
+          results.push(result);
+        }
+      }
+
+      return results;
+    } catch (error) {
+      console.error("Error uploading multiple vehicle images:", error);
+      throw error;
+    }
+  }
+
+  // Delete image from storage
+  async deleteImage(userId, vehicleId, imageNumber) {
+    try {
+      const mainPath = `${userId}/${vehicleId}/image_${imageNumber}.jpg`;
+      const thumbnailPath = `${userId}/${vehicleId}/thumbnail_${imageNumber}.jpg`;
 
       const { error: mainError } = await supabase.storage
         .from(this.bucketName)
@@ -132,9 +160,38 @@ class ImageService {
     }
   }
 
+  // Delete all images for a vehicle
+  async deleteAllVehicleImages(userId, vehicleId) {
+    try {
+      const paths = [];
+
+      // Generate paths for all 6 possible images
+      for (let i = 1; i <= 6; i++) {
+        paths.push(`${userId}/${vehicleId}/image_${i}.jpg`);
+        paths.push(`${userId}/${vehicleId}/thumbnail_${i}.jpg`);
+      }
+
+      const { error } = await supabase.storage
+        .from(this.bucketName)
+        .remove(paths);
+
+      if (error) {
+        console.error("Delete error:", error);
+        throw new Error("Failed to delete vehicle images");
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Error deleting vehicle images:", error);
+      throw error;
+    }
+  }
+
   // Get image URL (for display)
-  getImageUrl(userId, vehicleId, isThumbnail = false) {
-    const fileName = isThumbnail ? "thumbnail" : "main";
+  getImageUrl(userId, vehicleId, imageNumber, isThumbnail = false) {
+    const fileName = isThumbnail
+      ? `thumbnail_${imageNumber}`
+      : `image_${imageNumber}`;
     const filePath = `${userId}/${vehicleId}/${fileName}.jpg`;
 
     const { data } = supabase.storage

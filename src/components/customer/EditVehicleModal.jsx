@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { vehicleService } from "../../lib/vehicleService";
 import { supabase } from "../../lib/supabase";
-import ImageUpload from "../common/ImageUpload";
+import MultiImageUpload from "../common/MultiImageUpload";
 
 function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
   const [formData, setFormData] = useState({
@@ -26,7 +26,8 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [currentImages, setCurrentImages] = useState([]);
 
   // Populate form with vehicle data when modal opens
   useEffect(() => {
@@ -50,6 +51,19 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
         serviceHistory: vehicle.service_history || "",
         description: vehicle.description || "",
       });
+
+      // Set current images for display
+      const images = [
+        vehicle.image_1_url,
+        vehicle.image_2_url,
+        vehicle.image_3_url,
+        vehicle.image_4_url,
+        vehicle.image_5_url,
+        vehicle.image_6_url,
+      ].filter((url) => url && url.trim() !== "");
+
+      setCurrentImages(images);
+      setSelectedImages([]);
       setErrors({});
     }
   }, [vehicle, isOpen]);
@@ -69,8 +83,8 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
     }
   };
 
-  const handleImageSelect = (file) => {
-    setSelectedImage(file);
+  const handleImagesSelect = (files) => {
+    setSelectedImages(files);
   };
 
   const validateForm = () => {
@@ -151,7 +165,7 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
       const updatedVehicle = await vehicleService.updateVehicle(
         vehicle.id,
         formData,
-        selectedImage
+        selectedImages
       );
 
       // Call the onSubmit callback with the updated vehicle data
@@ -390,16 +404,17 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
             </div>
           </div>
 
-          {/* Vehicle Image */}
+          {/* Vehicle Images */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Vehicle Image
+              Vehicle Images
             </h3>
-            <ImageUpload
-              onImageSelect={handleImageSelect}
-              currentImageUrl={vehicle?.main_image_url}
-              label="Update Vehicle Photo"
-              className="max-w-md"
+            <MultiImageUpload
+              onImagesSelect={handleImagesSelect}
+              currentImages={currentImages}
+              label="Update Vehicle Photos"
+              className="max-w-full"
+              maxImages={6}
             />
           </div>
 

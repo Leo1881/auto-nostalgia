@@ -42,7 +42,7 @@ export const vehicleService = {
   },
 
   // Add a new vehicle
-  async addVehicle(vehicleData, imageFile = null) {
+  async addVehicle(vehicleData, imageFiles = []) {
     try {
       console.log("Starting addVehicle with data:", vehicleData);
 
@@ -101,19 +101,36 @@ export const vehicleService = {
         throw error;
       }
 
-      // Upload image if provided
-      if (imageFile) {
+      // Upload images if provided
+      if (imageFiles && imageFiles.length > 0) {
+        console.log(
+          "🚀 Starting image upload for",
+          imageFiles.length,
+          "images"
+        );
         try {
-          const { mainImageUrl, thumbnailUrl } =
-            await imageService.uploadVehicleImage(imageFile, user.id, data.id);
+          const imageResults = await imageService.uploadMultipleVehicleImages(
+            imageFiles,
+            user.id,
+            data.id
+          );
+
+          console.log("✅ Image upload results:", imageResults);
+
+          // Prepare image URL updates
+          const imageUpdates = {};
+          imageResults.forEach((result, index) => {
+            const imageNumber = index + 1;
+            imageUpdates[`image_${imageNumber}_url`] = result.mainImageUrl;
+            imageUpdates[`thumbnail_${imageNumber}_url`] = result.thumbnailUrl;
+          });
+
+          console.log("📝 Image updates to apply:", imageUpdates);
 
           // Update vehicle with image URLs
           const { error: updateError } = await supabase
             .from("vehicles")
-            .update({
-              main_image_url: mainImageUrl,
-              thumbnail_url: thumbnailUrl,
-            })
+            .update(imageUpdates)
             .eq("id", data.id);
 
           if (updateError) {
@@ -123,13 +140,16 @@ export const vehicleService = {
             );
             // Don't throw error here, vehicle was created successfully
           } else {
-            data.main_image_url = mainImageUrl;
-            data.thumbnail_url = thumbnailUrl;
+            console.log("✅ Vehicle updated with image URLs successfully");
+            // Add image URLs to returned data
+            Object.assign(data, imageUpdates);
           }
         } catch (imageError) {
-          console.error("Error uploading image:", imageError);
+          console.error("❌ Error uploading images:", imageError);
           // Don't throw error here, vehicle was created successfully
         }
+      } else {
+        console.log("ℹ️ No images provided for upload");
       }
 
       console.log("Vehicle added successfully:", data);
@@ -147,7 +167,7 @@ export const vehicleService = {
   },
 
   // Update an existing vehicle
-  async updateVehicle(vehicleId, vehicleData, imageFile = null) {
+  async updateVehicle(vehicleId, vehicleData, imageFiles = []) {
     try {
       const {
         data: { session },
@@ -196,23 +216,27 @@ export const vehicleService = {
         throw error;
       }
 
-      // Upload new image if provided
-      if (imageFile) {
+      // Upload new images if provided
+      if (imageFiles && imageFiles.length > 0) {
         try {
-          const { mainImageUrl, thumbnailUrl } =
-            await imageService.uploadVehicleImage(
-              imageFile,
-              user.id,
-              vehicleId
-            );
+          const imageResults = await imageService.uploadMultipleVehicleImages(
+            imageFiles,
+            user.id,
+            vehicleId
+          );
 
-          // Update vehicle with new image URLs
+          // Prepare image URL updates
+          const imageUpdates = {};
+          imageResults.forEach((result, index) => {
+            const imageNumber = index + 1;
+            imageUpdates[`image_${imageNumber}_url`] = result.mainImageUrl;
+            imageUpdates[`thumbnail_${imageNumber}_url`] = result.thumbnailUrl;
+          });
+
+          // Update vehicle with image URLs
           const { error: updateError } = await supabase
             .from("vehicles")
-            .update({
-              main_image_url: mainImageUrl,
-              thumbnail_url: thumbnailUrl,
-            })
+            .update(imageUpdates)
             .eq("id", vehicleId);
 
           if (updateError) {
@@ -221,11 +245,11 @@ export const vehicleService = {
               updateError
             );
           } else {
-            data.main_image_url = mainImageUrl;
-            data.thumbnail_url = thumbnailUrl;
+            // Add image URLs to returned data
+            Object.assign(data, imageUpdates);
           }
         } catch (imageError) {
-          console.error("Error uploading image:", imageError);
+          console.error("Error uploading images:", imageError);
         }
       }
 
