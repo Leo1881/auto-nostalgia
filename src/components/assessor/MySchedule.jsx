@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
+import { reportService } from "../../lib/reportService";
 import CompleteAssessmentModal from "./CompleteAssessmentModal";
 
 function MySchedule() {
@@ -133,6 +134,27 @@ function MySchedule() {
     // Refresh the schedule after successful completion
     await loadScheduledAssessments();
     setSelectedAssessment(null);
+  };
+
+  const handleGenerateReport = async (assessment) => {
+    try {
+      // Get complete assessment data including vehicle, customer, and assessor
+      const assessmentData = {
+        assessment: assessment,
+        vehicle: assessment.vehicles,
+        customer: assessment.profiles,
+        assessor: {
+          full_name: user.user_metadata?.full_name || user.email,
+          email: user.email,
+          phone: user.user_metadata?.phone || "Not provided",
+        },
+      };
+
+      await reportService.downloadReport(assessmentData);
+    } catch (error) {
+      console.error("Error generating report:", error);
+      alert("Failed to generate report. Please try again.");
+    }
   };
 
   const filteredAssessments = scheduledAssessments.filter((assessment) => {
@@ -399,47 +421,73 @@ function MySchedule() {
                       </div>
                     </div>
 
-                                         {assessment.assessment_notes && (
-                       <div className="mt-3">
-                         <p className="text-sm font-medium text-gray-700">
-                           Notes
-                         </p>
-                         <p className="text-sm text-gray-900">
-                           {assessment.assessment_notes}
-                         </p>
-                       </div>
-                     )}
+                    {assessment.assessment_notes && (
+                      <div className="mt-3">
+                        <p className="text-sm font-medium text-gray-700">
+                          Notes
+                        </p>
+                        <p className="text-sm text-gray-900">
+                          {assessment.assessment_notes}
+                        </p>
+                      </div>
+                    )}
 
-                     {/* Action Buttons */}
-                     <div className="mt-4 pt-3 border-t border-gray-200">
-                       {assessment.status === "approved" && (
-                         <button
-                           onClick={() => handleCompleteAssessment(assessment)}
-                           className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-                         >
-                           Complete Assessment
-                         </button>
-                       )}
-                       {assessment.status === "completed" && assessment.vehicle_value && (
-                         <div className="bg-blue-50 rounded-lg p-3">
-                           <p className="text-sm font-medium text-blue-800">
-                             Assessment Completed
-                           </p>
-                           <p className="text-sm text-blue-700">
-                             Vehicle Value: R{assessment.vehicle_value.toLocaleString()}
-                           </p>
-                           {assessment.completion_date && (
-                             <p className="text-sm text-blue-700">
-                               Completed: {new Date(assessment.completion_date).toLocaleDateString()}
-                             </p>
-                           )}
-                         </div>
-                       )}
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             ))}
+                    {/* Action Buttons */}
+                    <div className="mt-4 pt-3 border-t border-gray-200">
+                      {assessment.status === "approved" && (
+                        <button
+                          onClick={() => handleCompleteAssessment(assessment)}
+                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                        >
+                          Complete Assessment
+                        </button>
+                      )}
+                      {assessment.status === "completed" &&
+                        assessment.vehicle_value && (
+                          <div className="bg-blue-50 rounded-lg p-3">
+                            <p className="text-sm font-medium text-blue-800">
+                              Assessment Completed
+                            </p>
+                            <p className="text-sm text-blue-700">
+                              Vehicle Value: R
+                              {assessment.vehicle_value.toLocaleString()}
+                            </p>
+                            {assessment.completion_date && (
+                              <p className="text-sm text-blue-700">
+                                Completed:{" "}
+                                {new Date(
+                                  assessment.completion_date
+                                ).toLocaleDateString()}
+                              </p>
+                            )}
+                            <div className="mt-3">
+                              <button
+                                onClick={() => handleGenerateReport(assessment)}
+                                className="inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
+                              >
+                                <svg
+                                  className="w-4 h-4 mr-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                  />
+                                </svg>
+                                Generate Report
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

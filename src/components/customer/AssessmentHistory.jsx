@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
+import { reportService } from "../../lib/reportService";
 import CustomSelect from "../common/CustomSelect";
 import AssessmentDetailModal from "./AssessmentDetailModal";
 import RescheduleModal from "./RescheduleModal";
@@ -109,6 +110,17 @@ function AssessmentHistory() {
         }
       }
 
+      // Get customer profile data
+      const { data: customerProfile, error: customerError } = await supabase
+        .from("profiles")
+        .select("id, full_name, phone, email, city, province")
+        .eq("id", user.id)
+        .single();
+
+      if (customerError) {
+        console.error("Error loading customer profile:", customerError);
+      }
+
       // Combine the data
       const vehiclesMap = {};
       vehiclesData?.forEach((vehicle) => {
@@ -125,6 +137,7 @@ function AssessmentHistory() {
           ...assessment,
           vehicles: vehiclesMap[assessment.vehicle_id],
           assessor: assessorsMap[assessment.assigned_assessor_id],
+          profiles: customerProfile, // Add customer profile data
         })) || [];
 
       setAssessments(combinedData);
@@ -294,6 +307,25 @@ function AssessmentHistory() {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const handleGenerateReport = async (assessment) => {
+    try {
+      // Get complete assessment data including vehicle, customer, and assessor
+      const assessmentData = {
+        assessment: assessment,
+        vehicle: assessment.vehicles,
+        customer: assessment.profiles,
+        assessor: assessment.assessor,
+      };
+
+      console.log("📄 Report data being passed:", assessmentData);
+
+      await reportService.downloadReport(assessmentData);
+    } catch (error) {
+      console.error("Error generating report:", error);
+      alert("Failed to generate report. Please try again.");
+    }
   };
 
   if (isLoading) {
@@ -636,6 +668,27 @@ function AssessmentHistory() {
                               </p>
                             )}
                           </div>
+                        </div>
+                        <div className="mt-3">
+                          <button
+                            onClick={() => handleGenerateReport(assessment)}
+                            className="inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
+                          >
+                            <svg
+                              className="w-4 h-4 mr-2"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                              />
+                            </svg>
+                            Generate Report
+                          </button>
                         </div>
                       </div>
                     </div>
