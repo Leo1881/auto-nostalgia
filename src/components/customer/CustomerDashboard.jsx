@@ -34,9 +34,9 @@ function CustomerDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-white font-quicksand customer-dashboard">
+    <div className="min-h-screen bg-white font-quicksand customer-dashboard flex flex-col">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
+      <header className="bg-white dark:bg-gray-800 shadow-sm flex-shrink-0">
         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
@@ -61,7 +61,7 @@ function CustomerDashboard() {
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row flex-1">
         {/* Sidebar */}
         <CustomerSidebar
           activeSection={activeSection}
@@ -69,7 +69,7 @@ function CustomerDashboard() {
         />
 
         {/* Content Area */}
-        <main className="flex-1 p-6 sm:p-8 lg:p-10">
+        <main className="flex-1 p-6 sm:p-8 lg:p-10 overflow-auto">
           <div className="w-full">{renderContent()}</div>
         </main>
       </div>

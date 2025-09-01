@@ -104,9 +104,9 @@ function CustomerSidebar({ activeSection, onSectionChange }) {
   ];
 
   return (
-    <aside className="w-full lg:w-64 bg-red-600 shadow-sm lg:h-screen">
-      <nav className="p-0">
-        <ul className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-0 overflow-x-auto lg:overflow-x-visible">
+    <aside className="w-full lg:w-64 bg-red-600 shadow-sm lg:min-h-screen flex-shrink-0">
+      <nav className="p-0 h-full">
+        <ul className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-0 overflow-x-auto lg:overflow-x-visible h-full">
           {menuItems.map((item) => (
             <li key={item.id} className="flex-shrink-0 lg:flex-shrink">
               <button
