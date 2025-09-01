@@ -45,10 +45,10 @@ const ImageGallery = ({ images = [], vehicleId, userId }) => {
   return (
     <>
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-[#333333ff] mb-4">
+        <h4 className="text-sm font-bold text-[#333333ff] mb-3">
           Vehicle Images
-        </h3>
-        <div className="grid grid-cols-3 gap-3">
+        </h4>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {imageSlots.map((slot, index) => (
             <div key={slot.id} className="relative">
               {slot.url ? (
