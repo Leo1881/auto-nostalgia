@@ -41,14 +41,11 @@ function AssessorDashboard() {
         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <h1 className="text-[16px] font-medium text-[#333333ff]">
+              <h1 className="text-[16px] font-medium text-white">
                 Welcome back, {profile?.full_name?.split(" ")[0] || "Assessor"}
               </h1>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4">
-              <span className="hidden sm:block text-sm text-[#333333ff]">
-                Welcome, {profile?.full_name?.split(" ")[0] || "Assessor"}
-              </span>
               <button
                 onClick={handleSignOut}
                 disabled={loading}
