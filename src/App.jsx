@@ -9,6 +9,7 @@ import AuthenticatedApp from "./components/layout/AuthenticatedApp";
 import { useAppState } from "./hooks/useAppState";
 import { APP_STATES } from "./constants/appStates.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { ChatProvider } from "./contexts/ChatContext.jsx";
 import { useEffect } from "react";
 
 function App() {
@@ -125,7 +126,9 @@ function App() {
 function AppWrapper() {
   return (
     <AuthProvider>
-      <App />
+      <ChatProvider>
+        <App />
+      </ChatProvider>
     </AuthProvider>
   );
 }

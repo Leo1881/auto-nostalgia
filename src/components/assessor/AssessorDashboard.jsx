@@ -7,6 +7,7 @@ import AssessmentRequests from "./AssessmentRequests";
 import MySchedule from "./MySchedule";
 import AssessmentHistory from "./AssessmentHistory";
 import ProfileSettings from "./ProfileSettings";
+import ChatButton from "../chat/ChatButton";
 
 function AssessorDashboard() {
   const { signOut, loading, profile } = useAuth();
@@ -73,6 +74,9 @@ function AssessorDashboard() {
           <div className="w-full">{renderContent()}</div>
         </main>
       </div>
+
+      {/* Chat Button */}
+      <ChatButton />
     </div>
   );
 }

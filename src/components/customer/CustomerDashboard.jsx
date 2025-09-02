@@ -7,6 +7,7 @@ import RequestAssessment from "./RequestAssessment";
 import MyVehicles from "./MyVehicles";
 import AssessmentHistory from "./AssessmentHistory";
 import ProfileSettings from "./ProfileSettings";
+import ChatButton from "../chat/ChatButton";
 
 function CustomerDashboard() {
   const { signOut, loading, profile } = useAuth();
@@ -73,6 +74,9 @@ function CustomerDashboard() {
           <div className="w-full">{renderContent()}</div>
         </main>
       </div>
+
+      {/* Chat Button */}
+      <ChatButton />
     </div>
   );
 }
