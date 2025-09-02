@@ -96,13 +96,25 @@ function ResetPasswordForm({ onSuccess }) {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center font-quicksand">
-        <div className="max-w-md w-full space-y-8">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+      <div className="min-h-screen bg-white flex flex-col px-4 pt-6 pb-6 sm:pb-8 font-quicksand">
+        <div className="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-between">
+          {/* Container 1: Logo */}
+          <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-6">
+              <img
+                src="/an_plain.png"
+                alt="Auto Nostalgia"
+                className="mx-auto max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
+              />
+            </div>
+          </div>
+
+          {/* Container 2: Success Message */}
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="text-center mb-8">
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
                 <svg
-                  className="w-8 h-8 text-green-600 dark:text-green-400"
+                  className="w-8 h-8 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -116,19 +128,20 @@ function ResetPasswordForm({ onSuccess }) {
                 </svg>
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <h1 className="text-xl font-bold text-[#333333ff] mb-2">
                 Password Updated!
-              </h2>
-
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              </h1>
+              <p className="text-sm text-[#333333ff]">
                 Your password has been successfully updated. For security
                 reasons, you have been signed out. Please sign in with your new
                 password.
               </p>
+            </div>
 
+            <div className="flex justify-center">
               <button
                 onClick={() => (window.location.href = "/")}
-                className={BUTTON_STATES.PRIMARY.NORMAL}
+                className="w-40 px-6 py-2 bg-red-600 text-white rounded-lg transition-colors duration-200 font-medium hover:bg-red-700"
               >
                 Sign In
               </button>
@@ -140,16 +153,248 @@ function ResetPasswordForm({ onSuccess }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center font-quicksand">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+    <div className="min-h-screen bg-white flex flex-col px-4 pt-6 pb-6 sm:pb-8 font-quicksand">
+      <div className="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-between">
+        {/* Container 1: Logo */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <img
+              src="/an_plain.png"
+              alt="Auto Nostalgia"
+              className="mx-auto max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
+            />
+          </div>
+        </div>
+
+        {/* Container 2: Text and Input Fields */}
+        <div className="flex-1 flex flex-col justify-center">
           <div className="text-center mb-8">
-            <h2
-              className="text-3xl font-bold text-gray-900 dark:text-white"
-              style={{ marginBottom: "24px" }}
-            >
+            <h1 className="text-xl font-bold text-[#333333ff] mb-2">
               Reset Password
-            </h2>
+            </h1>
+            <p className="text-sm text-[#333333ff]">Enter your new password</p>
+          </div>
+
+          <div className="p-4">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col w-full max-w-[800px] mx-auto"
+            >
+              <div>
+                <input
+                  id="password"
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4 ${
+                    error
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      : "focus:border-red-600 focus:ring-red-500"
+                  }`}
+                  placeholder="Enter your new password"
+                  required
+                  disabled={loading}
+                  style={{
+                    marginTop: "16px",
+                  }}
+                />
+              </div>
+
+              <div>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4 ${
+                    error
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      : "focus:border-red-600 focus:ring-red-500"
+                  }`}
+                  placeholder="Confirm your new password"
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              {/* Password Requirements */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                <div className="space-y-2">
+                  <div
+                    className={`flex items-center text-sm ${
+                      passwordRequirements.length
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    <svg
+                      className={`w-4 h-4 mr-2 ${
+                        passwordRequirements.length
+                          ? "text-green-600"
+                          : "text-gray-400"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      {passwordRequirements.length ? (
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      ) : (
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      )}
+                    </svg>
+                    At least 8 characters
+                  </div>
+                  <div
+                    className={`flex items-center text-sm ${
+                      passwordRequirements.uppercase
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    <svg
+                      className={`w-4 h-4 mr-2 ${
+                        passwordRequirements.uppercase
+                          ? "text-green-600"
+                          : "text-gray-400"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      {passwordRequirements.uppercase ? (
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      ) : (
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      )}
+                    </svg>
+                    One uppercase letter
+                  </div>
+                  <div
+                    className={`flex items-center text-sm ${
+                      passwordRequirements.lowercase
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    <svg
+                      className={`w-4 h-4 mr-2 ${
+                        passwordRequirements.lowercase
+                          ? "text-green-600"
+                          : "text-gray-400"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      {passwordRequirements.lowercase ? (
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      ) : (
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      )}
+                    </svg>
+                    One lowercase letter
+                  </div>
+                  <div
+                    className={`flex items-center text-sm ${
+                      passwordRequirements.number
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    <svg
+                      className={`w-4 h-4 mr-2 ${
+                        passwordRequirements.number
+                          ? "text-green-600"
+                          : "text-gray-400"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      {passwordRequirements.number ? (
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      ) : (
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      )}
+                    </svg>
+                    One number
+                  </div>
+                  <div
+                    className={`flex items-center text-sm ${
+                      passwordRequirements.special
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    <svg
+                      className={`w-4 h-4 mr-2 ${
+                        passwordRequirements.special
+                          ? "text-green-600"
+                          : "text-gray-400"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      {passwordRequirements.special ? (
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      ) : (
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      )}
+                    </svg>
+                    One special character (!@#$%^&*)
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="w-40 px-6 py-2 bg-red-600 text-white rounded-lg transition-colors duration-200 font-medium hover:bg-red-700"
+                  disabled={loading}
+                >
+                  {loading ? LOADING_TEXT.PROCESSING : "Update Password"}
+                </button>
+              </div>
+            </form>
           </div>
 
           {error && (
@@ -162,232 +407,15 @@ function ResetPasswordForm({ onSuccess }) {
                 textAlign: "center",
                 fontWeight: "bold",
                 position: "absolute",
-                bottom: "15%",
+                bottom: "28%",
                 left: "50%",
                 transform: "translateX(-50%)",
                 zIndex: 10,
-                paddingLeft: "8px",
-                paddingRight: "8px",
               }}
             >
               {error}
             </div>
           )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="text-center">
-              <input
-                id="password"
-                type="password"
-                name="password"
-                value={password}
-                onChange={handlePasswordChange}
-                className="form-input"
-                placeholder="Enter your new password"
-                required
-                disabled={loading}
-                style={{ color: "#333333ff" }}
-              />
-            </div>
-
-            <div className="text-center">
-              <input
-                id="confirmPassword"
-                type="password"
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                className="form-input"
-                placeholder="Confirm your new password"
-                required
-                disabled={loading}
-                style={{ color: "#333333ff" }}
-              />
-            </div>
-
-            {/* Password Requirements */}
-            <div
-              className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center"
-              style={{ marginBottom: "24px" }}
-            >
-              <div className="space-y-2" style={{ marginLeft: "40px" }}>
-                <div
-                  className={`flex items-center text-sm ${
-                    passwordRequirements.length
-                      ? "text-green-600"
-                      : "text-gray-400"
-                  }`}
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${
-                      passwordRequirements.length
-                        ? "text-green-600"
-                        : "text-gray-400"
-                    }`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    {passwordRequirements.length ? (
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    ) : (
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    )}
-                  </svg>
-                  At least 8 characters
-                </div>
-                <div
-                  className={`flex items-center text-sm ${
-                    passwordRequirements.uppercase
-                      ? "text-green-600"
-                      : "text-gray-400"
-                  }`}
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${
-                      passwordRequirements.uppercase
-                        ? "text-green-600"
-                        : "text-gray-400"
-                    }`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    {passwordRequirements.uppercase ? (
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    ) : (
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    )}
-                  </svg>
-                  One uppercase letter
-                </div>
-                <div
-                  className={`flex items-center text-sm ${
-                    passwordRequirements.lowercase
-                      ? "text-green-600"
-                      : "text-gray-400"
-                  }`}
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${
-                      passwordRequirements.lowercase
-                        ? "text-green-600"
-                        : "text-gray-400"
-                    }`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    {passwordRequirements.lowercase ? (
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    ) : (
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    )}
-                  </svg>
-                  One lowercase letter
-                </div>
-                <div
-                  className={`flex items-center text-sm ${
-                    passwordRequirements.number
-                      ? "text-green-600"
-                      : "text-gray-400"
-                  }`}
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${
-                      passwordRequirements.number
-                        ? "text-green-600"
-                        : "text-gray-400"
-                    }`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    {passwordRequirements.number ? (
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    ) : (
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    )}
-                  </svg>
-                  One number
-                </div>
-                <div
-                  className={`flex items-center text-sm ${
-                    passwordRequirements.special
-                      ? "text-green-600"
-                      : "text-gray-400"
-                  }`}
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${
-                      passwordRequirements.special
-                        ? "text-green-600"
-                        : "text-gray-400"
-                    }`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    {passwordRequirements.special ? (
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    ) : (
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                        clipRule="evenodd"
-                      />
-                    )}
-                  </svg>
-                  One special character (!@#$%^&*)
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <button
-                type="submit"
-                className={
-                  loading
-                    ? BUTTON_STATES.PRIMARY.LOADING
-                    : BUTTON_STATES.PRIMARY.NORMAL
-                }
-                disabled={loading}
-              >
-                {loading ? LOADING_TEXT.PROCESSING : "Update Password"}
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>

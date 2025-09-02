@@ -69,137 +69,169 @@ function ForgotPasswordForm({ onBack, onSuccess }) {
 
   if (success) {
     return (
-      <div className="text-center">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <div className="mb-6">
-            <div
-              className="mb-1"
-              style={{
-                width: "400px",
-                height: "200px",
-                margin: "128px auto 16px auto",
-              }}
-            >
-              <Lottie
-                src="/checkmark-animation.json"
-                autoplay
-                style={{ width: "100%", height: "100%" }}
+      <div className="min-h-screen bg-white flex flex-col px-4 pt-6 pb-6 sm:pb-8 font-quicksand">
+        <div className="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-between">
+          {/* Container 1: Logo */}
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <img
+                src="/an_plain.png"
+                alt="Auto Nostalgia"
+                className="mx-auto max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
               />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Check Your Email
-            </h2>
           </div>
 
-          <p
-            className="text-gray-600 dark:text-gray-400"
-            style={{ marginBottom: "32px" }}
-          >
-            We've sent a password reset link to <strong>{email}</strong>
-          </p>
+          {/* Container 2: Success Message */}
+          <div className="flex-1 flex flex-col justify-center">
+            <div className="text-center mb-8">
+              <div
+                className="mb-6"
+                style={{
+                  width: "300px",
+                  height: "150px",
+                  margin: "0 auto 16px auto",
+                }}
+              >
+                <Lottie
+                  src="/checkmark-animation.json"
+                  autoplay
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </div>
+              <h1 className="text-xl font-bold text-[#333333ff] mb-2">
+                Check Your Email
+              </h1>
+              <p className="text-sm text-[#333333ff] mb-4">
+                We've sent a password reset link to <strong>{email}</strong>
+              </p>
+            </div>
 
-          <div className="mb-6">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              <strong>Next steps:</strong>
-            </p>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
-              <li>• Check your email inbox</li>
-              <li>• Click the reset link in the email</li>
-              <li>• Create a new password</li>
-              <li>• Sign in with your new password</li>
-            </ul>
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <p className="text-sm font-medium text-[#333333ff] mb-2">
+                Next steps:
+              </p>
+              <ul className="text-sm text-[#333333ff] space-y-1">
+                <li>• Check your email inbox</li>
+                <li>• Click the reset link in the email</li>
+                <li>• Create a new password</li>
+                <li>• Sign in with your new password</li>
+              </ul>
+            </div>
           </div>
 
-          <button
-            onClick={onBack}
-            className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
-            style={{
-              background: "none",
-              border: "none",
-              padding: "0",
-              cursor: "pointer",
-              textDecoration: "underline",
-              marginTop: "16px",
-            }}
-          >
-            ← Back to Sign In
-          </button>
+          {/* Container 3: Back Button */}
+          <div className="flex-1 flex flex-col justify-end items-center">
+            <button
+              onClick={onBack}
+              className="w-40 px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
+            >
+              Back to Sign In
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center font-quicksand">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+    <div className="min-h-screen bg-white flex flex-col px-4 pt-6 pb-6 sm:pb-8 font-quicksand">
+      <div className="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-between">
+        {/* Container 1: Logo */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <img
+              src="/an_plain.png"
+              alt="Auto Nostalgia"
+              className="mx-auto max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
+            />
+          </div>
+        </div>
+
+        {/* Container 2: Text and Input Fields */}
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="text-center mb-2">
+            <h1 className="text-xl font-bold text-[#333333ff] mb-2">
               Forgot Password
-            </h2>
-            <p
-              className="text-gray-600 dark:text-gray-400"
-              style={{
-                marginBottom: "24px",
-                paddingLeft: "24px",
-                paddingRight: "24px",
-              }}
-            >
+            </h1>
+            <p className="text-sm text-[#333333ff]">
               Enter your email address and we'll send you a link to reset your
               password
             </p>
           </div>
 
+          <div className="p-4">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col w-full max-w-[800px] mx-auto"
+            >
+              <div>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 mb-4 ${
+                    error
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      : "focus:border-red-600 focus:ring-red-500"
+                  }`}
+                  placeholder="Enter your email address"
+                  required
+                  disabled={loading}
+                  style={{
+                    marginTop: "16px",
+                  }}
+                />
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="w-40 px-6 py-2 bg-red-600 text-white rounded-lg transition-colors duration-200 font-medium hover:bg-red-700"
+                  disabled={loading}
+                >
+                  {loading ? LOADING_TEXT.PROCESSING : "Reset Link"}
+                </button>
+              </div>
+            </form>
+          </div>
+
           {error && (
-            <div className="mb-8 text-center">
-              <p
-                className="text-red-600 text-sm"
-                style={{
-                  paddingLeft: "24px",
-                  paddingRight: "24px",
-                  marginBottom: "16px",
-                }}
-              >
-                {error}
-              </p>
+            <div
+              className="text-red-600 text-sm font-bold mb-4"
+              style={{
+                color: "red",
+                marginLeft: "auto",
+                marginRight: "auto",
+                textAlign: "center",
+                fontWeight: "bold",
+                position: "absolute",
+                bottom: "28%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 10,
+              }}
+            >
+              {error}
             </div>
           )}
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="text-center">
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={email}
-                onChange={handleInputChange}
-                className="form-input"
-                placeholder="Enter your email address"
-                required
-                disabled={loading}
-                style={{ color: "#333333ff" }}
-              />
-            </div>
+        {/* Container 3: Back Button */}
+        <div className="flex-1 flex flex-col justify-end items-center">
+          <button
+            onClick={onBack}
+            className="w-40 px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium mb-2"
+          >
+            Back
+          </button>
 
-            <div className="text-center">
-              <button
-                type="submit"
-                className={
-                  loading
-                    ? BUTTON_STATES.PRIMARY.LOADING
-                    : BUTTON_STATES.PRIMARY.NORMAL
-                }
-                disabled={loading}
-              >
-                {loading ? LOADING_TEXT.PROCESSING : "Send Reset Link"}
-              </button>
-            </div>
-          </form>
-
-          <div className="mt-6 text-center">
+          <div className="text-center" style={{ marginBottom: "64px" }}>
             <button
               onClick={onBack}
-              className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
+              className="text-xs text-[#333333ff] hover:text-red-600 transition-colors duration-200"
               style={{
                 background: "none",
                 border: "none",
@@ -208,7 +240,7 @@ function ForgotPasswordForm({ onBack, onSuccess }) {
                 textDecoration: "underline",
               }}
             >
-              ← Back to Sign In
+              Back to Sign In
             </button>
           </div>
         </div>
