@@ -75,6 +75,7 @@ function RequestAssessment() {
         console.error("Error loading vehicles:", error);
         setMessage({ type: "error", text: "Failed to load vehicles" });
       } else {
+        console.log("Loaded vehicles:", data);
         setVehicles(data || []);
       }
     } catch (error) {
@@ -287,10 +288,16 @@ function RequestAssessment() {
                 Select Vehicle *
               </label>
               <CustomSelect
-                options={vehicles.map((vehicle) => ({
-                  value: vehicle.id,
-                  label: `${vehicle.year} ${vehicle.make} ${vehicle.model} (${vehicle.registration})`,
-                }))}
+                options={vehicles
+                  .filter((vehicle) => vehicle.id) // Only include vehicles with valid IDs
+                  .map((vehicle) => ({
+                    value: vehicle.id,
+                    label: `${vehicle.year || "N/A"} ${vehicle.make || "N/A"} ${
+                      vehicle.model || "N/A"
+                    }${vehicle.variant ? ` ${vehicle.variant}` : ""} (${
+                      vehicle.registration_number || "N/A"
+                    })`,
+                  }))}
                 value={formData.vehicleId}
                 onChange={(value) => handleSelectChange("vehicleId", value)}
                 placeholder="Choose a vehicle"
