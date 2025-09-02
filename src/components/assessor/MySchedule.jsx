@@ -117,11 +117,11 @@ function MySchedule() {
   const getStatusColor = (status) => {
     switch (status) {
       case "approved":
-        return "bg-green-100 text-green-800";
+        return "bg-red-200 text-red-700";
       case "completed":
-        return "bg-blue-100 text-blue-800";
+        return "bg-gray-100 text-gray-600";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
@@ -211,9 +211,9 @@ function MySchedule() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white rounded-xl shadow-sm p-4">
           <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
+            <div className="p-2 bg-red-200 rounded-lg">
               <svg
-                className="w-6 h-6 text-blue-600"
+                className="w-6 h-6 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -239,9 +239,9 @@ function MySchedule() {
 
         <div className="bg-white rounded-xl shadow-sm p-4">
           <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
+            <div className="p-2 bg-red-200 rounded-lg">
               <svg
-                className="w-6 h-6 text-green-600"
+                className="w-6 h-6 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -437,23 +437,23 @@ function MySchedule() {
                       {assessment.status === "approved" && (
                         <button
                           onClick={() => handleCompleteAssessment(assessment)}
-                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
                         >
                           Complete Assessment
                         </button>
                       )}
                       {assessment.status === "completed" &&
                         assessment.vehicle_value && (
-                          <div className="bg-blue-50 rounded-lg p-3">
-                            <p className="text-sm font-medium text-blue-800">
+                          <div className="bg-gray-50 rounded-lg p-3">
+                            <p className="text-sm font-medium text-gray-800">
                               Assessment Completed
                             </p>
-                            <p className="text-sm text-blue-700">
+                            <p className="text-sm text-gray-700">
                               Vehicle Value: R
                               {assessment.vehicle_value.toLocaleString()}
                             </p>
                             {assessment.completion_date && (
-                              <p className="text-sm text-blue-700">
+                              <p className="text-sm text-gray-700">
                                 Completed:{" "}
                                 {new Date(
                                   assessment.completion_date

@@ -285,9 +285,9 @@ function DashboardHome({ onSectionChange }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-red-100 rounded-lg">
+            <div className="p-1.5 bg-red-200 rounded-lg">
               <svg
-                className="w-4 h-4 text-red-600"
+                className="w-4 h-4 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -313,9 +313,9 @@ function DashboardHome({ onSectionChange }) {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-orange-100 rounded-lg">
+            <div className="p-1.5 bg-red-200 rounded-lg">
               <svg
-                className="w-4 h-4 text-orange-600"
+                className="w-4 h-4 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -341,9 +341,9 @@ function DashboardHome({ onSectionChange }) {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-green-100 rounded-lg">
+            <div className="p-1.5 bg-gray-100 rounded-lg">
               <svg
-                className="w-4 h-4 text-green-600"
+                className="w-4 h-4 text-gray-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -369,9 +369,9 @@ function DashboardHome({ onSectionChange }) {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-blue-100 rounded-lg">
+            <div className="p-1.5 bg-red-200 rounded-lg">
               <svg
-                className="w-4 h-4 text-blue-600"
+                className="w-4 h-4 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -510,7 +510,7 @@ function DashboardHome({ onSectionChange }) {
                         : assessment.status === "Pending"
                         ? "bg-yellow-100 text-yellow-800"
                         : assessment.status === "Approved"
-                        ? "bg-blue-100 text-blue-800"
+                        ? "bg-red-200 text-red-700"
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >

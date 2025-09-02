@@ -104,7 +104,7 @@ function MyVehicles() {
       case "excellent":
         return "bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-300 border border-green-200 dark:border-green-700";
       case "good":
-        return "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:from-blue-900 dark:to-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700";
+        return "bg-gradient-to-r from-red-100 to-red-200 text-red-800 dark:from-red-900 dark:to-red-800 dark:text-red-300 border border-red-200 dark:border-red-700";
       case "fair":
         return "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 dark:from-yellow-900 dark:to-yellow-800 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700";
       case "poor":

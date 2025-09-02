@@ -33,32 +33,32 @@ function AssessmentDetailModal({
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-red-200 text-red-700";
       case "approved":
-        return "bg-blue-100 text-blue-800";
+        return "bg-red-200 text-red-700";
       case "completed":
-        return "bg-green-100 text-green-800";
+        return "bg-gray-100 text-gray-600";
       case "rejected":
-        return "bg-red-100 text-red-800";
+        return "bg-red-200 text-red-700";
       case "cancelled":
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
   const getUrgencyColor = (urgency) => {
     switch (urgency) {
       case "low":
-        return "bg-green-100 text-green-800";
+        return "bg-gray-100 text-gray-600";
       case "normal":
-        return "bg-blue-100 text-blue-800";
+        return "bg-red-200 text-red-700";
       case "high":
-        return "bg-orange-100 text-orange-800";
+        return "bg-red-200 text-red-700";
       case "urgent":
-        return "bg-red-100 text-red-800";
+        return "bg-red-200 text-red-700";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
@@ -236,37 +236,41 @@ function AssessmentDetailModal({
 
           {/* Assessment Results (if completed) */}
           {assessment.status === "completed" && (
-            <div className="bg-blue-50 rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-blue-900 mb-3">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 Assessment Results
               </h3>
               <div className="space-y-3">
                 {assessment.vehicle_value && (
                   <div>
-                    <p className="text-sm font-medium text-blue-800">
+                    <p className="text-sm font-medium text-gray-700">
                       Estimated Vehicle Value
                     </p>
-                    <p className="text-lg font-bold text-blue-900">
+                    <p className="text-lg font-bold text-gray-900">
                       R{assessment.vehicle_value.toLocaleString()}
                     </p>
                   </div>
                 )}
                 {assessment.completion_date && (
                   <div>
-                    <p className="text-sm font-medium text-blue-800">
+                    <p className="text-sm font-medium text-gray-700">
                       Assessment Completed
                     </p>
-                    <p className="text-blue-900">
-                      {new Date(assessment.completion_date).toLocaleDateString()}
+                    <p className="text-gray-900">
+                      {new Date(
+                        assessment.completion_date
+                      ).toLocaleDateString()}
                     </p>
                   </div>
                 )}
                 {assessment.assessment_notes && (
                   <div>
-                    <p className="text-sm font-medium text-blue-800">
+                    <p className="text-sm font-medium text-gray-700">
                       Assessment Notes
                     </p>
-                    <p className="text-blue-900">{assessment.assessment_notes}</p>
+                    <p className="text-gray-900">
+                      {assessment.assessment_notes}
+                    </p>
                   </div>
                 )}
               </div>
@@ -278,8 +282,18 @@ function AssessmentDetailModal({
             <div className="bg-green-50 rounded-lg p-4">
               <h3 className="text-lg font-semibold text-green-900 mb-3">
                 <div className="flex items-center space-x-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                   <span>Assigned Assessor</span>
                 </div>
@@ -287,11 +301,15 @@ function AssessmentDetailModal({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-gray-700">Name</p>
-                  <p className="text-gray-900">{assessment.assessor.full_name}</p>
+                  <p className="text-gray-900">
+                    {assessment.assessor.full_name}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-700">Phone</p>
-                  <p className="text-gray-900">{assessment.assessor.phone || "Not provided"}</p>
+                  <p className="text-gray-900">
+                    {assessment.assessor.phone || "Not provided"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-700">Email</p>
@@ -299,8 +317,12 @@ function AssessmentDetailModal({
                 </div>
                 {assessment.assessment_location && (
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Assessment Location</p>
-                    <p className="text-gray-900">{assessment.assessment_location}</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      Assessment Location
+                    </p>
+                    <p className="text-gray-900">
+                      {assessment.assessment_location}
+                    </p>
                   </div>
                 )}
               </div>

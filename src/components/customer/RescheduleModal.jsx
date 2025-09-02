@@ -172,8 +172,8 @@ function RescheduleModal({ isOpen, onClose, assessment, onRescheduleSuccess }) {
             </div>
 
             {/* Note */}
-            <div className="bg-blue-50 rounded-lg p-3">
-              <p className="text-sm text-blue-800">
+            <div className="bg-red-50 rounded-lg p-3">
+              <p className="text-sm text-red-800">
                 <strong>Note:</strong> Rescheduling your assessment request will
                 update your preferred date and time. Our team will review your
                 new preferences and contact you to confirm the final schedule.

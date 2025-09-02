@@ -28,28 +28,28 @@ function RequestDetailModal({ isOpen, onClose, request }) {
   const getUrgencyColor = (urgency) => {
     switch (urgency) {
       case "low":
-        return "bg-green-100 text-green-800";
+        return "bg-gray-100 text-gray-600";
       case "normal":
-        return "bg-blue-100 text-blue-800";
+        return "bg-red-200 text-red-700";
       case "high":
-        return "bg-orange-100 text-orange-800";
+        return "bg-red-200 text-red-700";
       case "urgent":
-        return "bg-red-100 text-red-800";
+        return "bg-red-200 text-red-700";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-red-200 text-red-700";
       case "approved":
-        return "bg-green-100 text-green-800";
+        return "bg-red-200 text-red-700";
       case "rejected":
-        return "bg-red-100 text-red-800";
+        return "bg-red-200 text-red-700";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
@@ -249,7 +249,7 @@ function RequestDetailModal({ isOpen, onClose, request }) {
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="text-lg font-semibold text-[#333333ff] mb-4 flex items-center">
               <svg
-                className="w-5 h-5 mr-2 text-blue-600"
+                className="w-5 h-5 mr-2 text-red-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

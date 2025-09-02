@@ -293,28 +293,28 @@ function AssessmentRequests() {
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-red-200 text-red-700";
       case "approved":
-        return "bg-green-100 text-green-800";
+        return "bg-red-200 text-red-700";
       case "rejected":
-        return "bg-red-100 text-red-800";
+        return "bg-red-200 text-red-700";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
   const getUrgencyColor = (urgency) => {
     switch (urgency) {
       case "low":
-        return "bg-green-100 text-green-800";
+        return "bg-gray-100 text-gray-600";
       case "normal":
-        return "bg-blue-100 text-blue-800";
+        return "bg-red-200 text-red-700";
       case "high":
-        return "bg-orange-100 text-orange-800";
+        return "bg-red-200 text-red-700";
       case "urgent":
-        return "bg-red-100 text-red-800";
+        return "bg-red-200 text-red-700";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 

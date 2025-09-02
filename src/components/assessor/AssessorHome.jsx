@@ -164,15 +164,15 @@ function AssessorHome() {
   const getUrgencyColor = (urgency) => {
     switch (urgency) {
       case "low":
-        return "bg-green-100 text-green-800";
+        return "bg-gray-100 text-gray-600";
       case "normal":
-        return "bg-blue-100 text-blue-800";
+        return "bg-red-200 text-red-700";
       case "high":
-        return "bg-orange-100 text-orange-800";
+        return "bg-red-200 text-red-700";
       case "urgent":
-        return "bg-red-100 text-red-800";
+        return "bg-red-200 text-red-700";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-600";
     }
   };
 
@@ -223,9 +223,9 @@ function AssessorHome() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-blue-100 rounded-lg">
+            <div className="p-1.5 bg-red-200 rounded-lg">
               <svg
-                className="w-4 h-4 text-blue-600"
+                className="w-4 h-4 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -251,9 +251,9 @@ function AssessorHome() {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-yellow-100 rounded-lg">
+            <div className="p-1.5 bg-red-200 rounded-lg">
               <svg
-                className="w-4 h-4 text-yellow-600"
+                className="w-4 h-4 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -279,9 +279,9 @@ function AssessorHome() {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-blue-100 rounded-lg">
+            <div className="p-1.5 bg-red-200 rounded-lg">
               <svg
-                className="w-4 h-4 text-blue-600"
+                className="w-4 h-4 text-red-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -307,9 +307,9 @@ function AssessorHome() {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-green-100 rounded-lg">
+            <div className="p-1.5 bg-gray-100 rounded-lg">
               <svg
-                className="w-4 h-4 text-green-600"
+                className="w-4 h-4 text-gray-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
