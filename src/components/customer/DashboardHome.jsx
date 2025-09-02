@@ -341,9 +341,9 @@ function DashboardHome({ onSectionChange }) {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-gray-100 rounded-lg">
+            <div className="p-1.5 bg-green-100 rounded-lg">
               <svg
-                className="w-4 h-4 text-gray-600"
+                className="w-4 h-4 text-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -472,10 +472,10 @@ function DashboardHome({ onSectionChange }) {
 
                   {/* Assessor Information for Approved Assessments */}
                   {assessment.status === "Approved" && assessment.assessor && (
-                    <div className="mt-2 p-2 bg-green-50 rounded border border-green-200">
+                    <div className="mt-2 p-2 bg-red-50 rounded border border-red-200">
                       <div className="flex items-center space-x-1 mb-1">
                         <svg
-                          className="w-3 h-3 text-green-600"
+                          className="w-3 h-3 text-red-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -487,7 +487,7 @@ function DashboardHome({ onSectionChange }) {
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                           />
                         </svg>
-                        <span className="text-xs font-medium text-green-800">
+                        <span className="text-xs font-medium text-red-800">
                           Assigned Assessor
                         </span>
                       </div>
@@ -508,7 +508,7 @@ function DashboardHome({ onSectionChange }) {
                       assessment.status === "Completed"
                         ? "bg-green-100 text-green-800"
                         : assessment.status === "Pending"
-                        ? "bg-yellow-100 text-yellow-800"
+                        ? "bg-red-200 text-red-700"
                         : assessment.status === "Approved"
                         ? "bg-red-200 text-red-700"
                         : "bg-gray-100 text-gray-800"

@@ -307,9 +307,9 @@ function AssessorHome() {
 
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
           <div className="flex items-center">
-            <div className="p-1.5 bg-gray-100 rounded-lg">
+            <div className="p-1.5 bg-green-100 rounded-lg">
               <svg
-                className="w-4 h-4 text-gray-600"
+                className="w-4 h-4 text-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

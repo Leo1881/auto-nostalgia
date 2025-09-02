@@ -262,7 +262,7 @@ function AssessmentHistory() {
       case "approved":
         return "bg-red-200 text-red-700";
       case "completed":
-        return "bg-gray-100 text-gray-600";
+        return "bg-green-100 text-green-800";
       case "rejected":
         return "bg-red-200 text-red-700";
       case "cancelled":
@@ -624,10 +624,10 @@ function AssessmentHistory() {
                 {assessment.status === "completed" &&
                   assessment.vehicle_value && (
                     <div className="mt-3 pt-3 border-t border-gray-100">
-                      <div className="bg-gray-50 rounded-lg p-3">
+                      <div className="bg-green-50 rounded-lg p-3">
                         <div className="flex items-center space-x-2 mb-2">
                           <svg
-                            className="w-4 h-4 text-gray-600"
+                            className="w-4 h-4 text-green-600"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -639,7 +639,7 @@ function AssessmentHistory() {
                               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                           </svg>
-                          <span className="text-sm font-medium text-gray-800">
+                          <span className="text-sm font-medium text-green-800">
                             Assessment Complete
                           </span>
                         </div>

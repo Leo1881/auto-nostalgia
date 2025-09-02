@@ -119,7 +119,7 @@ function MySchedule() {
       case "approved":
         return "bg-red-200 text-red-700";
       case "completed":
-        return "bg-gray-100 text-gray-600";
+        return "bg-green-100 text-green-800";
       default:
         return "bg-gray-100 text-gray-600";
     }
@@ -265,9 +265,9 @@ function MySchedule() {
 
         <div className="bg-white rounded-xl shadow-sm p-4">
           <div className="flex items-center">
-            <div className="p-2 bg-gray-100 rounded-lg">
+            <div className="p-2 bg-green-100 rounded-lg">
               <svg
-                className="w-6 h-6 text-gray-600"
+                className="w-6 h-6 text-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -281,7 +281,7 @@ function MySchedule() {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Completed</p>
+              <p className="text-sm font-medium text-green-600">Completed</p>
               <p className="text-2xl font-bold text-[#333333ff]">
                 {pastAssessments.length}
               </p>
@@ -444,16 +444,16 @@ function MySchedule() {
                       )}
                       {assessment.status === "completed" &&
                         assessment.vehicle_value && (
-                          <div className="bg-gray-50 rounded-lg p-3">
-                            <p className="text-sm font-medium text-gray-800">
+                          <div className="bg-green-50 rounded-lg p-3">
+                            <p className="text-sm font-medium text-green-800">
                               Assessment Completed
                             </p>
-                            <p className="text-sm text-gray-700">
+                            <p className="text-sm text-green-700">
                               Vehicle Value: R
                               {assessment.vehicle_value.toLocaleString()}
                             </p>
                             {assessment.completion_date && (
-                              <p className="text-sm text-gray-700">
+                              <p className="text-sm text-green-700">
                                 Completed:{" "}
                                 {new Date(
                                   assessment.completion_date

@@ -37,7 +37,7 @@ function AssessmentDetailModal({
       case "approved":
         return "bg-red-200 text-red-700";
       case "completed":
-        return "bg-gray-100 text-gray-600";
+        return "bg-green-100 text-green-800";
       case "rejected":
         return "bg-red-200 text-red-700";
       case "cancelled":
@@ -236,27 +236,27 @@ function AssessmentDetailModal({
 
           {/* Assessment Results (if completed) */}
           {assessment.status === "completed" && (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <div className="bg-green-50 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-green-900 mb-3">
                 Assessment Results
               </h3>
               <div className="space-y-3">
                 {assessment.vehicle_value && (
                   <div>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium text-green-700">
                       Estimated Vehicle Value
                     </p>
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-green-900">
                       R{assessment.vehicle_value.toLocaleString()}
                     </p>
                   </div>
                 )}
                 {assessment.completion_date && (
                   <div>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium text-green-700">
                       Assessment Completed
                     </p>
-                    <p className="text-gray-900">
+                    <p className="text-green-900">
                       {new Date(
                         assessment.completion_date
                       ).toLocaleDateString()}
@@ -265,10 +265,10 @@ function AssessmentDetailModal({
                 )}
                 {assessment.assessment_notes && (
                   <div>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium text-green-700">
                       Assessment Notes
                     </p>
-                    <p className="text-gray-900">
+                    <p className="text-green-900">
                       {assessment.assessment_notes}
                     </p>
                   </div>
