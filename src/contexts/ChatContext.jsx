@@ -44,13 +44,13 @@ export const ChatProvider = ({ children }) => {
       let acceptedAssessments = [];
 
       if (profile.role === "customer") {
-        // For customers: get assessments where they are the customer and status is 'approved', 'scheduled', or 'completed'
+        // For customers: get assessments where they are the customer and status is 'approved' only
         const { data: customerAssessments, error: customerError } =
           await supabase
             .from("assessment_requests")
             .select("id, vehicle_id, assigned_assessor_id")
             .eq("user_id", user.id)
-            .in("status", ["approved", "scheduled", "completed"]);
+            .eq("status", "approved");
 
         console.log("Customer assessments query:", {
           customerAssessments,
@@ -59,13 +59,13 @@ export const ChatProvider = ({ children }) => {
         });
         acceptedAssessments = customerAssessments || [];
       } else if (profile.role === "assessor") {
-        // For assessors: get assessments where they are the assessor and status is 'approved', 'scheduled', or 'completed'
+        // For assessors: get assessments where they are the assessor and status is 'approved' only
         const { data: assessorAssessments, error: assessorError } =
           await supabase
             .from("assessment_requests")
             .select("id, vehicle_id, user_id")
             .eq("assigned_assessor_id", user.id)
-            .in("status", ["approved", "scheduled", "completed"]);
+            .eq("status", "approved");
 
         console.log("Assessor assessments query:", {
           assessorAssessments,
@@ -307,22 +307,28 @@ export const ChatProvider = ({ children }) => {
           return existingConversation;
         }
 
-        // Get assessment details to find customer and assessor
+        // Get assessment details to find customer and assessor, and verify it's approved
         const { data: assessment, error: assessmentError } = await supabase
           .from("assessment_requests")
-          .select("customer_id, assessor_id")
+          .select("user_id, assigned_assessor_id, status")
           .eq("id", assessmentId)
           .single();
 
         if (assessmentError) throw assessmentError;
+
+        // Only create conversation if assessment is approved
+        if (assessment.status !== "approved") {
+          console.log("Assessment is not approved, cannot create conversation");
+          return null;
+        }
 
         // Create new conversation
         const { data: newConversation, error: createError } = await supabase
           .from("chat_conversations")
           .insert({
             assessment_id: assessmentId,
-            customer_id: assessment.customer_id,
-            assessor_id: assessment.assessor_id,
+            customer_id: assessment.user_id,
+            assessor_id: assessment.assigned_assessor_id,
           })
           .select()
           .single();

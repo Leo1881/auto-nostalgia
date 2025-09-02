@@ -151,8 +151,7 @@ function ChatSidebar({ isOpen, onClose, onSelectConversation }) {
               No active assessments found.
             </p>
             <p className="text-xs text-gray-600 mt-1">
-              Chat will be available once an assessor accepts your assessment
-              request.
+              Chat is only available for approved assessments that haven't been completed yet.
             </p>
           </div>
         ) : (
