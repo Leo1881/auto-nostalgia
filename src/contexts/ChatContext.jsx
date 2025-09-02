@@ -401,9 +401,29 @@ export const ChatProvider = ({ children }) => {
       )
       .subscribe();
 
+    // Subscribe to assessment status changes
+    const assessmentsSubscription = supabase
+      .channel("assessment_requests")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "assessment_requests",
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log("Assessment status changed:", payload);
+          // Refresh conversations when assessment status changes
+          fetchConversations();
+        }
+      )
+      .subscribe();
+
     return () => {
       supabase.removeChannel(messagesSubscription);
       supabase.removeChannel(conversationsSubscription);
+      supabase.removeChannel(assessmentsSubscription);
     };
   }, [user, activeConversation, fetchConversations, fetchUnreadCount]);
 

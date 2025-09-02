@@ -3,7 +3,8 @@ import { useChat } from "../../contexts/ChatContext.jsx";
 import { useAuth } from "../../hooks/useAuth";
 
 function ChatWindow({ conversation, onBack }) {
-  const { messages, sendMessage, markMessagesAsRead } = useChat();
+  const { messages, sendMessage, markMessagesAsRead, conversations } =
+    useChat();
   const { user } = useAuth();
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
@@ -66,7 +67,11 @@ function ChatWindow({ conversation, onBack }) {
     return message.sender_id === user.id;
   };
 
-  if (!conversation) {
+  // Check if the conversation still exists in the conversations list
+  const conversationStillExists =
+    conversation && conversations.some((conv) => conv.id === conversation.id);
+
+  if (!conversation || !conversationStillExists) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -84,7 +89,9 @@ function ChatWindow({ conversation, onBack }) {
             />
           </svg>
           <p className="text-sm text-[#333333ff]">
-            Select a conversation to start chatting.
+            {!conversation
+              ? "Select a conversation to start chatting."
+              : "This conversation is no longer available."}
           </p>
         </div>
       </div>

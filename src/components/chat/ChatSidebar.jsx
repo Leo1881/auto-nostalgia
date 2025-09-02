@@ -151,7 +151,8 @@ function ChatSidebar({ isOpen, onClose, onSelectConversation }) {
               No active assessments found.
             </p>
             <p className="text-xs text-gray-600 mt-1">
-              Chat is only available for approved assessments that haven't been completed yet.
+              Chat is only available for approved assessments that haven't been
+              completed yet.
             </p>
           </div>
         ) : (
@@ -183,9 +184,6 @@ function ChatSidebar({ isOpen, onClose, onSelectConversation }) {
                       </div>
                       <p className="text-xs text-[#333333ff] truncate">
                         {participant?.full_name || "Unknown User"}
-                      </p>
-                      <p className="text-xs text-gray-600 truncate">
-                        {participant?.email || "No email"}
                       </p>
                     </div>
                   </div>
