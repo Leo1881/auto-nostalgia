@@ -70,7 +70,7 @@ function AssessmentRequests() {
   const loadAssessmentRequests = async () => {
     setIsLoading(true);
     try {
-      // First get assessment requests
+      // Get all assessment requests in the assessor's province/location
       const { data: requestsData, error: requestsError } = await supabase
         .from("assessment_requests")
         .select("*")

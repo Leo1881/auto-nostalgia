@@ -41,7 +41,7 @@ function AssessorDashboard() {
         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <h1 className="text-[16px] font-medium text-white">
+              <h1 className="text-[16px] font-medium text-[#333333ff]">
                 Welcome back, {profile?.full_name?.split(" ")[0] || "Assessor"}
               </h1>
             </div>

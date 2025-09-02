@@ -39,29 +39,19 @@ function AssessorHome() {
 
   const loadStats = async () => {
     try {
-      // Get all assessment requests (not just pending)
+      // Get assessment requests assigned to this assessor
       const { data: allRequests } = await supabase
         .from("assessment_requests")
-        .select("*");
+        .select("*")
+        .eq("assigned_assessor_id", user.id);
 
-      // Filter by province (assuming assessor's province is stored in profile)
-      const assessorProvince = profile?.location || profile?.province;
-      const requestsInProvince =
-        allRequests?.filter((request) => {
-          // This would need to be enhanced when we add province to assessment_requests
-          return true; // For now, show all requests
-        }) || [];
-
-      const totalRequests = requestsInProvince.length;
-      const pendingRequests = requestsInProvince.filter(
-        (r) => r.status === "pending"
-      ).length;
-      const scheduledAssessments = requestsInProvince.filter(
-        (r) => r.status === "approved"
-      ).length;
-      const completedAssessments = requestsInProvince.filter(
-        (r) => r.status === "completed"
-      ).length;
+      const totalRequests = allRequests?.length || 0;
+      const pendingRequests =
+        allRequests?.filter((r) => r.status === "pending").length || 0;
+      const scheduledAssessments =
+        allRequests?.filter((r) => r.status === "approved").length || 0;
+      const completedAssessments =
+        allRequests?.filter((r) => r.status === "completed").length || 0;
 
       return {
         totalRequests,
@@ -82,10 +72,11 @@ function AssessorHome() {
 
   const loadRecentRequests = async () => {
     try {
-      // First get assessment requests (all statuses)
+      // Get assessment requests assigned to this assessor
       const { data: requestsData, error: requestsError } = await supabase
         .from("assessment_requests")
         .select("*")
+        .eq("assigned_assessor_id", user.id)
         .order("created_at", { ascending: false })
         .limit(5);
 
