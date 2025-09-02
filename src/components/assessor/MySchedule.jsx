@@ -23,12 +23,12 @@ function MySchedule() {
   const loadScheduledAssessments = async () => {
     setIsLoading(true);
     try {
-      // Get all approved assessments assigned to this assessor
+      // Get all scheduled assessments assigned to this assessor (approved and scheduled status)
       const { data: assessmentsData, error: assessmentsError } = await supabase
         .from("assessment_requests")
         .select("*")
         .eq("assigned_assessor_id", user.id)
-        .eq("status", "approved")
+        .in("status", ["approved", "scheduled"])
         .order("scheduled_date", { ascending: true });
 
       if (assessmentsError) {
@@ -88,6 +88,7 @@ function MySchedule() {
           vehicles: vehiclesMap[assessment.vehicle_id],
         })) || [];
 
+      console.log("Loaded scheduled assessments:", combinedData);
       setScheduledAssessments(combinedData);
     } catch (error) {
       console.error("Error loading scheduled assessments:", error);
@@ -117,6 +118,7 @@ function MySchedule() {
   const getStatusColor = (status) => {
     switch (status) {
       case "approved":
+      case "scheduled":
         return "bg-red-200 text-red-700";
       case "completed":
         return "bg-green-100 text-green-800";
@@ -366,32 +368,31 @@ function MySchedule() {
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-semibold text-[#333333ff] mb-2">
-                      {assessment.vehicles?.year} {assessment.vehicles?.make}{" "}
-                      {assessment.vehicles?.model}
-                    </h3>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                      <div>
-                        <p className="text-sm font-medium text-gray-700">
-                          Customer
-                        </p>
-                        <p className="text-sm text-gray-900">
-                          {assessment.profiles?.full_name}
-                        </p>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-[#333333ff]">
+                        {assessment.vehicles?.year} {assessment.vehicles?.make}{" "}
+                        {assessment.vehicles?.model}
+                      </h3>
+                      <div className="text-right">
                         <p className="text-sm text-gray-600">
-                          {assessment.profiles?.phone}
+                          {assessment.vehicles?.registration_number}
                         </p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-700">
-                          Vehicle Details
-                        </p>
-                        <p className="text-sm text-gray-900">
-                          {assessment.vehicles?.registration_number} •{" "}
+                        <p className="text-xs text-gray-500">
                           {assessment.vehicles?.mileage}km
                         </p>
                       </div>
+                    </div>
+
+                    <div className="mb-3">
+                      <p className="text-sm font-medium text-gray-700 mb-1">
+                        Customer
+                      </p>
+                      <p className="text-sm text-gray-900">
+                        {assessment.profiles?.full_name}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {assessment.profiles?.phone}
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -434,7 +435,8 @@ function MySchedule() {
 
                     {/* Action Buttons */}
                     <div className="mt-4 pt-3 border-t border-gray-200">
-                      {assessment.status === "approved" && (
+                      {(assessment.status === "approved" ||
+                        assessment.status === "scheduled") && (
                         <button
                           onClick={() => handleCompleteAssessment(assessment)}
                           className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
