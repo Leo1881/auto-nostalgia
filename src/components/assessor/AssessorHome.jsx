@@ -39,18 +39,17 @@ function AssessorHome() {
 
   const loadStats = async () => {
     try {
-      // Get all assessment requests in assessor's province
+      // Get all assessment requests (not just pending)
       const { data: allRequests } = await supabase
         .from("assessment_requests")
-        .select("*")
-        .eq("status", "pending");
+        .select("*");
 
       // Filter by province (assuming assessor's province is stored in profile)
       const assessorProvince = profile?.location || profile?.province;
       const requestsInProvince =
         allRequests?.filter((request) => {
           // This would need to be enhanced when we add province to assessment_requests
-          return true; // For now, show all pending requests
+          return true; // For now, show all requests
         }) || [];
 
       const totalRequests = requestsInProvince.length;
@@ -83,11 +82,10 @@ function AssessorHome() {
 
   const loadRecentRequests = async () => {
     try {
-      // First get assessment requests
+      // First get assessment requests (all statuses)
       const { data: requestsData, error: requestsError } = await supabase
         .from("assessment_requests")
         .select("*")
-        .eq("status", "pending")
         .order("created_at", { ascending: false })
         .limit(5);
 
