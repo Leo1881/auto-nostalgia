@@ -457,71 +457,73 @@ function DashboardHome({ onSectionChange }) {
             {recentAssessments.map((assessment) => (
               <div
                 key={assessment.id}
-                className="flex flex-col sm:flex-row sm:items-start sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
+                className="p-3 sm:p-4 bg-gray-50 rounded-lg space-y-3"
               >
-                <div className="flex-1">
-                  <h3 className="font-medium text-[#333333ff] text-sm">
-                    {assessment.vehicle}
-                  </h3>
-                  <p className="text-sm text-[#333333ff]">
-                    {new Date(assessment.date).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-gray-600 mt-1">
-                    {assessment.assessmentType}
-                  </p>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-2 sm:space-y-0">
+                  <div className="flex-1">
+                    <h3 className="font-medium text-[#333333ff] text-sm">
+                      {assessment.vehicle}
+                    </h3>
+                    <p className="text-sm text-[#333333ff]">
+                      {new Date(assessment.date).toLocaleDateString()}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">
+                      {assessment.assessmentType}
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:text-right space-y-1 sm:space-y-0">
+                    <span
+                      className={`px-2 sm:px-3 py-1 rounded-full text-sm font-medium w-fit ${
+                        assessment.status === "Completed"
+                          ? "bg-green-100 text-green-800"
+                          : assessment.status === "Pending"
+                          ? "bg-red-200 text-red-700"
+                          : assessment.status === "Approved"
+                          ? "bg-red-200 text-red-700"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {assessment.status}
+                    </span>
+                    <p className="text-xs text-gray-600 mt-1">
+                      Priority:{" "}
+                      {assessment.urgency.charAt(0).toUpperCase() +
+                        assessment.urgency.slice(1)}
+                    </p>
+                  </div>
+                </div>
 
-                  {/* Assessor Information for Approved Assessments */}
-                  {assessment.status === "Approved" && assessment.assessor && (
-                    <div className="mt-2 p-2 bg-red-50 rounded border border-red-200">
-                      <div className="flex items-center space-x-1 mb-1">
-                        <svg
-                          className="w-3 h-3 text-red-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                        <span className="text-xs font-medium text-red-800">
-                          Assigned Assessor
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-700">
-                        <span className="font-medium">Name:</span>{" "}
-                        {assessment.assessor.full_name}
-                      </p>
-                      <p className="text-xs text-gray-700">
-                        <span className="font-medium">Phone:</span>{" "}
-                        {assessment.assessor.phone || "Not provided"}
-                      </p>
+                {/* Assessor Information for Approved Assessments */}
+                {assessment.status === "Approved" && assessment.assessor && (
+                  <div className="p-2 bg-red-50 rounded border border-red-200 w-full">
+                    <div className="flex items-center space-x-1 mb-1">
+                      <svg
+                        className="w-3 h-3 text-red-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      <span className="text-xs font-medium text-red-800">
+                        Assigned Assessor
+                      </span>
                     </div>
-                  )}
-                </div>
-                <div className="flex flex-col sm:text-right space-y-1 sm:space-y-0">
-                  <span
-                    className={`px-2 sm:px-3 py-1 rounded-full text-sm font-medium w-fit ${
-                      assessment.status === "Completed"
-                        ? "bg-green-100 text-green-800"
-                        : assessment.status === "Pending"
-                        ? "bg-red-200 text-red-700"
-                        : assessment.status === "Approved"
-                        ? "bg-red-200 text-red-700"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {assessment.status}
-                  </span>
-                  <p className="text-xs text-gray-600 mt-1">
-                    Priority:{" "}
-                    {assessment.urgency.charAt(0).toUpperCase() +
-                      assessment.urgency.slice(1)}
-                  </p>
-                </div>
+                    <p className="text-xs text-gray-700">
+                      <span className="font-medium">Name:</span>{" "}
+                      {assessment.assessor.full_name}
+                    </p>
+                    <p className="text-xs text-gray-700">
+                      <span className="font-medium">Phone:</span>{" "}
+                      {assessment.assessor.phone || "Not provided"}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
