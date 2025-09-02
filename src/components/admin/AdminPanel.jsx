@@ -350,7 +350,7 @@ function AdminPanel() {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 p-6 sm:p-8 lg:p-10 overflow-auto">
+        <main className="flex-1 p-6 sm:p-8 lg:p-10 overflow-auto bg-white">
           <div className="w-full space-y-6">
             {/* Error Message */}
             {error && (
@@ -382,16 +382,22 @@ function AdminPanel() {
 
             {/* Dashboard Tab */}
             {activeTab === "dashboard" && (
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-                  Dashboard Overview
-                </h1>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+              <div className="space-y-6">
+                {/* Welcome Section */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <p className="text-[#333333ff] mb-4">
+                    Here's what's happening with assessor requests and system
+                    management.
+                  </p>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                  <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
                     <div className="flex items-center">
-                      <div className="p-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl shadow-md">
+                      <div className="p-1.5 bg-red-200 rounded-lg">
                         <svg
-                          className="w-8 h-8 text-white"
+                          className="w-4 h-4 text-red-700"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -404,22 +410,22 @@ function AdminPanel() {
                           />
                         </svg>
                       </div>
-                      <div className="ml-6">
-                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      <div className="ml-3 flex items-center space-x-2">
+                        <p className="text-xs font-medium text-[#333333ff] mr-2">
                           Total Requests
                         </p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                        <p className="text-xs font-bold text-[#333333ff]">
                           {stats.total}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                  <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
                     <div className="flex items-center">
-                      <div className="p-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl shadow-md">
+                      <div className="p-1.5 bg-red-200 rounded-lg">
                         <svg
-                          className="w-8 h-8 text-white"
+                          className="w-4 h-4 text-red-700"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -432,22 +438,22 @@ function AdminPanel() {
                           />
                         </svg>
                       </div>
-                      <div className="ml-6">
-                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      <div className="ml-3 flex items-center space-x-2">
+                        <p className="text-xs font-medium text-[#333333ff] mr-2">
                           Pending
                         </p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                        <p className="text-xs font-bold text-[#333333ff]">
                           {stats.pending}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                  <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
                     <div className="flex items-center">
-                      <div className="p-3 bg-gradient-to-br from-green-400 to-green-600 rounded-xl shadow-md">
+                      <div className="p-1.5 bg-green-100 rounded-lg">
                         <svg
-                          className="w-8 h-8 text-white"
+                          className="w-4 h-4 text-green-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -460,22 +466,22 @@ function AdminPanel() {
                           />
                         </svg>
                       </div>
-                      <div className="ml-6">
-                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      <div className="ml-3 flex items-center space-x-2">
+                        <p className="text-xs font-medium text-[#333333ff] mr-2">
                           Approved
                         </p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                        <p className="text-xs font-bold text-[#333333ff]">
                           {stats.approved}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                  <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
                     <div className="flex items-center">
-                      <div className="p-3 bg-gradient-to-br from-red-400 to-red-600 rounded-xl shadow-md">
+                      <div className="p-1.5 bg-gray-100 rounded-lg">
                         <svg
-                          className="w-8 h-8 text-white"
+                          className="w-4 h-4 text-gray-600"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -488,16 +494,152 @@ function AdminPanel() {
                           />
                         </svg>
                       </div>
-                      <div className="ml-6">
-                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                      <div className="ml-3 flex items-center space-x-2">
+                        <p className="text-xs font-medium text-[#333333ff] mr-2">
                           Rejected
                         </p>
-                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                        <p className="text-xs font-bold text-[#333333ff]">
                           {stats.rejected}
                         </p>
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* Spacer */}
+                <div className="mb-6"></div>
+
+                {/* Top spacer for quick actions */}
+                <div className="mt-6"></div>
+
+                {/* Quick Actions */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6">
+                  <button
+                    onClick={() => setActiveTab("pending")}
+                    className="bg-red-600 rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-lg transition-all duration-200 text-left w-full h-24 flex items-center"
+                  >
+                    <div className="flex items-center pl-2 sm:pl-4 w-full h-full">
+                      <div className="rounded-lg text-white bg-red-600">
+                        <svg
+                          className="w-8 h-8"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-3 sm:ml-4 flex-1">
+                        <h3 className="text-base sm:text-lg font-semibold text-white">
+                          Review Pending Requests
+                        </h3>
+                        <p className="text-xs sm:text-sm text-white">
+                          Approve or reject assessor applications
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab("users")}
+                    className="bg-red-600 rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-lg transition-all duration-200 text-left w-full h-24 flex items-center"
+                  >
+                    <div className="flex items-center pl-2 sm:pl-4 w-full h-full">
+                      <div className="rounded-lg text-white bg-red-600">
+                        <svg
+                          className="w-8 h-8"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-3 sm:ml-4 flex-1">
+                        <h3 className="text-base sm:text-lg font-semibold text-white">
+                          Manage Users
+                        </h3>
+                        <p className="text-xs sm:text-sm text-white">
+                          View and manage user accounts
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <h2 className="text-sm font-bold text-[#333333ff] mb-4">
+                    Recent Activity
+                  </h2>
+                  {assessorRequests.length === 0 ? (
+                    <div className="text-center py-8">
+                      <svg
+                        className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        />
+                      </svg>
+                      <p className="text-gray-600">No recent activity.</p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        New assessor requests will appear here.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 sm:space-y-4">
+                      {assessorRequests.slice(0, 5).map((request) => (
+                        <div
+                          key={request.id}
+                          className="flex flex-col sm:flex-row sm:items-start sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
+                        >
+                          <div className="flex-1">
+                            <h3 className="font-medium text-[#333333ff] text-sm">
+                              {request.profiles?.full_name || "Unknown User"}
+                            </h3>
+                            <p className="text-sm text-[#333333ff]">
+                              {new Date(
+                                request.created_at
+                              ).toLocaleDateString()}
+                            </p>
+                            <p className="text-xs text-gray-600 mt-1">
+                              {request.profiles?.email || "No email provided"}
+                            </p>
+                          </div>
+                          <div className="flex flex-col sm:text-right space-y-1 sm:space-y-0">
+                            <span
+                              className={`px-2 sm:px-3 py-1 rounded-full text-sm font-medium w-fit ${
+                                request.status === "approved"
+                                  ? "bg-green-100 text-green-800"
+                                  : request.status === "pending"
+                                  ? "bg-red-200 text-red-700"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
+                            >
+                              {request.status.charAt(0).toUpperCase() +
+                                request.status.slice(1)}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
