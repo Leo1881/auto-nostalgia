@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 
 const MultiImageUpload = ({
   onImagesSelect,
@@ -13,17 +13,23 @@ const MultiImageUpload = ({
   const [error, setError] = useState("");
   const fileInputRef = useRef(null);
 
+  // Memoize the currentImages array to prevent unnecessary re-renders
+  const memoizedCurrentImages = useMemo(
+    () => currentImages,
+    [JSON.stringify(currentImages)]
+  );
+
   // Update previewUrls when currentImages changes
   useEffect(() => {
     const urls = Array(maxImages).fill(null);
-    currentImages.forEach((url, index) => {
+    memoizedCurrentImages.forEach((url, index) => {
       if (index < maxImages && url) {
         urls[index] = url;
       }
     });
 
     setPreviewUrls(urls);
-  }, [currentImages, maxImages]);
+  }, [memoizedCurrentImages, maxImages]);
 
   const validateFile = (file) => {
     // Check file type

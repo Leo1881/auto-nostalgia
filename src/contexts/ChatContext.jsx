@@ -28,29 +28,97 @@ export const ChatProvider = ({ children }) => {
 
   // Fetch user's conversations
   const fetchConversations = useCallback(async () => {
-    if (!user) return;
+    console.log("ChatContext - fetchConversations called, user:", user);
+    console.log("ChatContext - profile:", profile);
+    console.log("ChatContext - user details:", {
+      id: user?.id,
+      role: profile?.role,
+      email: user?.email,
+    });
+    if (!user || !profile) return;
 
     try {
       setLoading(true);
 
-      // First, get the conversations
-      const { data: conversations, error: conversationsError } = await supabase
-        .from("chat_conversations")
-        .select("*")
-        .or(`customer_id.eq.${user.id},assessor_id.eq.${user.id}`)
-        .order("updated_at", { ascending: false });
+      // Get accepted assessments based on user role
+      let acceptedAssessments = [];
 
-      if (conversationsError) throw conversationsError;
-
-      // Then, get the related data for each conversation
-      const conversationsWithData = await Promise.all(
-        conversations.map(async (conversation) => {
-          // Get assessment request data
-          const { data: assessmentData } = await supabase
+      if (profile.role === "customer") {
+        // For customers: get assessments where they are the customer and status is 'approved', 'scheduled', or 'completed'
+        const { data: customerAssessments, error: customerError } =
+          await supabase
             .from("assessment_requests")
-            .select("id, vehicle_make, vehicle_model, vehicle_year")
-            .eq("id", conversation.assessment_id)
+            .select("id, vehicle_id, assigned_assessor_id")
+            .eq("user_id", user.id)
+            .in("status", ["approved", "scheduled", "completed"]);
+
+        console.log("Customer assessments query:", {
+          customerAssessments,
+          customerError,
+          userId: user.id,
+        });
+        acceptedAssessments = customerAssessments || [];
+      } else if (profile.role === "assessor") {
+        // For assessors: get assessments where they are the assessor and status is 'approved', 'scheduled', or 'completed'
+        const { data: assessorAssessments, error: assessorError } =
+          await supabase
+            .from("assessment_requests")
+            .select("id, vehicle_id, user_id")
+            .eq("assigned_assessor_id", user.id)
+            .in("status", ["approved", "scheduled", "completed"]);
+
+        console.log("Assessor assessments query:", {
+          assessorAssessments,
+          assessorError,
+          userId: user.id,
+        });
+        acceptedAssessments = assessorAssessments || [];
+      }
+
+      console.log("Accepted assessments:", acceptedAssessments);
+
+      // Get or create conversations for accepted assessments
+      const conversationsWithData = await Promise.all(
+        acceptedAssessments.map(async (assessment) => {
+          // Get vehicle data for this assessment
+          const { data: vehicleData } = await supabase
+            .from("vehicles")
+            .select("id, year, make, model")
+            .eq("id", assessment.vehicle_id)
             .single();
+
+          // Check if conversation already exists
+          const { data: existingConversation } = await supabase
+            .from("chat_conversations")
+            .select("*")
+            .eq("assessment_id", assessment.id)
+            .single();
+
+          let conversation;
+          if (existingConversation) {
+            conversation = existingConversation;
+          } else {
+            // Create new conversation
+            const { data: newConversation, error: createError } = await supabase
+              .from("chat_conversations")
+              .insert({
+                assessment_id: assessment.id,
+                customer_id:
+                  profile.role === "customer" ? user.id : assessment.user_id,
+                assessor_id:
+                  profile.role === "assessor"
+                    ? user.id
+                    : assessment.assigned_assessor_id,
+              })
+              .select("*")
+              .single();
+
+            if (createError) {
+              console.error("Error creating conversation:", createError);
+              return null;
+            }
+            conversation = newConversation;
+          }
 
           // Get customer data
           const { data: customerData } = await supabase
@@ -68,20 +136,30 @@ export const ChatProvider = ({ children }) => {
 
           return {
             ...conversation,
-            assessment_requests: assessmentData,
+            assessment_requests: {
+              id: assessment.id,
+              vehicle_make: vehicleData?.make || "Unknown",
+              vehicle_model: vehicleData?.model || "Unknown",
+              vehicle_year: vehicleData?.year || "Unknown",
+            },
             customer: customerData,
             assessor: assessorData,
           };
         })
       );
 
-      setConversations(conversationsWithData || []);
+      // Filter out any null conversations (from errors)
+      const validConversations = conversationsWithData.filter(
+        (conv) => conv !== null
+      );
+      console.log("Final conversations:", validConversations);
+      setConversations(validConversations);
     } catch (error) {
       console.error("Error fetching conversations:", error);
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, profile]);
 
   // Fetch messages for a conversation
   const fetchMessages = useCallback(async (conversationId) => {
@@ -164,7 +242,7 @@ export const ChatProvider = ({ children }) => {
           .update({ updated_at: new Date().toISOString() })
           .eq("id", conversationId);
 
-        return data;
+        return messageWithSender;
       } catch (error) {
         console.error("Error sending message:", error);
         throw error;
@@ -232,7 +310,7 @@ export const ChatProvider = ({ children }) => {
         // Get assessment details to find customer and assessor
         const { data: assessment, error: assessmentError } = await supabase
           .from("assessment_requests")
-          .select("customer_id, assigned_assessor_id")
+          .select("customer_id, assessor_id")
           .eq("id", assessmentId)
           .single();
 
@@ -244,7 +322,7 @@ export const ChatProvider = ({ children }) => {
           .insert({
             assessment_id: assessmentId,
             customer_id: assessment.customer_id,
-            assessor_id: assessment.assigned_assessor_id,
+            assessor_id: assessment.assessor_id,
           })
           .select()
           .single();
@@ -260,7 +338,7 @@ export const ChatProvider = ({ children }) => {
         return null;
       }
     },
-    [user, fetchConversations]
+    [user, profile, fetchConversations]
   );
 
   // Get unread message count
@@ -325,6 +403,7 @@ export const ChatProvider = ({ children }) => {
 
   // Initial data fetch
   useEffect(() => {
+    console.log("ChatContext - Initial data fetch triggered, user:", user);
     fetchConversations();
     fetchUnreadCount();
   }, [fetchConversations, fetchUnreadCount]);

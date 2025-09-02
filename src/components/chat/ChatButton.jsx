@@ -3,7 +3,7 @@ import { useChat } from "../../contexts/ChatContext.jsx";
 import ChatInterface from "./ChatInterface";
 
 function ChatButton() {
-  const { unreadCount } = useChat();
+  const { unreadCount, conversations } = useChat();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
@@ -13,6 +13,13 @@ function ChatButton() {
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  // Only show chat button if there are conversations available
+  console.log("ChatButton - conversations:", conversations);
+  if (conversations.length === 0) {
+    console.log("ChatButton - No conversations, not showing button");
+    return null;
+  }
 
   return (
     <>

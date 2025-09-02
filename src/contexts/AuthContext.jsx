@@ -257,6 +257,7 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json();
       console.log("Profile data:", data);
+      console.log("Profile data details:", JSON.stringify(data, null, 2));
 
       if (data && data.length > 0) {
         setProfile(data[0]);
