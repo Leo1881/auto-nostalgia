@@ -277,6 +277,13 @@ export const AuthProvider = ({ children }) => {
     location,
     contactMethod,
     experience,
+    // Address fields
+    address,
+    city,
+    state,
+    province,
+    zipCode,
+    country,
   }) => {
     try {
       // Sign up the user
@@ -306,6 +313,14 @@ export const AuthProvider = ({ children }) => {
                 email: email,
                 full_name: fullName,
                 role: role,
+                // Address fields
+                phone: phoneNumber,
+                address: address,
+                city: city,
+                state: state,
+                province: province,
+                zip_code: zipCode,
+                country: country,
               },
             ]);
 
