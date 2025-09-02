@@ -646,164 +646,165 @@ function AdminPanel() {
 
             {/* Pending Requests Tab */}
             {activeTab === "pending" && (
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-                  Pending Requests
-                </h1>
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-                  <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                          Requests Requiring Action
-                        </h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                          Review and approve or reject assessor applications
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {stats.pending} pending review
-                        </span>
-                      </div>
+              <div className="space-y-6">
+                {/* Welcome Section */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <p className="text-[#333333ff] mb-4">
+                    Review and approve or reject assessor applications.
+                  </p>
+                </div>
+
+                {/* Stats Summary */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-sm font-bold text-[#333333ff] mb-2">
+                        Pending Requests
+                      </h2>
+                      <p className="text-xs text-[#333333ff]">
+                        {stats.pending} requests requiring review
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <span className="text-xs text-[#333333ff]">
+                        {stats.pending} pending
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  <div className="p-8">
-                    {loading ? (
-                      <div className="text-center py-12">
-                        <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
-                        <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-                          {LOADING_TEXT.LOADING_REQUESTS}
-                        </p>
-                      </div>
-                    ) : assessorRequests.filter(
-                        (req) => req.status === "pending"
-                      ).length === 0 ? (
-                      <div className="text-center py-12">
-                        <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
-                          <svg
-                            className="h-12 w-12 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                          No pending requests
-                        </h3>
-                        <p className="text-gray-500 dark:text-gray-400">
-                          All assessor requests have been reviewed.
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-6">
-                        {assessorRequests
-                          .filter((request) => request.status === "pending")
-                          .map((request) => (
-                            <AssessorRequestCard
-                              key={request.id}
-                              request={request}
-                              onStatusUpdate={handleStatusUpdate}
-                            />
-                          ))}
-                      </div>
-                    )}
-                  </div>
+                {/* Requests List */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  {loading ? (
+                    <div className="text-center py-8">
+                      <div className={LOADING_SPINNER_CLASSES.LARGE}></div>
+                      <p className="mt-4 text-sm text-[#333333ff]">
+                        {LOADING_TEXT.LOADING_REQUESTS}
+                      </p>
+                    </div>
+                  ) : assessorRequests.filter((req) => req.status === "pending")
+                      .length === 0 ? (
+                    <div className="text-center py-8">
+                      <svg
+                        className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <p className="text-sm text-[#333333ff]">
+                        No pending requests.
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">
+                        All assessor requests have been reviewed.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {assessorRequests
+                        .filter((request) => request.status === "pending")
+                        .map((request) => (
+                          <AssessorRequestCard
+                            key={request.id}
+                            request={request}
+                            onStatusUpdate={handleStatusUpdate}
+                          />
+                        ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {/* Active Assessors Tab */}
             {activeTab === "assessors" && (
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-                  Active Assessors
-                </h1>
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-                  <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                          Approved Assessors
-                        </h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                          View all active assessors in the system
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {activeAssessors.length} active assessors
-                        </span>
-                      </div>
+              <div className="space-y-6">
+                {/* Welcome Section */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <p className="text-[#333333ff] mb-4">
+                    View all active assessors in the system.
+                  </p>
+                </div>
+
+                {/* Stats Summary */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-sm font-bold text-[#333333ff] mb-2">
+                        Active Assessors
+                      </h2>
+                      <p className="text-xs text-[#333333ff]">
+                        {activeAssessors.length} approved assessors
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-xs text-[#333333ff]">
+                        {activeAssessors.length} active
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  <div className="p-8">
-                    {loading ? (
-                      <div className="text-center py-12">
-                        <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
-                        <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-                          {LOADING_TEXT.LOADING_ASSESSORS}
-                        </p>
-                      </div>
-                    ) : activeAssessors.length === 0 ? (
-                      <div className="text-center py-12">
-                        <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
-                          <svg
-                            className="h-12 w-12 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                          </svg>
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                          No active assessors
-                        </h3>
-                        <p className="text-gray-500 dark:text-gray-400">
-                          No assessors have been approved yet.
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {activeAssessors.map((assessor) => (
-                          <div
-                            key={assessor.id}
-                            className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600"
-                          >
-                            <div className="flex items-center space-x-4 mb-4">
-                              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-md">
-                                <span className="text-sm font-bold text-white">
-                                  {assessor.full_name?.charAt(0) || "A"}
-                                </span>
-                              </div>
-                              <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                  {assessor.full_name || "Unknown"}
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  {assessor.email}
-                                </p>
-                              </div>
+                {/* Assessors List */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  {loading ? (
+                    <div className="text-center py-8">
+                      <div className={LOADING_SPINNER_CLASSES.LARGE}></div>
+                      <p className="mt-4 text-sm text-[#333333ff]">
+                        {LOADING_TEXT.LOADING_ASSESSORS}
+                      </p>
+                    </div>
+                  ) : activeAssessors.length === 0 ? (
+                    <div className="text-center py-8">
+                      <svg
+                        className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                      <p className="text-sm text-[#333333ff]">
+                        No active assessors.
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">
+                        No assessors have been approved yet.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {activeAssessors.map((assessor) => (
+                        <div
+                          key={assessor.id}
+                          className="bg-gray-50 rounded-lg p-4 border border-gray-100"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                              <span className="text-sm font-bold text-green-600">
+                                {assessor.full_name?.charAt(0) || "A"}
+                              </span>
                             </div>
-                            <div className="text-sm text-gray-600 dark:text-gray-400">
-                              <p>
+                            <div className="flex-1">
+                              <h3 className="text-sm font-bold text-[#333333ff]">
+                                {assessor.full_name || "Unknown"}
+                              </h3>
+                              <p className="text-xs text-[#333333ff]">
+                                {assessor.email}
+                              </p>
+                              <p className="text-xs text-gray-600 mt-1">
                                 Joined:{" "}
                                 {new Date(
                                   assessor.created_at
@@ -811,10 +812,10 @@ function AdminPanel() {
                               </p>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -824,48 +825,36 @@ function AdminPanel() {
 
             {/* Clients Tab */}
             {activeTab === "clients" && (
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-                  Clients
-                </h1>
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-                  <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                          Client Management
-                        </h2>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                          Manage client accounts and information
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+              <div className="space-y-6">
+                {/* Welcome Section */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <p className="text-[#333333ff] mb-4">
+                    Manage client accounts and information.
+                  </p>
+                </div>
 
-                  <div className="p-8">
-                    <div className="text-center py-12">
-                      <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
-                        <svg
-                          className="h-12 w-12 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                          />
-                        </svg>
-                      </div>
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                        Client Management Coming Soon
-                      </h3>
-                      <p className="text-gray-500 dark:text-gray-400">
-                        Client management features will be available here.
-                      </p>
-                    </div>
+                {/* Coming Soon Section */}
+                <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                  <div className="text-center py-8">
+                    <svg
+                      className="w-12 h-12 text-gray-400 mx-auto mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                    <h3 className="text-sm font-bold text-[#333333ff] mb-2">
+                      Client Management Coming Soon
+                    </h3>
+                    <p className="text-xs text-gray-600">
+                      Client management features will be available here.
+                    </p>
                   </div>
                 </div>
               </div>

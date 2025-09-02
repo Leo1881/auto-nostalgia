@@ -189,28 +189,28 @@ function UserManagement() {
   const getStatusColor = (status) => {
     switch (status) {
       case ACCOUNT_STATUS.ACTIVE:
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        return "bg-green-100 text-green-800";
       case ACCOUNT_STATUS.SUSPENDED:
-        return "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-800";
       case ACCOUNT_STATUS.DISABLED:
-        return "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-800";
       case ACCOUNT_STATUS.PENDING_APPROVAL:
-        return "bg-red-200 text-red-700 dark:bg-red-900 dark:text-red-200";
+        return "bg-red-200 text-red-700";
       default:
-        return "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getRoleColor = (role) => {
     switch (role) {
       case ROLES.ADMIN:
-        return "bg-red-200 text-red-700 dark:bg-red-900 dark:text-red-200";
+        return "bg-red-200 text-red-700";
       case ROLES.ASSESSOR:
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        return "bg-green-100 text-green-800";
       case ROLES.CUSTOMER:
-        return "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-800";
       default:
-        return "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -226,166 +226,142 @@ function UserManagement() {
 
   return (
     <PermissionGuard permission="canViewAllUsers" requiredRole={ROLES.ADMIN}>
-      <div className="p-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            User Management
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Manage user accounts, roles, and permissions
+      <div className="space-y-6">
+        {/* Welcome Section */}
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          <p className="text-[#333333ff] mb-4">
+            Manage user accounts, roles, and permissions.
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600">{error}</p>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-              {LOADING_TEXT.LOADING_REQUESTS}
-            </p>
-          </div>
-        ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      User
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Role
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Joined
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {users.map((user) => (
-                    <tr
-                      key={user.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="w-10 h-10 bg-gradient-to-br from-primary-red to-red-600 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-bold text-white">
-                              {user.full_name?.charAt(0) || "U"}
-                            </span>
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {user.full_name || "Unknown"}
-                            </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {user.email}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(
-                            user.role
-                          )}`}
-                        >
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-                            user.account_status || ACCOUNT_STATUS.ACTIVE
-                          )}`}
-                        >
-                          {user.account_status || ACCOUNT_STATUS.ACTIVE}
-                        </span>
-                        {user.suspension_reason && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            Reason: {user.suspension_reason}
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {formatDate(user.created_at)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
-                          {user.account_status === ACCOUNT_STATUS.SUSPENDED ? (
-                            <button
-                              onClick={() => handleActivateUser(user.id)}
-                              disabled={actionLoading}
-                              className="text-green-600 hover:text-green-900 dark:hover:text-green-400 disabled:opacity-50"
-                            >
-                              Activate
-                            </button>
-                          ) : user.account_status === ACCOUNT_STATUS.ACTIVE ||
-                            !user.account_status ? (
-                            <button
-                              onClick={() => {
-                                setSelectedUser(user);
-                                setShowSuspendModal(true);
-                              }}
-                              disabled={
-                                actionLoading || user.role === ROLES.ADMIN
-                              }
-                              className="text-red-600 hover:text-red-900 dark:hover:text-red-400 disabled:opacity-50"
-                            >
-                              Suspend
-                            </button>
-                          ) : null}
-
-                          {user.account_status !== ACCOUNT_STATUS.DISABLED && (
-                            <button
-                              onClick={() => handleDeleteUser(user.id)}
-                              disabled={
-                                actionLoading || user.role === ROLES.ADMIN
-                              }
-                              className="text-red-600 hover:text-red-900 dark:hover:text-red-400 disabled:opacity-50"
-                            >
-                              Delete
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {/* Users List */}
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          {loading ? (
+            <div className="text-center py-8">
+              <div className={LOADING_SPINNER_CLASSES.LARGE}></div>
+              <p className="mt-4 text-sm text-[#333333ff]">
+                {LOADING_TEXT.LOADING_REQUESTS}
+              </p>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="space-y-4">
+              {users.map((user) => (
+                <div
+                  key={user.id}
+                  className="bg-gray-50 rounded-lg p-4 border border-gray-100"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-bold text-red-700">
+                          {user.full_name?.charAt(0) || "U"}
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-[#333333ff]">
+                          {user.full_name || "Unknown"}
+                        </h3>
+                        <p className="text-xs text-[#333333ff]">{user.email}</p>
+                        <p className="text-xs text-gray-600 mt-1">
+                          Joined: {formatDate(user.created_at)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleColor(
+                          user.role
+                        )}`}
+                      >
+                        {user.role}
+                      </span>
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                          user.account_status || ACCOUNT_STATUS.ACTIVE
+                        )}`}
+                      >
+                        {user.account_status || ACCOUNT_STATUS.ACTIVE}
+                      </span>
+
+                      <div className="flex space-x-2">
+                        {user.account_status === ACCOUNT_STATUS.SUSPENDED ? (
+                          <button
+                            onClick={() => handleActivateUser(user.id)}
+                            disabled={actionLoading}
+                            className="text-xs text-green-600 hover:text-green-800 disabled:opacity-50 font-medium"
+                          >
+                            Activate
+                          </button>
+                        ) : user.account_status === ACCOUNT_STATUS.ACTIVE ||
+                          !user.account_status ? (
+                          <button
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setShowSuspendModal(true);
+                            }}
+                            disabled={
+                              actionLoading || user.role === ROLES.ADMIN
+                            }
+                            className="text-xs text-red-600 hover:text-red-800 disabled:opacity-50 font-medium"
+                          >
+                            Suspend
+                          </button>
+                        ) : null}
+
+                        {user.account_status !== ACCOUNT_STATUS.DISABLED && (
+                          <button
+                            onClick={() => handleDeleteUser(user.id)}
+                            disabled={
+                              actionLoading || user.role === ROLES.ADMIN
+                            }
+                            className="text-xs text-red-600 hover:text-red-800 disabled:opacity-50 font-medium"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {user.suspension_reason && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <p className="text-xs text-gray-600">
+                        <span className="font-medium">Suspension Reason:</span>{" "}
+                        {user.suspension_reason}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Suspend User Modal */}
         {showSuspendModal && selectedUser && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-lg font-semibold text-[#333333ff] mb-4">
                 Suspend User
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-[#333333ff] mb-4">
                 Are you sure you want to suspend {selectedUser.full_name}?
               </p>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-[#333333ff] mb-2">
                   Reason for suspension
                 </label>
                 <textarea
                   value={suspendReason}
                   onChange={(e) => setSuspendReason(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-red focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   rows="3"
                   placeholder="Enter reason for suspension..."
                 />
@@ -397,7 +373,7 @@ function UserManagement() {
                     setSelectedUser(null);
                     setSuspendReason("");
                   }}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
                   Cancel
                 </button>
