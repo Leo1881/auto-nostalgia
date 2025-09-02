@@ -9,13 +9,16 @@ import {
 } from "../../constants/loadingStates";
 
 function AdminPanel() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, loading: authLoading } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
   const [assessorRequests, setAssessorRequests] = useState([]);
   const [activeAssessors, setActiveAssessors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [assessorsDropdownOpen, setAssessorsDropdownOpen] = useState(false);
 
   // Debug logging
   console.log("AdminPanel render:", { user, profile, loading, error });
@@ -166,170 +169,196 @@ function AdminPanel() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 font-quicksand">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-lg border-b-4 border-primary-red">
+      <header className="bg-white dark:bg-gray-800 shadow-sm flex-shrink-0">
         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  Admin Panel
-                </h1>
-              </div>
+              <h1 className="text-[16px] font-medium text-white">
+                Welcome back, {profile?.full_name?.split(" ")[0] || "Admin"}
+              </h1>
             </div>
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <span className="hidden sm:block text-sm text-[#333333ff]">
+                Welcome, {profile?.full_name?.split(" ")[0] || "Admin"}
+              </span>
               <button
-                onClick={signOut}
-                className="px-8 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold border-0 text-sm"
+                onClick={handleSignOut}
+                disabled={authLoading}
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
               >
-                Sign Out
+                {authLoading ? LOADING_TEXT.SIGNING_OUT : "Sign Out"}
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Navigation */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 w-full">
-        <nav className="px-8 sm:px-12 lg:px-16">
-          <div className="flex justify-center space-x-16">
-            <button
-              onClick={() => setActiveTab("dashboard")}
-              className={`py-6 px-8 font-medium text-sm transition-colors duration-200 ${
-                activeTab === "dashboard"
-                  ? "text-primary-red"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Dashboard
-            </button>
-
-            {/* Assessors Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setAssessorsDropdownOpen(!assessorsDropdownOpen)}
-                className={`py-6 px-8 font-medium text-sm transition-colors duration-200 flex items-center space-x-1 ${
-                  activeTab === "pending" || activeTab === "assessors"
-                    ? "text-primary-red"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                <span>Assessors</span>
-                <svg
-                  className={`w-4 h-4 transition-transform duration-200 ${
-                    assessorsDropdownOpen ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {assessorsDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 min-w-48 z-10">
-                  <button
-                    onClick={() => {
-                      setActiveTab("pending");
-                      setAssessorsDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm transition-colors duration-200 ${
-                      activeTab === "pending"
-                        ? "text-primary-red bg-red-50 dark:bg-red-900/20"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    Pending Requests ({stats.pending})
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActiveTab("assessors");
-                      setAssessorsDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm transition-colors duration-200 ${
-                      activeTab === "assessors"
-                        ? "text-primary-red bg-red-50 dark:bg-red-900/20"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    Active Assessors ({activeAssessors.length})
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => setActiveTab("users")}
-              className={`py-6 px-8 font-medium text-sm transition-colors duration-200 ${
-                activeTab === "users"
-                  ? "text-primary-red"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Users
-            </button>
-
-            <button
-              onClick={() => setActiveTab("clients")}
-              className={`py-6 px-8 font-medium text-sm transition-colors duration-200 ${
-                activeTab === "clients"
-                  ? "text-primary-red"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Clients
-            </button>
-          </div>
-        </nav>
-      </div>
-
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-16 sm:px-20 lg:px-24 py-20">
-        {/* Error Message */}
-        {error && (
-          <div className="mb-8 bg-red-50 border-l-4 border-red-400 p-6 rounded-lg shadow-md">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+      <div className="flex flex-col lg:flex-row flex-1">
+        {/* Sidebar */}
+        <aside className="w-full lg:w-64 bg-red-600 shadow-sm lg:min-h-screen flex-shrink-0">
+          <nav className="p-0 h-full">
+            <ul className="flex lg:flex-col space-x-2 lg:space-x-0 lg:space-y-0 overflow-x-auto lg:overflow-x-visible h-full">
+              <li className="flex-shrink-0 lg:flex-shrink">
+                <button
+                  onClick={() => setActiveTab("dashboard")}
+                  className={`w-full flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-12 transition-all duration-200 text-left whitespace-nowrap no-underline ${
+                    activeTab === "dashboard"
+                      ? "bg-red-700 text-white"
+                      : "bg-red-600 text-white hover:bg-red-700"
+                  }`}
+                  style={{ textDecoration: "none" }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700 dark:text-red-300">
-                  {error}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm lg:text-base">
+                    Dashboard
+                  </span>
+                </button>
+              </li>
+              <li className="flex-shrink-0 lg:flex-shrink">
+                <button
+                  onClick={() => setActiveTab("pending")}
+                  className={`w-full flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-12 transition-all duration-200 text-left whitespace-nowrap no-underline ${
+                    activeTab === "pending"
+                      ? "bg-red-700 text-white"
+                      : "bg-red-600 text-white hover:bg-red-700"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm lg:text-base">
+                    Pending Requests ({stats.pending})
+                  </span>
+                </button>
+              </li>
+              <li className="flex-shrink-0 lg:flex-shrink">
+                <button
+                  onClick={() => setActiveTab("assessors")}
+                  className={`w-full flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-12 transition-all duration-200 text-left whitespace-nowrap no-underline ${
+                    activeTab === "assessors"
+                      ? "bg-red-700 text-white"
+                      : "bg-red-600 text-white hover:bg-red-700"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm lg:text-base">
+                    Active Assessors ({activeAssessors.length})
+                  </span>
+                </button>
+              </li>
+              <li className="flex-shrink-0 lg:flex-shrink">
+                <button
+                  onClick={() => setActiveTab("users")}
+                  className={`w-full flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-12 transition-all duration-200 text-left whitespace-nowrap no-underline ${
+                    activeTab === "users"
+                      ? "bg-red-700 text-white"
+                      : "bg-red-600 text-white hover:bg-red-700"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm lg:text-base">
+                    Users
+                  </span>
+                </button>
+              </li>
+              <li className="flex-shrink-0 lg:flex-shrink">
+                <button
+                  onClick={() => setActiveTab("clients")}
+                  className={`w-full flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-12 transition-all duration-200 text-left whitespace-nowrap no-underline ${
+                    activeTab === "clients"
+                      ? "bg-red-700 text-white"
+                      : "bg-red-600 text-white hover:bg-red-700"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm lg:text-base">
+                    Clients
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </aside>
 
-        {/* Dashboard Tab */}
-        {activeTab === "dashboard" && (
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-              Dashboard Overview
-            </h1>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
-                <div className="flex items-center">
-                  <div className="p-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl shadow-md">
+        {/* Content Area */}
+        <main className="flex-1 p-6 sm:p-8 lg:p-10 overflow-auto">
+          <div className="w-full space-y-6">
+            {/* Error Message */}
+            {error && (
+              <div className="mb-8 bg-red-50 border-l-4 border-red-400 p-6 rounded-lg shadow-md">
+                <div className="flex">
+                  <div className="flex-shrink-0">
                     <svg
-                      className="w-8 h-8 text-white"
+                      className="h-5 w-5 text-red-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -338,332 +367,370 @@ function AdminPanel() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
                   </div>
-                  <div className="ml-6">
-                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                      Total Requests
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                      {stats.total}
+                  <div className="ml-3">
+                    <p className="text-sm text-red-700 dark:text-red-300">
+                      {error}
                     </p>
                   </div>
                 </div>
               </div>
+            )}
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
-                <div className="flex items-center">
-                  <div className="p-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl shadow-md">
-                    <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-6">
-                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                      Pending
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                      {stats.pending}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
-                <div className="flex items-center">
-                  <div className="p-3 bg-gradient-to-br from-green-400 to-green-600 rounded-xl shadow-md">
-                    <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-6">
-                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                      Approved
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                      {stats.approved}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
-                <div className="flex items-center">
-                  <div className="p-3 bg-gradient-to-br from-red-400 to-red-600 rounded-xl shadow-md">
-                    <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-6">
-                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                      Rejected
-                    </p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                      {stats.rejected}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Pending Requests Tab */}
-        {activeTab === "pending" && (
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-              Pending Requests
-            </h1>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-              <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      Requests Requiring Action
-                    </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Review and approve or reject assessor applications
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {stats.pending} pending review
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-8">
-                {loading ? (
-                  <div className="text-center py-12">
-                    <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
-                    <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-                      {LOADING_TEXT.LOADING_REQUESTS}
-                    </p>
-                  </div>
-                ) : assessorRequests.filter((req) => req.status === "pending")
-                    .length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
-                      <svg
-                        className="h-12 w-12 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                      No pending requests
-                    </h3>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      All assessor requests have been reviewed.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {assessorRequests
-                      .filter((request) => request.status === "pending")
-                      .map((request) => (
-                        <AssessorRequestCard
-                          key={request.id}
-                          request={request}
-                          onStatusUpdate={handleStatusUpdate}
-                        />
-                      ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Active Assessors Tab */}
-        {activeTab === "assessors" && (
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-              Active Assessors
-            </h1>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-              <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      Approved Assessors
-                    </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      View all active assessors in the system
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {activeAssessors.length} active assessors
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-8">
-                {loading ? (
-                  <div className="text-center py-12">
-                    <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
-                    <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
-                      {LOADING_TEXT.LOADING_ASSESSORS}
-                    </p>
-                  </div>
-                ) : activeAssessors.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
-                      <svg
-                        className="h-12 w-12 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                      No active assessors
-                    </h3>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      No assessors have been approved yet.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {activeAssessors.map((assessor) => (
-                      <div
-                        key={assessor.id}
-                        className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600"
-                      >
-                        <div className="flex items-center space-x-4 mb-4">
-                          <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-md">
-                            <span className="text-sm font-bold text-white">
-                              {assessor.full_name?.charAt(0) || "A"}
-                            </span>
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                              {assessor.full_name || "Unknown"}
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {assessor.email}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          <p>
-                            Joined:{" "}
-                            {new Date(assessor.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
+            {/* Dashboard Tab */}
+            {activeTab === "dashboard" && (
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+                  Dashboard Overview
+                </h1>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                    <div className="flex items-center">
+                      <div className="p-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl shadow-md">
+                        <svg
+                          className="w-8 h-8 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
+                        </svg>
                       </div>
-                    ))}
+                      <div className="ml-6">
+                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                          Total Requests
+                        </p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {stats.total}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
-        {/* Users Tab */}
-        {activeTab === "users" && <UserManagement />}
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                    <div className="flex items-center">
+                      <div className="p-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl shadow-md">
+                        <svg
+                          className="w-8 h-8 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-6">
+                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                          Pending
+                        </p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {stats.pending}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-        {/* Clients Tab */}
-        {activeTab === "clients" && (
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-              Clients
-            </h1>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
-              <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      Client Management
-                    </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Manage client accounts and information
-                    </p>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                    <div className="flex items-center">
+                      <div className="p-3 bg-gradient-to-br from-green-400 to-green-600 rounded-xl shadow-md">
+                        <svg
+                          className="w-8 h-8 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-6">
+                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                          Approved
+                        </p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {stats.approved}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                    <div className="flex items-center">
+                      <div className="p-3 bg-gradient-to-br from-red-400 to-red-600 rounded-xl shadow-md">
+                        <svg
+                          className="w-8 h-8 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-6">
+                        <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                          Rejected
+                        </p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {stats.rejected}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+            )}
 
-              <div className="p-8">
-                <div className="text-center py-12">
-                  <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
-                    <svg
-                      className="h-12 w-12 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
+            {/* Pending Requests Tab */}
+            {activeTab === "pending" && (
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+                  Pending Requests
+                </h1>
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+                  <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                          Requests Requiring Action
+                        </h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          Review and approve or reject assessor applications
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {stats.pending} pending review
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                    Client Management Coming Soon
-                  </h3>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    Client management features will be available here.
-                  </p>
+
+                  <div className="p-8">
+                    {loading ? (
+                      <div className="text-center py-12">
+                        <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
+                        <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
+                          {LOADING_TEXT.LOADING_REQUESTS}
+                        </p>
+                      </div>
+                    ) : assessorRequests.filter(
+                        (req) => req.status === "pending"
+                      ).length === 0 ? (
+                      <div className="text-center py-12">
+                        <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
+                          <svg
+                            className="h-12 w-12 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                          No pending requests
+                        </h3>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          All assessor requests have been reviewed.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {assessorRequests
+                          .filter((request) => request.status === "pending")
+                          .map((request) => (
+                            <AssessorRequestCard
+                              key={request.id}
+                              request={request}
+                              onStatusUpdate={handleStatusUpdate}
+                            />
+                          ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Active Assessors Tab */}
+            {activeTab === "assessors" && (
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+                  Active Assessors
+                </h1>
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+                  <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                          Approved Assessors
+                        </h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          View all active assessors in the system
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {activeAssessors.length} active assessors
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-8">
+                    {loading ? (
+                      <div className="text-center py-12">
+                        <div className={LOADING_SPINNER_CLASSES.XLARGE}></div>
+                        <p className="mt-4 text-gray-600 dark:text-gray-400 text-lg">
+                          {LOADING_TEXT.LOADING_ASSESSORS}
+                        </p>
+                      </div>
+                    ) : activeAssessors.length === 0 ? (
+                      <div className="text-center py-12">
+                        <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
+                          <svg
+                            className="h-12 w-12 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                            />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                          No active assessors
+                        </h3>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          No assessors have been approved yet.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {activeAssessors.map((assessor) => (
+                          <div
+                            key={assessor.id}
+                            className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600"
+                          >
+                            <div className="flex items-center space-x-4 mb-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-md">
+                                <span className="text-sm font-bold text-white">
+                                  {assessor.full_name?.charAt(0) || "A"}
+                                </span>
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                  {assessor.full_name || "Unknown"}
+                                </h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  {assessor.email}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                              <p>
+                                Joined:{" "}
+                                {new Date(
+                                  assessor.created_at
+                                ).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Users Tab */}
+            {activeTab === "users" && <UserManagement />}
+
+            {/* Clients Tab */}
+            {activeTab === "clients" && (
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+                  Clients
+                </h1>
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+                  <div className="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                          Client Management
+                        </h2>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          Manage client accounts and information
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-8">
+                    <div className="text-center py-12">
+                      <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-6">
+                        <svg
+                          className="h-12 w-12 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                        Client Management Coming Soon
+                      </h3>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        Client management features will be available here.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

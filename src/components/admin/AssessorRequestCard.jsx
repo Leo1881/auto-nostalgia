@@ -14,13 +14,13 @@ function AssessorRequestCard({ request, onStatusUpdate }) {
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+        return "bg-red-200 text-red-700 dark:bg-red-900 dark:text-red-200";
       case "approved":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
       case "rejected":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+        return "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200";
     }
   };
 
@@ -151,14 +151,22 @@ function AssessorRequestCard({ request, onStatusUpdate }) {
             <button
               onClick={() => handleStatusUpdate("rejected")}
               disabled={loading}
-              className={loading ? BUTTON_STATES.ACTION.LOADING : "px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"}
+              className={
+                loading
+                  ? BUTTON_STATES.ACTION.LOADING
+                  : "px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"
+              }
             >
               {loading ? LOADING_TEXT.PROCESSING : "Reject"}
             </button>
             <button
               onClick={() => handleStatusUpdate("approved")}
               disabled={loading}
-              className={loading ? "px-6 py-3 bg-green-600 text-white rounded-lg opacity-75 cursor-not-allowed transition-all duration-200 shadow-md font-semibold" : "px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"}
+              className={
+                loading
+                  ? "px-6 py-3 bg-green-600 text-white rounded-lg opacity-75 cursor-not-allowed transition-all duration-200 shadow-md font-semibold"
+                  : "px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold"
+              }
             >
               {loading ? LOADING_TEXT.PROCESSING : "Approve"}
             </button>
