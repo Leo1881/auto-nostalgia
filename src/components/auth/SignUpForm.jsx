@@ -742,6 +742,11 @@ function SignUpForm({ onBack }) {
                   <h1 className="text-2xl font-bold text-gray-800 mb-2">
                     Account Created Successfully!
                   </h1>
+                  {formData.role === "assessor" && (
+                    <p className="text-gray-600 text-lg mt-2">
+                      Your account has been sent for approval
+                    </p>
+                  )}
                 </div>
               </div>
 

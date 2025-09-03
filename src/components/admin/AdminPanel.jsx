@@ -23,12 +23,6 @@ function AdminPanel() {
   // Debug logging
   console.log("AdminPanel render:", { user, profile, loading, error });
 
-  useEffect(() => {
-    console.log("AdminPanel useEffect triggered");
-    fetchAssessorRequests();
-    fetchActiveAssessors();
-  }, []);
-
   const fetchAssessorRequests = async () => {
     try {
       console.log("Fetching assessor requests...");
@@ -106,8 +100,9 @@ function AdminPanel() {
         }
       }
 
-      // Refresh the list
+      // Refresh the lists
       await fetchAssessorRequests();
+      await fetchActiveAssessors();
       setError("");
     } catch (err) {
       setError("Failed to update request");
@@ -117,10 +112,40 @@ function AdminPanel() {
 
   const fetchActiveAssessors = async () => {
     try {
+      console.log("🔍 fetchActiveAssessors function called");
+      // First get all approved assessor requests
+      const { data: approvedRequests, error: requestsError } = await supabase
+        .from("assessor_requests")
+        .select("user_id")
+        .eq("status", "approved");
+
+      if (requestsError) {
+        console.error(
+          "Error fetching approved assessor requests:",
+          requestsError
+        );
+        return;
+      }
+
+      console.log("🔍 Approved assessor requests:", approvedRequests);
+
+      // Extract the user IDs from approved requests
+      const approvedUserIds = approvedRequests.map((req) => req.user_id);
+
+      console.log("🔍 Approved user IDs:", approvedUserIds);
+
+      if (approvedUserIds.length === 0) {
+        console.log("🔍 No approved assessors found, setting empty array");
+        setActiveAssessors([]);
+        return;
+      }
+
+      // Then fetch the profiles for approved assessors
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("role", "assessor")
+        .in("id", approvedUserIds)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -128,11 +153,22 @@ function AdminPanel() {
         return;
       }
 
+      console.log("🔍 Fetched assessor profiles:", data);
       setActiveAssessors(data || []);
     } catch (err) {
       console.error("Error:", err);
     }
   };
+
+  // useEffect must be defined after the functions it calls
+  useEffect(() => {
+    console.log("🔍 🔍 🔍 AdminPanel useEffect triggered 🔍 🔍 🔍");
+    console.log("🔍 About to call fetchAssessorRequests");
+    fetchAssessorRequests();
+    console.log("🔍 About to call fetchActiveAssessors");
+    fetchActiveAssessors();
+    console.log("🔍 Both functions called");
+  }, []);
 
   const getStats = () => {
     const pending = assessorRequests.filter(
@@ -725,6 +761,10 @@ function AdminPanel() {
             {/* Active Assessors Tab */}
             {activeTab === "assessors" && (
               <div className="space-y-6">
+                {console.log(
+                  "🔍 Rendering Active Assessors tab, activeAssessors:",
+                  activeAssessors
+                )}
                 {/* Welcome Section */}
                 <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                   <p className="text-[#333333ff] mb-4">
