@@ -9,7 +9,7 @@ import {
 } from "../../constants/loadingStates";
 
 function AdminPanel() {
-  const { user, profile, signOut, loading: authLoading } = useAuth();
+  const { user, profile, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -183,10 +183,9 @@ function AdminPanel() {
               </span>
               <button
                 onClick={handleSignOut}
-                disabled={authLoading}
-                className="px-3 py-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
               >
-                {authLoading ? LOADING_TEXT.SIGNING_OUT : "Sign Out"}
+                Sign Out
               </button>
             </div>
           </div>

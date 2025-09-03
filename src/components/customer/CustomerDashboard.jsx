@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { LOADING_TEXT } from "../../constants/loadingStates";
 import CustomerSidebar from "./CustomerSidebar";
 import DashboardHome from "./DashboardHome";
 import RequestAssessment from "./RequestAssessment";
@@ -10,7 +9,7 @@ import ProfileSettings from "./ProfileSettings";
 import ChatButton from "../chat/ChatButton";
 
 function CustomerDashboard() {
-  const { signOut, loading, profile } = useAuth();
+  const { signOut, profile } = useAuth();
   const [activeSection, setActiveSection] = useState("dashboard");
 
   const handleSignOut = async () => {
@@ -51,10 +50,9 @@ function CustomerDashboard() {
               </span>
               <button
                 onClick={handleSignOut}
-                disabled={loading}
-                className="px-3 py-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
               >
-                {loading ? LOADING_TEXT.SIGNING_OUT : "Sign Out"}
+                Sign Out
               </button>
             </div>
           </div>

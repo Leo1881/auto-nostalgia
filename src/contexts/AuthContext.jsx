@@ -196,6 +196,17 @@ export const AuthProvider = ({ children }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("🔐 Auth state changed:", event, session?.user?.email);
+
+      // Handle sign out events more gracefully
+      if (event === "SIGNED_OUT") {
+        console.log("🔐 User signed out, clearing state");
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
+
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -518,20 +529,16 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("🔐 Starting sign out process...");
 
-      // Set loading state for better UX
-      setLoading(true);
-
       // Clear user and profile state immediately for better UX
       setUser(null);
       setProfile(null);
+      setSession(null);
 
       // Sign out from Supabase
       const { error } = await supabase.auth.signOut();
 
       if (error) {
         console.error("❌ Sign out error:", error);
-        // Even if Supabase signout fails, we've cleared local state
-        setLoading(false);
         return { error };
       }
 
@@ -541,8 +548,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("supabase.auth.token");
       sessionStorage.clear();
 
-      // Force a page reload to clear any cached data
-      window.location.reload();
+      // Don't force a page reload - let React handle the state transition
+      // The auth state change listener will handle the rest
 
       return { error: null };
     } catch (error) {
@@ -550,7 +557,7 @@ export const AuthProvider = ({ children }) => {
       // Clear state even if there's an error
       setUser(null);
       setProfile(null);
-      setLoading(false);
+      setSession(null);
       return { error };
     }
   };

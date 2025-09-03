@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { LOADING_TEXT } from "../../constants/loadingStates";
 import FeatureCard from "../features/FeatureCard";
 import { FEATURES } from "../../constants/appStates.jsx";
 
 function MainApp() {
   const [count, setCount] = useState(0);
-  const { signOut, loading } = useAuth();
+  const { signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -20,10 +19,9 @@ function MainApp() {
           <div className="absolute top-0 right-0">
             <button
               onClick={handleSignOut}
-              disabled={loading}
-              className="px-4 py-1.5 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
+              className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-semibold text-xs"
             >
-              {loading ? LOADING_TEXT.SIGNING_OUT : "Sign Out"}
+              Sign Out
             </button>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-primary-grey dark:text-white mb-4">

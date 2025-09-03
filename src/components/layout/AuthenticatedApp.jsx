@@ -1,4 +1,5 @@
 import { useAuth } from "../../hooks/useAuth";
+import { useEffect } from "react";
 import MainApp from "./MainApp";
 import AdminPanel from "../admin/AdminPanel";
 import CustomerDashboard from "../customer/CustomerDashboard";
@@ -14,6 +15,17 @@ function AuthenticatedApp() {
 
   console.log("AuthenticatedApp render:", { profile, loading });
 
+  // Handle logout routing - if no profile after loading, redirect to auth choice
+  useEffect(() => {
+    if (!loading && !profile) {
+      console.log(
+        "🔐 No profile found, user logged out - redirecting to auth choice"
+      );
+      // Force a page reload to reset the app state to AUTH_CHOICE
+      window.location.reload();
+    }
+  }, [profile, loading]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center font-quicksand">
@@ -21,6 +33,20 @@ function AuthenticatedApp() {
           <div className={LOADING_SPINNER_CLASSES.LARGE}></div>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
             {LOADING_TEXT.LOADING}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If no profile after loading, show a brief message before redirect
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center font-quicksand">
+        <div className="text-center">
+          <div className={LOADING_SPINNER_CLASSES.LARGE}></div>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            Redirecting to login...
           </p>
         </div>
       </div>
