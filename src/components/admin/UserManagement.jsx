@@ -15,16 +15,27 @@ import {
 function UserManagement() {
   const { profile } = useAuth();
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showSuspendModal, setShowSuspendModal] = useState(false);
   const [suspendReason, setSuspendReason] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
 
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  // Filter users when roleFilter or users change
+  useEffect(() => {
+    if (roleFilter === "all") {
+      setFilteredUsers(users);
+    } else {
+      setFilteredUsers(users.filter((user) => user.role === roleFilter));
+    }
+  }, [users, roleFilter]);
 
   const fetchUsers = async () => {
     try {
@@ -250,97 +261,137 @@ function UserManagement() {
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {users.map((user) => (
-                <div
-                  key={user.id}
-                  className="bg-gray-50 rounded-lg p-4 border border-gray-100"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-bold text-red-700">
-                          {user.full_name?.charAt(0) || "U"}
-                        </span>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-bold text-[#333333ff]">
-                          {user.full_name || "Unknown"}
-                        </h3>
-                        <p className="text-xs text-[#333333ff]">{user.email}</p>
-                        <p className="text-xs text-gray-600 mt-1">
-                          Joined: {formatDate(user.created_at)}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center space-x-3">
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleColor(
-                          user.role
-                        )}`}
-                      >
-                        {user.role}
-                      </span>
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
-                          user.account_status || ACCOUNT_STATUS.ACTIVE
-                        )}`}
-                      >
-                        {user.account_status || ACCOUNT_STATUS.ACTIVE}
-                      </span>
-
-                      <div className="flex space-x-2">
-                        {user.account_status === ACCOUNT_STATUS.SUSPENDED ? (
-                          <button
-                            onClick={() => handleActivateUser(user.id)}
-                            disabled={actionLoading}
-                            className="text-xs text-green-600 hover:text-green-800 disabled:opacity-50 font-medium"
-                          >
-                            Activate
-                          </button>
-                        ) : user.account_status === ACCOUNT_STATUS.ACTIVE ||
-                          !user.account_status ? (
-                          <button
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setShowSuspendModal(true);
-                            }}
-                            disabled={
-                              actionLoading || user.role === ROLES.ADMIN
-                            }
-                            className="text-xs text-red-600 hover:text-red-800 disabled:opacity-50 font-medium"
-                          >
-                            Suspend
-                          </button>
-                        ) : null}
-
-                        {user.account_status !== ACCOUNT_STATUS.DISABLED && (
-                          <button
-                            onClick={() => handleDeleteUser(user.id)}
-                            disabled={
-                              actionLoading || user.role === ROLES.ADMIN
-                            }
-                            className="text-xs text-red-600 hover:text-red-800 disabled:opacity-50 font-medium"
-                          >
-                            Delete
-                          </button>
-                        )}
-                      </div>
-                    </div>
+            <>
+              {/* Filter Section */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <label className="text-sm font-medium text-[#333333ff]">
+                      Filter by Role:
+                    </label>
+                    <select
+                      value={roleFilter}
+                      onChange={(e) => setRoleFilter(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                    >
+                      <option value="all">All Users</option>
+                      <option value="admin">Admins</option>
+                      <option value="assessor">Assessors</option>
+                      <option value="customer">Customers</option>
+                    </select>
                   </div>
-
-                  {user.suspension_reason && (
-                    <div className="mt-3 pt-3 border-t border-gray-100">
-                      <p className="text-xs text-gray-600">
-                        <span className="font-medium">Suspension Reason:</span>{" "}
-                        {user.suspension_reason}
-                      </p>
-                    </div>
-                  )}
+                  <div className="text-sm text-gray-600">
+                    Showing {filteredUsers.length} of {users.length} users
+                  </div>
                 </div>
-              ))}
-            </div>
+              </div>
+
+              <div className="space-y-4">
+                {filteredUsers.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500 text-sm">
+                      No users found with the selected filter.
+                    </p>
+                  </div>
+                ) : (
+                  filteredUsers.map((user) => (
+                    <div
+                      key={user.id}
+                      className="bg-gray-50 rounded-lg p-4 border border-gray-100"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-bold text-red-700">
+                              {user.full_name?.charAt(0) || "U"}
+                            </span>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-bold text-[#333333ff]">
+                              {user.full_name || "Unknown"}
+                            </h3>
+                            <p className="text-xs text-[#333333ff]">
+                              {user.email}
+                            </p>
+                            <p className="text-xs text-gray-600 mt-1">
+                              Joined: {formatDate(user.created_at)}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                          <span
+                            className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleColor(
+                              user.role
+                            )}`}
+                          >
+                            {user.role}
+                          </span>
+                          <span
+                            className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                              user.account_status || ACCOUNT_STATUS.ACTIVE
+                            )}`}
+                          >
+                            {user.account_status || ACCOUNT_STATUS.ACTIVE}
+                          </span>
+
+                          <div className="flex space-x-2">
+                            {user.account_status ===
+                            ACCOUNT_STATUS.SUSPENDED ? (
+                              <button
+                                onClick={() => handleActivateUser(user.id)}
+                                disabled={actionLoading}
+                                className="text-xs text-green-600 hover:text-green-800 disabled:opacity-50 font-medium"
+                              >
+                                Activate
+                              </button>
+                            ) : user.account_status === ACCOUNT_STATUS.ACTIVE ||
+                              !user.account_status ? (
+                              <button
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  setShowSuspendModal(true);
+                                }}
+                                disabled={
+                                  actionLoading || user.role === ROLES.ADMIN
+                                }
+                                className="text-xs text-red-600 hover:text-red-800 disabled:opacity-50 font-medium"
+                              >
+                                Suspend
+                              </button>
+                            ) : null}
+
+                            {user.account_status !==
+                              ACCOUNT_STATUS.DISABLED && (
+                              <button
+                                onClick={() => handleDeleteUser(user.id)}
+                                disabled={
+                                  actionLoading || user.role === ROLES.ADMIN
+                                }
+                                className="text-xs text-red-600 hover:text-red-800 disabled:opacity-50 font-medium"
+                              >
+                                Delete
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {user.suspension_reason && (
+                        <div className="mt-3 pt-3 border-t border-gray-100">
+                          <p className="text-xs text-gray-600">
+                            <span className="font-medium">
+                              Suspension Reason:
+                            </span>{" "}
+                            {user.suspension_reason}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </>
           )}
         </div>
 
