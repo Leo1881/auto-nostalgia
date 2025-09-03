@@ -113,48 +113,68 @@ function AdminPanel() {
   const fetchActiveAssessors = async () => {
     try {
       console.log("🔍 fetchActiveAssessors function called");
-      // First get all approved assessor requests
-      const { data: approvedRequests, error: requestsError } = await supabase
-        .from("assessor_requests")
-        .select("user_id")
-        .eq("status", "approved");
 
-      if (requestsError) {
-        console.error(
-          "Error fetching approved assessor requests:",
-          requestsError
-        );
-        return;
-      }
-
-      console.log("🔍 Approved assessor requests:", approvedRequests);
-
-      // Extract the user IDs from approved requests
-      const approvedUserIds = approvedRequests.map((req) => req.user_id);
-
-      console.log("🔍 Approved user IDs:", approvedUserIds);
-
-      if (approvedUserIds.length === 0) {
-        console.log("🔍 No approved assessors found, setting empty array");
-        setActiveAssessors([]);
-        return;
-      }
-
-      // Then fetch the profiles for approved assessors
-      const { data, error } = await supabase
+      // First, get all assessors from profiles table
+      const { data: allAssessors, error: profilesError } = await supabase
         .from("profiles")
         .select("*")
         .eq("role", "assessor")
-        .in("id", approvedUserIds)
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Error fetching active assessors:", error);
+      if (profilesError) {
+        console.error("Error fetching assessor profiles:", profilesError);
         return;
       }
 
-      console.log("🔍 Fetched assessor profiles:", data);
-      setActiveAssessors(data || []);
+      console.log("🔍 All assessors from profiles:", allAssessors);
+
+      // Get all assessor requests with their statuses
+      const { data: allRequests, error: requestsError } = await supabase
+        .from("assessor_requests")
+        .select("user_id, status")
+        .in("status", ["approved", "rejected"]);
+
+      if (requestsError) {
+        console.error("Error fetching assessor requests:", requestsError);
+        return;
+      }
+
+      console.log("🔍 All assessor requests:", allRequests);
+
+      // Create a map of user_id to status for quick lookup
+      const statusMap = {};
+      allRequests.forEach((req) => {
+        statusMap[req.user_id] = req.status;
+      });
+
+      console.log("🔍 Status map:", statusMap);
+
+      // Mark each assessor with their approval status
+      const assessorsWithStatus = allAssessors.map((profile) => {
+        const requestStatus = statusMap[profile.id];
+        let approvalStatus;
+
+        if (requestStatus === "approved") {
+          approvalStatus = "approved";
+        } else if (requestStatus === "rejected") {
+          approvalStatus = "rejected";
+        } else {
+          // If no request found, assume they were approved before the current system
+          // or they were created directly as assessors
+          approvalStatus = "approved";
+        }
+
+        return {
+          ...profile,
+          approvalStatus,
+        };
+      });
+
+      console.log(
+        "🔍 Fetched assessor profiles with status:",
+        assessorsWithStatus
+      );
+      setActiveAssessors(assessorsWithStatus || []);
     } catch (err) {
       console.error("Error:", err);
     }
@@ -777,17 +797,41 @@ function AdminPanel() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-sm font-bold text-[#333333ff] mb-2">
-                        Active Assessors
+                        Assessor Status Overview
                       </h2>
-                      <p className="text-xs text-[#333333ff]">
-                        {activeAssessors.length} approved assessors
-                      </p>
+                      <div className="flex space-x-4 text-xs text-[#333333ff]">
+                        <span>
+                          Approved:{" "}
+                          {
+                            activeAssessors.filter(
+                              (a) => a.approvalStatus === "approved"
+                            ).length
+                          }
+                        </span>
+                        <span>
+                          Rejected:{" "}
+                          {
+                            activeAssessors.filter(
+                              (a) => a.approvalStatus === "rejected"
+                            ).length
+                          }
+                        </span>
+                        <span>Total: {activeAssessors.length}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-xs text-[#333333ff]">
-                        {activeAssessors.length} active
-                      </span>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span className="text-xs text-[#333333ff]">
+                          Approved
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <span className="text-xs text-[#333333ff]">
+                          Rejected
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -817,10 +861,10 @@ function AdminPanel() {
                         />
                       </svg>
                       <p className="text-sm text-[#333333ff]">
-                        No active assessors.
+                        No assessors found.
                       </p>
                       <p className="text-xs text-gray-600 mt-1">
-                        No assessors have been approved yet.
+                        No assessors have been processed yet.
                       </p>
                     </div>
                   ) : (
@@ -828,27 +872,58 @@ function AdminPanel() {
                       {activeAssessors.map((assessor) => (
                         <div
                           key={assessor.id}
-                          className="bg-gray-50 rounded-lg p-4 border border-gray-100"
+                          className={`rounded-lg p-4 border ${
+                            assessor.approvalStatus === "approved"
+                              ? "bg-green-50 border-green-200"
+                              : "bg-red-50 border-red-200"
+                          }`}
                         >
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                              <span className="text-sm font-bold text-green-600">
-                                {assessor.full_name?.charAt(0) || "A"}
-                              </span>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div
+                                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                  assessor.approvalStatus === "approved"
+                                    ? "bg-green-100"
+                                    : "bg-red-100"
+                                }`}
+                              >
+                                <span
+                                  className={`text-sm font-bold ${
+                                    assessor.approvalStatus === "approved"
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }`}
+                                >
+                                  {assessor.full_name?.charAt(0) || "A"}
+                                </span>
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="text-sm font-bold text-[#333333ff]">
+                                  {assessor.full_name || "Unknown"}
+                                </h3>
+                                <p className="text-xs text-[#333333ff]">
+                                  {assessor.email}
+                                </p>
+                                <p className="text-xs text-gray-600 mt-1">
+                                  Joined:{" "}
+                                  {new Date(
+                                    assessor.created_at
+                                  ).toLocaleDateString()}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex-1">
-                              <h3 className="text-sm font-bold text-[#333333ff]">
-                                {assessor.full_name || "Unknown"}
-                              </h3>
-                              <p className="text-xs text-[#333333ff]">
-                                {assessor.email}
-                              </p>
-                              <p className="text-xs text-gray-600 mt-1">
-                                Joined:{" "}
-                                {new Date(
-                                  assessor.created_at
-                                ).toLocaleDateString()}
-                              </p>
+                            <div className="flex items-center space-x-2">
+                              <span
+                                className={`px-2 py-1 text-xs font-medium rounded-full ${
+                                  assessor.approvalStatus === "approved"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-red-100 text-red-800"
+                                }`}
+                              >
+                                {assessor.approvalStatus === "approved"
+                                  ? "Approved"
+                                  : "Rejected"}
+                              </span>
                             </div>
                           </div>
                         </div>
