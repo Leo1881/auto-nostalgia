@@ -3,6 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import CustomSelect from "../common/CustomSelect";
 import Lottie from "@lottielab/lottie-player/react";
 import { LOADING_TEXT, BUTTON_STATES } from "../../constants/loadingStates";
+import { emailService } from "../../emails/services/EmailService";
 
 function SignUpForm({ onBack }) {
   const { signUp } = useAuth();
@@ -86,6 +87,61 @@ function SignUpForm({ onBack }) {
       setError(result.error.message);
       setLoading(false);
     } else {
+      // Send welcome email for customers
+      if (formData.role === "customer") {
+        try {
+          await emailService.sendCustomerWelcomeEmail(
+            { email: formData.email, full_name: formData.name },
+            `${window.location.origin}/login`
+          );
+          console.log("✅ Welcome email sent successfully");
+        } catch (emailError) {
+          console.error("❌ Failed to send welcome email:", emailError);
+          // Don't block signup if email fails
+        }
+      }
+
+      // Send assessor application pending email for assessors
+      if (formData.role === "assessor") {
+        try {
+          await emailService.sendAssessorApplicationPendingEmail({
+            email: formData.email,
+            full_name: formData.name,
+          });
+          console.log("✅ Assessor application pending email sent");
+
+          // Send admin notification
+          try {
+            const adminEmails = await emailService.getAdminEmails();
+            if (adminEmails.length > 0) {
+              await emailService.sendAdminAssessorNotificationEmail(
+                {
+                  full_name: formData.name,
+                  email: formData.email,
+                  phone: formData.phoneNumber,
+                  city: formData.city,
+                  province: formData.state,
+                  experience: formData.experience,
+                },
+                adminEmails
+              );
+              console.log("✅ Admin notification emails sent");
+            }
+          } catch (adminEmailError) {
+            console.error(
+              "❌ Failed to send admin notification:",
+              adminEmailError
+            );
+          }
+        } catch (assessorEmailError) {
+          console.error(
+            "❌ Failed to send assessor email:",
+            assessorEmailError
+          );
+          // Don't block signup if email fails
+        }
+      }
+
       setSuccess(true);
       setLoading(false);
     }

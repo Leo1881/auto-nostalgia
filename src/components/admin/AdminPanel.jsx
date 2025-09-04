@@ -3,6 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
 import AssessorRequestCard from "./AssessorRequestCard";
 import UserManagement from "./UserManagement";
+import { emailService } from "../../emails/services/EmailService";
 import {
   LOADING_TEXT,
   LOADING_SPINNER_CLASSES,
@@ -96,6 +97,24 @@ function AdminPanel() {
           if (profileError) {
             setError("Failed to update user role");
             return;
+          }
+
+          // Send approval confirmation email to the assessor
+          try {
+            await emailService.sendAssessorApprovalEmail(
+              {
+                email: request.profiles?.email,
+                full_name: request.profiles?.full_name,
+              },
+              `${window.location.origin}/login`
+            );
+            console.log("✅ Assessor approval email sent successfully");
+          } catch (emailError) {
+            console.error(
+              "❌ Failed to send assessor approval email:",
+              emailError
+            );
+            // Don't block approval if email fails
           }
         }
       }

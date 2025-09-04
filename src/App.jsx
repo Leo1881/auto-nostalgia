@@ -74,7 +74,12 @@ function App() {
   }
 
   if (appState === APP_STATES.AUTH_CHOICE) {
-    return <AuthChoicePage onLogin={goToLogin} onSignUp={goToSignUp} />;
+    return (
+      <AuthChoicePage
+        onLogin={goToLogin}
+        onSignUp={goToSignUp}
+      />
+    );
   }
 
   if (appState === APP_STATES.LOGIN) {
