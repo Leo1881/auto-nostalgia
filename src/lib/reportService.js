@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { supabase } from "./supabase";
 
 class ReportService {
   async generateAssessmentReport(assessmentData) {
@@ -51,7 +52,7 @@ class ReportService {
     yPosition += 6;
     pdf.text(
       `Assessment Date: ${new Date(
-        assessment.completion_date
+        assessment.completion_date || assessment.created_at
       ).toLocaleDateString()}`,
       margin,
       yPosition
@@ -140,7 +141,9 @@ class ReportService {
 
     pdf.setFont("helvetica", "normal");
     pdf.text(
-      `Vehicle Value: R ${assessment.vehicle_value?.toLocaleString()}`,
+      `Vehicle Value: R ${
+        assessment.vehicle_value?.toLocaleString() || "Not assessed"
+      }`,
       margin,
       yPosition
     );
@@ -222,8 +225,93 @@ class ReportService {
     return pdf;
   }
 
+  async saveReportToStorage(assessmentData) {
+    try {
+      const { assessment, vehicle } = assessmentData;
+
+      // Generate the PDF
+      const pdf = await this.generateAssessmentReport(assessmentData);
+      const pdfBlob = pdf.output("blob");
+
+      // Create filename
+      const filename = `assessment_reports/${assessment.id}_${
+        vehicle.registration_number
+      }_${Date.now()}.pdf`;
+
+      console.log("🔍 Attempting to upload to storage bucket: reports");
+      console.log("🔍 Filename:", filename);
+      console.log("🔍 File size:", pdfBlob.size, "bytes");
+
+      // Check current user's role
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
+
+        console.log("🔍 Current user role:", profile?.role);
+        console.log("🔍 User ID:", user.id);
+      }
+
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("reports")
+        .upload(filename, pdfBlob, {
+          contentType: "application/pdf",
+          cacheControl: "3600",
+        });
+
+      if (uploadError) {
+        console.error("Error uploading report to storage:", uploadError);
+        console.error("Upload error details:", {
+          message: uploadError.message,
+          details: uploadError.details,
+          hint: uploadError.hint,
+          code: uploadError.code,
+        });
+        throw new Error("Failed to upload report to storage");
+      }
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from("reports")
+        .getPublicUrl(filename);
+
+      // Update assessment_requests table with report info
+      const { error: updateError } = await supabase
+        .from("assessment_requests")
+        .update({
+          report_url: urlData.publicUrl,
+          report_generated_at: new Date().toISOString(),
+          report_version: 1,
+        })
+        .eq("id", assessment.id);
+
+      if (updateError) {
+        console.error(
+          "Error updating assessment with report info:",
+          updateError
+        );
+        throw new Error("Failed to update assessment with report info");
+      }
+
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error("Error saving report to storage:", error);
+      throw error;
+    }
+  }
+
   async downloadReport(assessmentData, filename = null) {
     try {
+      // First save the report to storage
+      const reportUrl = await this.saveReportToStorage(assessmentData);
+
+      // Then download it for the user
       const pdf = await this.generateAssessmentReport(assessmentData);
 
       if (!filename) {
@@ -232,9 +320,40 @@ class ReportService {
       }
 
       pdf.save(filename);
+      return { success: true, reportUrl };
+    } catch (error) {
+      console.error("Error generating and saving report:", error);
+      throw error;
+    }
+  }
+
+  async downloadSavedReport(reportUrl, filename = null) {
+    try {
+      if (!reportUrl) {
+        throw new Error("No report URL provided");
+      }
+
+      // Download the file from storage
+      const response = await fetch(reportUrl);
+      if (!response.ok) {
+        throw new Error("Failed to fetch report from storage");
+      }
+
+      const blob = await response.blob();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename || "assessment_report.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
       return true;
     } catch (error) {
-      console.error("Error generating report:", error);
+      console.error("Error downloading saved report:", error);
       throw error;
     }
   }

@@ -171,7 +171,10 @@ function AssessmentHistory() {
         },
       };
 
-      await reportService.downloadReport(assessmentData);
+      const result = await reportService.downloadReport(assessmentData);
+      if (result.success) {
+        alert("Report generated and saved successfully!");
+      }
     } catch (error) {
       console.error("Error generating report:", error);
       alert("Failed to generate report. Please try again.");
