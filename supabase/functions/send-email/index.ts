@@ -34,7 +34,7 @@ const baseTemplate = `<!DOCTYPE html>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f8f9fa; }
         .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         .header { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 30px 20px; text-align: center; }
-        .logo { color: #ffffff; font-size: 28px; font-weight: bold; text-decoration: none; margin-bottom: 10px; display: block; }
+        .logo { color: #ffffff !important; font-size: 28px; font-weight: bold; text-decoration: none; margin-bottom: 10px; display: block; }
         .tagline { color: #fecaca; font-size: 16px; font-style: italic; }
         .content { padding: 40px 30px; }
         .greeting { font-size: 24px; color: #1f2937; margin-bottom: 20px; font-weight: 600; }
@@ -58,7 +58,7 @@ const baseTemplate = `<!DOCTYPE html>
 <body>
     <div class="email-container">
         <div class="header">
-            <a href="#" class="logo">Auto Nostalgia</a>
+            <a href="#" class="logo" style="color: #ffffff !important;">Auto Nostalgia</a>
             <div class="tagline">Preserving Automotive Heritage</div>
         </div>
         <div class="content">
@@ -73,10 +73,10 @@ const baseTemplate = `<!DOCTYPE html>
                     <a href="#">Privacy Policy</a>
                 </div>
                 <div class="social-links">
-                    <a href="#" title="Facebook">📘</a>
-                    <a href="#" title="Instagram">📷</a>
-                    <a href="#" title="Twitter">🐦</a>
-                    <a href="#" title="LinkedIn">💼</a>
+                    <a href="#" title="Facebook">Facebook</a>
+                    <a href="#" title="Instagram">Instagram</a>
+                    <a href="#" title="Twitter">Twitter</a>
+                    <a href="#" title="LinkedIn">LinkedIn</a>
                 </div>
                 <div class="copyright">
                     © 2024 Auto Nostalgia. All rights reserved.<br>
@@ -91,11 +91,11 @@ const baseTemplate = `<!DOCTYPE html>
 // Content templates
 const contentTemplates = {
   customer_welcome: `
-    <div class="greeting">Welcome to Auto Nostalgia! 🚗✨</div>
+    <div class="greeting">Welcome to Auto Nostalgia!</div>
     <div class="message">Thank you for joining Auto Nostalgia! We're excited to have you as part of our community of classic car enthusiasts and collectors.</div>
     <div class="message">Your account has been successfully created and you can now:</div>
     <div class="highlight-box">
-      <h3>🚀 What You Can Do Now:</h3>
+      <h3>What You Can Do Now:</h3>
       <ul style="margin-left: 20px; color: #4b5563;">
         <li>Request vehicle assessments from our expert assessors</li>
         <li>Track your assessment history and results</li>
@@ -111,10 +111,10 @@ const contentTemplates = {
   `,
 
   assessor_application_pending: `
-    <div class="greeting">Application Received! 📋</div>
+    <div class="greeting">Application Received!</div>
     <div class="message">Thank you for your interest in becoming an Auto Nostalgia assessor! We've received your application and our team is currently reviewing your credentials and experience.</div>
     <div class="highlight-box">
-      <h3>📋 Application Status: Pending Review</h3>
+      <h3>Application Status: Pending Review</h3>
       <p>Your application is now in our review queue. Our team will carefully evaluate your qualifications and get back to you within 3-5 business days.</p>
     </div>
     <div class="message"><strong>What happens next?</strong></div>
@@ -132,10 +132,10 @@ const contentTemplates = {
   `,
 
   admin_assessor_notification: `
-    <div class="greeting">New Assessor Application Requires Review! 🔍</div>
+    <div class="greeting">New Assessor Application Requires Review!</div>
     <div class="message">A new assessor application has been submitted and requires your review and approval.</div>
     <div class="highlight-box">
-      <h3>📋 Application Details:</h3>
+      <h3>Application Details:</h3>
       <p><strong>Applicant:</strong> {{assessor_name}}</p>
       <p><strong>Email:</strong> {{assessor_email}}</p>
       <p><strong>Phone:</strong> {{assessor_phone}}</p>
@@ -159,10 +159,10 @@ const contentTemplates = {
   `,
 
   assessor_approval: `
-    <div class="greeting">Congratulations! Your Application is Approved! 🎉</div>
+    <div class="greeting">Congratulations! Your Application is Approved!</div>
     <div class="message">Great news! Your application to become an Auto Nostalgia assessor has been approved. Welcome to our team of automotive experts!</div>
     <div class="highlight-box">
-      <h3>✅ Application Status: APPROVED</h3>
+      <h3>Application Status: APPROVED</h3>
       <p>You are now officially part of the Auto Nostalgia assessor network and can begin accepting assessment requests from customers.</p>
     </div>
     <div class="message"><strong>What you can do now:</strong></div>
@@ -179,7 +179,7 @@ const contentTemplates = {
     <div class="message"><strong>Getting Started:</strong><br>Log in to your account and explore the assessor dashboard. You'll find all the tools and information you need to start accepting assessment requests.</div>
     <a href="{{login_url}}" class="button">Access Your Assessor Dashboard</a>
     <div class="highlight-box">
-      <h3>📚 Resources Available:</h3>
+      <h3>Resources Available:</h3>
       <p>We've prepared comprehensive guides and training materials to help you get started quickly. Check your dashboard for:</p>
       <ul style="margin-left: 20px; color: #4b5563;">
         <li>Assessment guidelines and best practices</li>

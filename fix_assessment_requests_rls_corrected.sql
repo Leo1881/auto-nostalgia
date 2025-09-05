@@ -1,4 +1,4 @@
--- Fix RLS policies for assessment_requests table to allow admins to see all data
+-- Fix RLS policies for assessment_requests table (corrected version)
 
 -- First, let's see what policies currently exist
 SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual, with_check
@@ -6,13 +6,13 @@ FROM pg_policies
 WHERE tablename = 'assessment_requests';
 
 -- Drop ALL existing policies (if any)
-DROP POLICY IF EXISTS "Users can view their own assessment requests" ON assessment_requests;
-DROP POLICY IF EXISTS "Assessors can view assigned assessment requests" ON assessment_requests;
-DROP POLICY IF EXISTS "Admins can view all assessment requests" ON assessment_requests;
-DROP POLICY IF EXISTS "Customers can insert their own assessment requests" ON assessment_requests;
-DROP POLICY IF EXISTS "Assessors can update assigned assessment requests" ON assessment_requests;
-DROP POLICY IF EXISTS "Admins can update any assessment request" ON assessment_requests;
-DROP POLICY IF EXISTS "Admins can delete any assessment request" ON assessment_requests;
+DROP POLICY IF EXISTS "customers_view_own_requests" ON assessment_requests;
+DROP POLICY IF EXISTS "assessors_view_assigned_requests" ON assessment_requests;
+DROP POLICY IF EXISTS "admins_view_all_requests" ON assessment_requests;
+DROP POLICY IF EXISTS "customers_insert_own_requests" ON assessment_requests;
+DROP POLICY IF EXISTS "assessors_update_assigned_requests" ON assessment_requests;
+DROP POLICY IF EXISTS "admins_update_any_request" ON assessment_requests;
+DROP POLICY IF EXISTS "admins_delete_any_request" ON assessment_requests;
 
 -- Create new policies that allow proper access
 
@@ -20,7 +20,7 @@ DROP POLICY IF EXISTS "Admins can delete any assessment request" ON assessment_r
 CREATE POLICY "customers_view_own_requests" ON assessment_requests
     FOR SELECT
     USING (
-        customer_id = auth.uid() AND
+        user_id = auth.uid() AND
         EXISTS (
             SELECT 1 FROM profiles 
             WHERE profiles.id = auth.uid()
@@ -55,7 +55,7 @@ CREATE POLICY "admins_view_all_requests" ON assessment_requests
 CREATE POLICY "customers_insert_own_requests" ON assessment_requests
     FOR INSERT
     WITH CHECK (
-        customer_id = auth.uid() AND
+        user_id = auth.uid() AND
         EXISTS (
             SELECT 1 FROM profiles 
             WHERE profiles.id = auth.uid()
@@ -75,7 +75,7 @@ CREATE POLICY "assessors_update_assigned_requests" ON assessment_requests
         )
     );
 
--- 6. Admins can update any assessment request
+-- 4. Admins can update any assessment request
 CREATE POLICY "admins_update_any_request" ON assessment_requests
     FOR UPDATE
     USING (
@@ -86,7 +86,7 @@ CREATE POLICY "admins_update_any_request" ON assessment_requests
         )
     );
 
--- 7. Admins can delete any assessment request
+-- 5. Admins can delete any assessment request
 CREATE POLICY "admins_delete_any_request" ON assessment_requests
     FOR DELETE
     USING (
