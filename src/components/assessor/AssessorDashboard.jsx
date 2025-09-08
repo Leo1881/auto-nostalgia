@@ -36,7 +36,7 @@ function AssessorDashboard() {
   return (
     <div className="min-h-screen bg-white font-quicksand assessor-dashboard">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
+      <header className="shadow-sm" style={{ backgroundColor: "#19323C" }}>
         <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
