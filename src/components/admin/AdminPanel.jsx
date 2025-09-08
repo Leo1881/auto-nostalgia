@@ -333,7 +333,7 @@ function AdminPanel() {
                     />
                   </svg>
                   <span className="font-medium text-sm lg:text-base">
-                    Pending Requests ({stats.pending})
+                    Pending Requests
                   </span>
                 </button>
               </li>
@@ -361,7 +361,7 @@ function AdminPanel() {
                     />
                   </svg>
                   <span className="font-medium text-sm lg:text-base">
-                    Active Assessors ({activeAssessors.length})
+                    Active Assessors
                   </span>
                 </button>
               </li>
