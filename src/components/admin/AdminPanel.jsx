@@ -4,6 +4,7 @@ import { supabase } from "../../lib/supabase";
 import AssessorRequestCard from "./AssessorRequestCard";
 import UserManagement from "./UserManagement";
 import ReportsView from "./ReportsView";
+import AllAssessmentsView from "./AllAssessmentsView";
 import { emailService } from "../../emails/services/EmailService";
 import {
   LOADING_TEXT,
@@ -389,6 +390,34 @@ function AdminPanel() {
                   </svg>
                   <span className="font-medium text-sm lg:text-base">
                     Users
+                  </span>
+                </button>
+              </li>
+              <li className="flex-shrink-0 lg:flex-shrink">
+                <button
+                  onClick={() => setActiveTab("assessments")}
+                  className={`w-full flex items-center space-x-3 lg:space-x-4 px-4 py-3 h-12 transition-all duration-200 text-left whitespace-nowrap no-underline ${
+                    activeTab === "assessments"
+                      ? "bg-red-700 text-white"
+                      : "bg-red-600 text-white hover:bg-red-700"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  <span className="font-medium text-sm lg:text-base">
+                    All Assessments
                   </span>
                 </button>
               </li>
@@ -984,6 +1013,9 @@ function AdminPanel() {
 
             {/* Users Tab */}
             {activeTab === "users" && <UserManagement />}
+
+            {/* All Assessments Tab */}
+            {activeTab === "assessments" && <AllAssessmentsView />}
 
             {/* Reports Tab */}
             {activeTab === "reports" && (
