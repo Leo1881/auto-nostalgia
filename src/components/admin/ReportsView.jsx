@@ -5,7 +5,6 @@ function ReportsView() {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [searchMode, setSearchMode] = useState("vehicle"); // "vehicle" or "client"
   const [selectedVehicle, setSelectedVehicle] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [vehicles, setVehicles] = useState([]);
@@ -73,10 +72,23 @@ function ReportsView() {
         .select("*")
         .not("report_url", "is", null);
 
-      if (searchMode === "vehicle" && selectedVehicle) {
+      if (selectedVehicle && selectedClient) {
+        // Search by both vehicle and client
+        console.log(
+          "Searching for vehicle ID:",
+          selectedVehicle,
+          "and client ID:",
+          selectedClient
+        );
+        query = query
+          .eq("vehicle_id", selectedVehicle)
+          .eq("user_id", selectedClient);
+      } else if (selectedVehicle) {
+        // Search by vehicle only
         console.log("Searching for vehicle ID:", selectedVehicle);
         query = query.eq("vehicle_id", selectedVehicle);
-      } else if (searchMode === "client" && selectedClient) {
+      } else if (selectedClient) {
+        // Search by client only
         console.log("Searching for client ID:", selectedClient);
         query = query.eq("user_id", selectedClient);
       } else {
@@ -210,79 +222,47 @@ function ReportsView() {
           Search Reports
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Search Mode Toggle */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Vehicle Dropdown - Always render to prevent layout shift */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search By
+              Select Vehicle
             </label>
             <select
-              value={searchMode}
-              onChange={(e) => {
-                setSearchMode(e.target.value);
-                setSelectedVehicle("");
-                setSelectedClient("");
-                setReports([]);
-              }}
-              className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              value={selectedVehicle}
+              onChange={(e) => setSelectedVehicle(e.target.value)}
+              disabled={loadingVehicles}
+              className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
             >
-              <option value="vehicle">Vehicle</option>
-              <option value="client">Client</option>
+              <option value="">Choose a vehicle...</option>
+              {vehicles.map((vehicle) => (
+                <option key={vehicle.id} value={vehicle.id}>
+                  {vehicle.year} {vehicle.make} {vehicle.model} -{" "}
+                  {vehicle.registration_number}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Vehicle Dropdown */}
-          {searchMode === "vehicle" && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Vehicle
-              </label>
-              <select
-                value={selectedVehicle}
-                onChange={(e) => setSelectedVehicle(e.target.value)}
-                disabled={loadingVehicles}
-                className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
-              >
-                <option value="">Choose a vehicle...</option>
-                {vehicles.map((vehicle) => (
-                  <option key={vehicle.id} value={vehicle.id}>
-                    {vehicle.year} {vehicle.make} {vehicle.model} -{" "}
-                    {vehicle.registration_number}
-                  </option>
-                ))}
-              </select>
-              {loadingVehicles && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Loading vehicles...
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Client Dropdown */}
-          {searchMode === "client" && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Client
-              </label>
-              <select
-                value={selectedClient}
-                onChange={(e) => setSelectedClient(e.target.value)}
-                disabled={loadingClients}
-                className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
-              >
-                <option value="">Choose a client...</option>
-                {clients.map((client) => (
-                  <option key={client.id} value={client.id}>
-                    {client.full_name} ({client.email})
-                  </option>
-                ))}
-              </select>
-              {loadingClients && (
-                <p className="text-xs text-gray-500 mt-1">Loading clients...</p>
-              )}
-            </div>
-          )}
+          {/* Client Dropdown - Always render to prevent layout shift */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Client
+            </label>
+            <select
+              value={selectedClient}
+              onChange={(e) => setSelectedClient(e.target.value)}
+              disabled={loadingClients}
+              className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+            >
+              <option value="">Choose a client...</option>
+              {clients.map((client) => (
+                <option key={client.id} value={client.id}>
+                  {client.full_name} ({client.email})
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Search Button */}
           <div className="flex items-end">
