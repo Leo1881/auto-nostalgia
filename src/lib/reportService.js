@@ -148,12 +148,30 @@ class ReportService {
       yPosition
     );
     yPosition += 6;
-    pdf.text(
-      `Assessment Notes: ${assessment.assessment_notes || "No notes provided"}`,
-      margin,
-      yPosition
-    );
-    yPosition += 15;
+
+    // Add Assessment Notes with proper text wrapping
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Assessment Notes:", margin, yPosition);
+    yPosition += 8;
+
+    pdf.setFont("helvetica", "normal");
+    const notesText = assessment.assessment_notes || "No notes provided";
+    const maxLineWidth = contentWidth - 10; // Leave some margin
+    const lines = pdf.splitTextToSize(notesText, maxLineWidth);
+
+    // Add each line of text
+    for (let i = 0; i < lines.length; i++) {
+      // Check if we need a new page
+      if (yPosition > pageHeight - margin - 20) {
+        pdf.addPage();
+        yPosition = margin;
+      }
+
+      pdf.text(lines[i], margin + 5, yPosition);
+      yPosition += 6;
+    }
+
+    yPosition += 10;
 
     // Add vehicle images if available
     const vehicleImages = [
