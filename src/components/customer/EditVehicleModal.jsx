@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { vehicleService } from "../../lib/vehicleService";
+import { imageService } from "../../lib/imageService";
 import { supabase } from "../../lib/supabase";
 import MultiImageUpload from "../common/MultiImageUpload";
 
@@ -28,6 +29,7 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [currentImages, setCurrentImages] = useState([]);
+  const [deletedImageIndices, setDeletedImageIndices] = useState([]);
 
   // Populate form with vehicle data when modal opens
   useEffect(() => {
@@ -64,6 +66,7 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
 
       setCurrentImages(images);
       setSelectedImages([]);
+      setDeletedImageIndices([]);
       setErrors({});
     }
   }, [vehicle, isOpen]);
@@ -85,6 +88,10 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
 
   const handleImagesSelect = (files) => {
     setSelectedImages(files);
+  };
+
+  const handleImageDelete = (imageIndex) => {
+    setDeletedImageIndices((prev) => [...prev, imageIndex]);
   };
 
   const validateForm = () => {
@@ -165,7 +172,8 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
       const updatedVehicle = await vehicleService.updateVehicle(
         vehicle.id,
         formData,
-        selectedImages
+        selectedImages,
+        deletedImageIndices
       );
 
       // Call the onSubmit callback with the updated vehicle data
@@ -411,6 +419,7 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
             </h3>
             <MultiImageUpload
               onImagesSelect={handleImagesSelect}
+              onImageDelete={handleImageDelete}
               currentImages={currentImages}
               label="Update Vehicle Photos"
               className="max-w-full"

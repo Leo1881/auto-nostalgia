@@ -68,3 +68,6 @@ CREATE POLICY "vehicles_delete_policy" ON vehicles
             AND profiles.role = 'admin'
         )
     );
+
+
+

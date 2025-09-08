@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 
 const MultiImageUpload = ({
   onImagesSelect,
+  onImageDelete,
   currentImages = [],
   label = "Vehicle Images",
   className = "",
@@ -14,10 +15,7 @@ const MultiImageUpload = ({
   const fileInputRef = useRef(null);
 
   // Memoize the currentImages array to prevent unnecessary re-renders
-  const memoizedCurrentImages = useMemo(
-    () => currentImages,
-    [JSON.stringify(currentImages)]
-  );
+  const memoizedCurrentImages = useMemo(() => currentImages, [currentImages]);
 
   // Update previewUrls when currentImages changes
   useEffect(() => {
@@ -124,6 +122,10 @@ const MultiImageUpload = ({
     const newPreviewUrls = [...previewUrls];
     const newSelectedFiles = [...selectedFiles];
 
+    // Check if this is an existing image (from currentImages) or a newly selected file
+    const isExistingImage =
+      index < memoizedCurrentImages.length && memoizedCurrentImages[index];
+
     // Revoke the object URL to free memory
     if (newPreviewUrls[index]) {
       URL.revokeObjectURL(newPreviewUrls[index]);
@@ -134,6 +136,11 @@ const MultiImageUpload = ({
 
     setPreviewUrls(newPreviewUrls);
     setSelectedFiles(newSelectedFiles);
+
+    // If it's an existing image, notify parent to delete it from storage
+    if (isExistingImage && onImageDelete) {
+      onImageDelete(index);
+    }
 
     // Notify parent of remaining files
     onImagesSelect(newSelectedFiles.filter((file) => file));

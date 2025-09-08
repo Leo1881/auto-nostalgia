@@ -167,7 +167,12 @@ export const vehicleService = {
   },
 
   // Update an existing vehicle
-  async updateVehicle(vehicleId, vehicleData, imageFiles = []) {
+  async updateVehicle(
+    vehicleId,
+    vehicleData,
+    imageFiles = [],
+    deletedImageIndices = []
+  ) {
     try {
       const {
         data: { session },
@@ -214,6 +219,42 @@ export const vehicleService = {
       if (error) {
         console.error("Error updating vehicle:", error);
         throw error;
+      }
+
+      // Delete images if specified
+      if (deletedImageIndices && deletedImageIndices.length > 0) {
+        try {
+          // Delete images from storage
+          for (const imageIndex of deletedImageIndices) {
+            await imageService.deleteImage(user.id, vehicleId, imageIndex + 1);
+          }
+
+          // Clear image URLs in database for deleted images
+          const imageUpdates = {};
+          deletedImageIndices.forEach((index) => {
+            const imageNumber = index + 1;
+            imageUpdates[`image_${imageNumber}_url`] = null;
+            imageUpdates[`thumbnail_${imageNumber}_url`] = null;
+          });
+
+          // Update vehicle to clear deleted image URLs
+          const { error: deleteUpdateError } = await supabase
+            .from("vehicles")
+            .update(imageUpdates)
+            .eq("id", vehicleId);
+
+          if (deleteUpdateError) {
+            console.error(
+              "Error clearing deleted image URLs:",
+              deleteUpdateError
+            );
+          } else {
+            // Update returned data to reflect deletions
+            Object.assign(data, imageUpdates);
+          }
+        } catch (deleteError) {
+          console.error("Error deleting images:", deleteError);
+        }
       }
 
       // Upload new images if provided

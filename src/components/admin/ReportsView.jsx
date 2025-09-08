@@ -224,7 +224,7 @@ function ReportsView() {
                 setSelectedClient("");
                 setReports([]);
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
             >
               <option value="vehicle">Vehicle</option>
               <option value="client">Client</option>
@@ -241,7 +241,7 @@ function ReportsView() {
                 value={selectedVehicle}
                 onChange={(e) => setSelectedVehicle(e.target.value)}
                 disabled={loadingVehicles}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+                className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
               >
                 <option value="">Choose a vehicle...</option>
                 {vehicles.map((vehicle) => (
@@ -269,7 +269,7 @@ function ReportsView() {
                 value={selectedClient}
                 onChange={(e) => setSelectedClient(e.target.value)}
                 disabled={loadingClients}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+                className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
               >
                 <option value="">Choose a client...</option>
                 {clients.map((client) => (
