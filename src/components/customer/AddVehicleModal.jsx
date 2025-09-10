@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { vehicleService } from "../../lib/vehicleService";
 import { supabase } from "../../lib/supabase";
 import MultiImageUpload from "../common/MultiImageUpload";
+import CustomSelect from "../common/CustomSelect";
+import nhtsaService from "../../lib/nhtsaService";
 
 function AddVehicleModal({ isOpen, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
@@ -28,6 +30,54 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
 
+  // NHTSA API data
+  const [makes, setMakes] = useState([]);
+  const [models, setModels] = useState([]);
+  const [years, setYears] = useState([]);
+  const [loadingMakes, setLoadingMakes] = useState(false);
+  const [loadingModels, setLoadingModels] = useState(false);
+
+  // Load NHTSA data when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      loadNHTSAData();
+    }
+  }, [isOpen]);
+
+  const loadNHTSAData = async () => {
+    setLoadingMakes(true);
+    try {
+      const [makesData, yearsData] = await Promise.all([
+        nhtsaService.getAllMakes(),
+        Promise.resolve(nhtsaService.getVehicleYears()),
+      ]);
+      setMakes(makesData);
+      setYears(yearsData);
+    } catch (error) {
+      console.error("Error loading NHTSA data:", error);
+    } finally {
+      setLoadingMakes(false);
+    }
+  };
+
+  const loadModelsForMake = async (make) => {
+    if (!make) {
+      setModels([]);
+      return;
+    }
+
+    setLoadingModels(true);
+    try {
+      const modelsData = await nhtsaService.getModelsForMake(make);
+      setModels(modelsData);
+    } catch (error) {
+      console.error("Error loading models:", error);
+      setModels([]);
+    } finally {
+      setLoadingModels(false);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -40,6 +90,31 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
         ...prev,
         [name]: "",
       }));
+    }
+  };
+
+  const handleSelectChange = (name, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear error when user makes selection
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+
+    // If make changes, load models for that make and reset model
+    if (name === "make") {
+      setFormData((prev) => ({
+        ...prev,
+        make: value,
+        model: "", // Reset model when make changes
+      }));
+      loadModelsForMake(value);
     }
   };
 
@@ -158,6 +233,7 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
         description: "",
       });
       setSelectedImages([]);
+      setModels([]); // Reset models when form is reset
     } catch (error) {
       console.error("Error adding vehicle:", error);
       console.error("Error details:", {
@@ -257,17 +333,15 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Make *
                 </label>
-                <input
-                  type="text"
-                  name="make"
+                <CustomSelect
+                  options={makes}
                   value={formData.make}
-                  onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
-                    errors.make
-                      ? "border-red-500"
-                      : "border-gray-300 dark:border-gray-600"
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                  placeholder="e.g., Ford"
+                  onChange={(value) => handleSelectChange("make", value)}
+                  placeholder={
+                    loadingMakes ? "Loading makes..." : "Select vehicle make"
+                  }
+                  className="w-full"
+                  disabled={loadingMakes}
                 />
                 {errors.make && (
                   <p className="text-red-500 text-sm mt-1">{errors.make}</p>
@@ -278,17 +352,19 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Model *
                 </label>
-                <input
-                  type="text"
-                  name="model"
+                <CustomSelect
+                  options={models}
                   value={formData.model}
-                  onChange={handleInputChange}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
-                    errors.model
-                      ? "border-red-500"
-                      : "border-gray-300 dark:border-gray-600"
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                  placeholder="e.g., Mustang"
+                  onChange={(value) => handleSelectChange("model", value)}
+                  placeholder={
+                    loadingModels
+                      ? "Loading models..."
+                      : formData.make
+                      ? "Select model"
+                      : "Select make first"
+                  }
+                  className="w-full"
+                  disabled={loadingModels || !formData.make}
                 />
                 {errors.model && (
                   <p className="text-red-500 text-sm mt-1">{errors.model}</p>
@@ -313,19 +389,12 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Year *
                 </label>
-                <input
-                  type="number"
-                  name="year"
+                <CustomSelect
+                  options={years}
                   value={formData.year}
-                  onChange={handleInputChange}
-                  min="1900"
-                  max={new Date().getFullYear() + 1}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red ${
-                    errors.year
-                      ? "border-red-500"
-                      : "border-gray-300 dark:border-gray-600"
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
-                  placeholder="e.g., 1967"
+                  onChange={(value) => handleSelectChange("year", value)}
+                  placeholder="Select vehicle year"
+                  className="w-full"
                 />
                 {errors.year && (
                   <p className="text-red-500 text-sm mt-1">{errors.year}</p>
