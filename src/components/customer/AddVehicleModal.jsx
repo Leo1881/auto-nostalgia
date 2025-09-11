@@ -118,7 +118,9 @@ function AddVehicleModal({ isOpen, onClose, onSubmit }) {
     }
   };
 
-  const handleImagesSelect = (files) => {
+  const handleImagesSelect = (filesWithSlots) => {
+    // For add mode, we just need the files, not the slot information
+    const files = filesWithSlots.map(({ file }) => file);
     setSelectedImages(files);
   };
 

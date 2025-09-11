@@ -22,10 +22,23 @@ function MyVehicles() {
       setLoading(true);
       setError(null);
 
+      console.log("🔄 Fetching vehicles from database...");
+
       // TEMPORARY: Add delay so you can see the loading state
       await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 second delay
 
       const userVehicles = await vehicleService.getUserVehicles();
+
+      console.log("🔄 Fetched vehicles:", {
+        count: userVehicles.length,
+        vehicles: userVehicles.map((v) => ({
+          id: v.id,
+          registration: v.registration_number,
+          make: v.make,
+          model: v.model,
+        })),
+      });
+
       setVehicles(userVehicles);
     } catch (err) {
       console.error("Error fetching vehicles:", err);
@@ -76,11 +89,40 @@ function MyVehicles() {
   };
 
   const handleVehicleUpdated = (updatedVehicle) => {
-    setVehicles((prevVehicles) =>
-      prevVehicles.map((vehicle) =>
+    console.log("🔄 Handling vehicle update:", {
+      updatedVehicleId: updatedVehicle.id,
+      updatedVehicleRegistration: updatedVehicle.registration_number,
+      currentVehiclesCount: vehicles.length,
+      currentVehicleIds: vehicles.map((v) => v.id),
+      updatedVehicleKeys: Object.keys(updatedVehicle),
+    });
+
+    console.log("🖼️ Updated vehicle image data:", {
+      image_1_url: updatedVehicle.image_1_url,
+      image_2_url: updatedVehicle.image_2_url,
+      image_3_url: updatedVehicle.image_3_url,
+      image_4_url: updatedVehicle.image_4_url,
+      image_5_url: updatedVehicle.image_5_url,
+      image_6_url: updatedVehicle.image_6_url,
+    });
+
+    setVehicles((prevVehicles) => {
+      console.log("🔄 Before update - prevVehicles:", {
+        count: prevVehicles.length,
+        ids: prevVehicles.map((v) => v.id),
+      });
+
+      const newVehicles = prevVehicles.map((vehicle) =>
         vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle
-      )
-    );
+      );
+
+      console.log("🔄 After update - newVehicles:", {
+        newVehiclesCount: newVehicles.length,
+        newVehicleIds: newVehicles.map((v) => v.id),
+      });
+
+      return newVehicles;
+    });
   };
 
   const handleDeleteVehicle = (vehicle) => {
@@ -422,22 +464,23 @@ function MyVehicles() {
                         vehicle.image_5_url,
                         vehicle.image_6_url,
                       ];
-                      const filteredImages = imageUrls.filter(
-                        (url) => url && url.trim() !== ""
+                      // Keep the array structure with nulls for empty slots
+                      const imagesWithSlots = imageUrls.map((url) =>
+                        url && url.trim() !== "" ? url : null
                       );
                       console.log(
                         `🔍 Vehicle ${vehicle.make} ${vehicle.model} (${vehicle.registration_number}):`,
                         {
                           id: vehicle.id,
                           rawImageUrls: imageUrls,
-                          filteredImages: filteredImages,
+                          imagesWithSlots: imagesWithSlots,
                           hasImage1: !!vehicle.image_1_url,
                           image1Url: vehicle.image_1_url,
                         }
                       );
                       return (
                         <ImageGallery
-                          images={filteredImages}
+                          images={imagesWithSlots}
                           vehicleId={vehicle.id}
                           userId={vehicle.user_id}
                         />

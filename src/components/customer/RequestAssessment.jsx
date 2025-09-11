@@ -20,19 +20,6 @@ function RequestAssessment() {
     additionalNotes: "",
     contactPhone: "",
     contactEmail: "",
-    // Vehicle Information Fields
-    chassisNumber: "",
-    engineNumber: "",
-    meanMcgregorCode: "",
-    warranty: "",
-    warrantyExpiration: "",
-    currentOdometer: "",
-    fullServiceHistory: "",
-    rebuiltBodyWork: "",
-    rebuiltEngineWork: "",
-    accessories: "",
-    currentDamages: "",
-    previousBodyWork: "",
   });
 
   const assessmentTypes = [
@@ -169,19 +156,6 @@ function RequestAssessment() {
       additional_notes: formData.additionalNotes,
       contact_phone: formData.contactPhone,
       contact_email: formData.contactEmail,
-      // Vehicle Information Fields
-      chassis_number: formData.chassisNumber,
-      engine_number: formData.engineNumber,
-      mean_mcgregor_code: formData.meanMcgregorCode,
-      warranty: formData.warranty,
-      warranty_expiration: formData.warrantyExpiration,
-      current_odometer: formData.currentOdometer,
-      full_service_history: formData.fullServiceHistory,
-      rebuilt_body_work: formData.rebuiltBodyWork,
-      rebuilt_engine_work: formData.rebuiltEngineWork,
-      accessories: formData.accessories,
-      current_damages: formData.currentDamages,
-      previous_body_work: formData.previousBodyWork,
       status: "pending",
       created_at: new Date().toISOString(),
     };
@@ -215,19 +189,6 @@ function RequestAssessment() {
           additionalNotes: "",
           contactPhone: formData.contactPhone,
           contactEmail: formData.contactEmail,
-          // Reset vehicle information fields
-          chassisNumber: "",
-          engineNumber: "",
-          meanMcgregorCode: "",
-          warranty: "",
-          warrantyExpiration: "",
-          currentOdometer: "",
-          fullServiceHistory: "",
-          rebuiltBodyWork: "",
-          rebuiltEngineWork: "",
-          accessories: "",
-          currentDamages: "",
-          previousBodyWork: "",
         });
       }
     } catch (error) {
@@ -358,193 +319,6 @@ function RequestAssessment() {
                 placeholder="Select assessment type"
                 className="w-full"
               />
-            </div>
-
-            {/* Vehicle Information Section */}
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Vehicle Information
-              </h3>
-
-              {/* Chassis Number and Engine Number */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Chassis Number
-                  </label>
-                  <input
-                    type="text"
-                    name="chassisNumber"
-                    value={formData.chassisNumber}
-                    onChange={handleInputChange}
-                    placeholder="Enter chassis number"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Number
-                  </label>
-                  <input
-                    type="text"
-                    name="engineNumber"
-                    value={formData.engineNumber}
-                    onChange={handleInputChange}
-                    placeholder="Enter engine number"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                  />
-                </div>
-              </div>
-
-              {/* Mean and McGregor Code */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Mean and McGregor Code
-                </label>
-                <input
-                  type="text"
-                  name="meanMcgregorCode"
-                  value={formData.meanMcgregorCode}
-                  onChange={handleInputChange}
-                  placeholder="Enter Mean and McGregor code"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                />
-              </div>
-
-              {/* Warranty Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Warranty
-                  </label>
-                  <input
-                    type="text"
-                    name="warranty"
-                    value={formData.warranty}
-                    onChange={handleInputChange}
-                    placeholder="Warranty details"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Warranty Expiration
-                  </label>
-                  <input
-                    type="date"
-                    name="warrantyExpiration"
-                    value={formData.warrantyExpiration}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                  />
-                </div>
-              </div>
-
-              {/* Current Odometer Reading */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Current Odometer Reading
-                </label>
-                <input
-                  type="number"
-                  name="currentOdometer"
-                  value={formData.currentOdometer}
-                  onChange={handleInputChange}
-                  placeholder="Enter current odometer reading"
-                  min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200"
-                />
-              </div>
-
-              {/* Full Service History */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Service History
-                </label>
-                <textarea
-                  name="fullServiceHistory"
-                  value={formData.fullServiceHistory}
-                  onChange={handleInputChange}
-                  rows={3}
-                  placeholder="Describe the vehicle's service history..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 resize-none"
-                />
-              </div>
-
-              {/* Rebuilt Work */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Rebuilt - Body Work
-                  </label>
-                  <textarea
-                    name="rebuiltBodyWork"
-                    value={formData.rebuiltBodyWork}
-                    onChange={handleInputChange}
-                    rows={3}
-                    placeholder="Describe any body work rebuilds..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 resize-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Rebuilt - Engine Work
-                  </label>
-                  <textarea
-                    name="rebuiltEngineWork"
-                    value={formData.rebuiltEngineWork}
-                    onChange={handleInputChange}
-                    rows={3}
-                    placeholder="Describe any engine rebuilds..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 resize-none"
-                  />
-                </div>
-              </div>
-
-              {/* Accessories */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Accessories
-                </label>
-                <textarea
-                  name="accessories"
-                  value={formData.accessories}
-                  onChange={handleInputChange}
-                  rows={3}
-                  placeholder="List any accessories or modifications..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 resize-none"
-                />
-              </div>
-
-              {/* Current Damages */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Current Damages
-                </label>
-                <textarea
-                  name="currentDamages"
-                  value={formData.currentDamages}
-                  onChange={handleInputChange}
-                  rows={3}
-                  placeholder="Describe any current damages or issues..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 resize-none"
-                />
-              </div>
-
-              {/* Previous Body Work */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Previous Body Work
-                </label>
-                <textarea
-                  name="previousBodyWork"
-                  value={formData.previousBodyWork}
-                  onChange={handleInputChange}
-                  rows={3}
-                  placeholder="Describe any previous body work or repairs..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-red bg-white text-gray-900 transition-all duration-200 resize-none"
-                />
-              </div>
             </div>
 
             {/* Date and Time */}

@@ -33,7 +33,16 @@ export const vehicleService = {
         throw error;
       }
 
-      console.log("✅ User vehicles fetched:", data);
+      console.log("✅ User vehicles fetched:", {
+        count: data?.length || 0,
+        vehicles:
+          data?.map((v) => ({
+            id: v.id,
+            registration: v.registration_number,
+            make: v.make,
+            model: v.model,
+          })) || [],
+      });
       return data || [];
     } catch (error) {
       console.error("Error in getUserVehicles:", error);
@@ -174,6 +183,13 @@ export const vehicleService = {
     deletedImageIndices = []
   ) {
     try {
+      console.log("🔄 Updating vehicle:", {
+        vehicleId,
+        vehicleData: { ...vehicleData, registration: vehicleData.registration },
+        imageFilesCount: imageFiles.length,
+        deletedImageIndices,
+      });
+
       const {
         data: { session },
         error: sessionError,
@@ -208,6 +224,15 @@ export const vehicleService = {
       delete vehicleToUpdate.bodyType;
       delete vehicleToUpdate.fuelType;
 
+      console.log("🔍 About to update vehicle in database:", {
+        vehicleId,
+        userId: user.id,
+        vehicleToUpdate: {
+          ...vehicleToUpdate,
+          registration_number: vehicleToUpdate.registration_number,
+        },
+      });
+
       const { data, error } = await supabase
         .from("vehicles")
         .update(vehicleToUpdate)
@@ -215,6 +240,13 @@ export const vehicleService = {
         .eq("user_id", user.id) // Ensure user can only update their own vehicles
         .select()
         .single();
+
+      console.log("🔍 Database update result:", {
+        data: data
+          ? { id: data.id, registration: data.registration_number }
+          : null,
+        error: error ? error.message : null,
+      });
 
       if (error) {
         console.error("Error updating vehicle:", error);
@@ -260,32 +292,77 @@ export const vehicleService = {
       // Upload new images if provided
       if (imageFiles && imageFiles.length > 0) {
         try {
-          const imageResults = await imageService.uploadMultipleVehicleImages(
-            imageFiles,
-            user.id,
-            vehicleId
-          );
+          console.log("🖼️ Starting image upload process:", {
+            imageFilesCount: imageFiles.length,
+            imageFiles: imageFiles.map(({ file, slot }) => ({
+              fileName: file?.name,
+              slot,
+              fileSize: file?.size,
+            })),
+          });
 
           // Prepare image URL updates
           const imageUpdates = {};
-          imageResults.forEach((result, index) => {
-            const imageNumber = index + 1;
-            imageUpdates[`image_${imageNumber}_url`] = result.mainImageUrl;
-            imageUpdates[`thumbnail_${imageNumber}_url`] = result.thumbnailUrl;
+
+          // Process each file with its slot information
+          for (const { file, slot } of imageFiles) {
+            if (file) {
+              console.log(`🖼️ Uploading image to slot ${slot + 1}:`, {
+                fileName: file.name,
+                fileSize: file.size,
+                slot,
+              });
+
+              // Upload the image to the specific slot
+              const result = await imageService.uploadVehicleImage(
+                file,
+                user.id,
+                vehicleId,
+                slot + 1 // Convert 0-based slot to 1-based image number
+              );
+
+              console.log(
+                `🖼️ Image uploaded successfully to slot ${slot + 1}:`,
+                {
+                  mainImageUrl: result.mainImageUrl,
+                  thumbnailUrl: result.thumbnailUrl,
+                }
+              );
+
+              // Set the URLs for this specific slot
+              imageUpdates[`image_${slot + 1}_url`] = result.mainImageUrl;
+              imageUpdates[`thumbnail_${slot + 1}_url`] = result.thumbnailUrl;
+            }
+          }
+
+          console.log("🖼️ Updating vehicle with image URLs:", {
+            vehicleId,
+            imageUpdates,
           });
 
           // Update vehicle with image URLs
-          const { error: updateError } = await supabase
+          const { data: updateData, error: updateError } = await supabase
             .from("vehicles")
             .update(imageUpdates)
-            .eq("id", vehicleId);
+            .eq("id", vehicleId)
+            .select()
+            .single();
 
           if (updateError) {
             console.error(
-              "Error updating vehicle with image URLs:",
+              "❌ Error updating vehicle with image URLs:",
               updateError
             );
           } else {
+            console.log("✅ Vehicle updated with image URLs successfully");
+            console.log("🖼️ Database verification - updated vehicle images:", {
+              image_1_url: updateData.image_1_url,
+              image_2_url: updateData.image_2_url,
+              image_3_url: updateData.image_3_url,
+              image_4_url: updateData.image_4_url,
+              image_5_url: updateData.image_5_url,
+              image_6_url: updateData.image_6_url,
+            });
             // Add image URLs to returned data
             Object.assign(data, imageUpdates);
           }
@@ -294,9 +371,26 @@ export const vehicleService = {
         }
       }
 
+      console.log("✅ Vehicle updated successfully:", {
+        vehicleId: data.id,
+        registration: data.registration_number,
+        make: data.make,
+        model: data.model,
+        year: data.year,
+      });
+
+      console.log("🖼️ Final returned vehicle data - all image URLs:", {
+        image_1_url: data.image_1_url,
+        image_2_url: data.image_2_url,
+        image_3_url: data.image_3_url,
+        image_4_url: data.image_4_url,
+        image_5_url: data.image_5_url,
+        image_6_url: data.image_6_url,
+      });
+
       return data;
     } catch (error) {
-      console.error("Error in updateVehicle:", error);
+      console.error("❌ Error in updateVehicle:", error);
       throw error;
     }
   },

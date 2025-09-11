@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const MultiImageUpload = ({
   onImagesSelect,
@@ -9,25 +9,41 @@ const MultiImageUpload = ({
   maxImages = 6,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
-  const [previewUrls, setPreviewUrls] = useState([]);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [error, setError] = useState("");
-  const fileInputRef = useRef(null);
-
-  // Memoize the currentImages array to prevent unnecessary re-renders
-  const memoizedCurrentImages = useMemo(() => currentImages, [currentImages]);
-
-  // Update previewUrls when currentImages changes
-  useEffect(() => {
+  const [previewUrls, setPreviewUrls] = useState(() => {
+    // Initialize with currentImages using lazy initializer
     const urls = Array(maxImages).fill(null);
-    memoizedCurrentImages.forEach((url, index) => {
+    currentImages.forEach((url, index) => {
       if (index < maxImages && url) {
         urls[index] = url;
       }
     });
+    return urls;
+  });
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [error, setError] = useState("");
+  const fileInputRef = useRef(null);
+  const prevCurrentImagesRef = useRef([]);
 
-    setPreviewUrls(urls);
-  }, [memoizedCurrentImages, maxImages]);
+  // Update previewUrls when currentImages changes (for edit mode)
+  useEffect(() => {
+    // Only update if currentImages has actually changed and we don't have selected files
+    const hasChanged =
+      currentImages.length !== prevCurrentImagesRef.current.length ||
+      currentImages.some(
+        (url, index) => url !== prevCurrentImagesRef.current[index]
+      );
+
+    if (hasChanged && selectedFiles.length === 0) {
+      const urls = Array(maxImages).fill(null);
+      currentImages.forEach((url, index) => {
+        if (index < maxImages && url) {
+          urls[index] = url;
+        }
+      });
+      setPreviewUrls(urls);
+      prevCurrentImagesRef.current = [...currentImages];
+    }
+  }, [currentImages, maxImages, selectedFiles.length]);
 
   const validateFile = (file) => {
     // Check file type
@@ -83,7 +99,13 @@ const MultiImageUpload = ({
     if (validFiles.length > 0) {
       setPreviewUrls(newPreviewUrls);
       setSelectedFiles(newSelectedFiles);
-      onImagesSelect(newSelectedFiles.filter((file) => file));
+
+      // Pass both files and their slot positions
+      const filesWithSlots = newSelectedFiles
+        .map((file, index) => ({ file, slot: index }))
+        .filter(({ file }) => file);
+
+      onImagesSelect(filesWithSlots);
     }
   };
 
@@ -124,7 +146,7 @@ const MultiImageUpload = ({
 
     // Check if this is an existing image (from currentImages) or a newly selected file
     const isExistingImage =
-      index < memoizedCurrentImages.length && memoizedCurrentImages[index];
+      index < currentImages.length && currentImages[index];
 
     // Revoke the object URL to free memory
     if (newPreviewUrls[index]) {
@@ -142,8 +164,12 @@ const MultiImageUpload = ({
       onImageDelete(index);
     }
 
-    // Notify parent of remaining files
-    onImagesSelect(newSelectedFiles.filter((file) => file));
+    // Notify parent of remaining files with slot information
+    const filesWithSlots = newSelectedFiles
+      .map((file, index) => ({ file, slot: index }))
+      .filter(({ file }) => file);
+
+    onImagesSelect(filesWithSlots);
   };
 
   const getEmptySlots = () => {

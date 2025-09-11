@@ -54,7 +54,7 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
         description: vehicle.description || "",
       });
 
-      // Set current images for display
+      // Set current images for display - preserve slot positions
       const images = [
         vehicle.image_1_url,
         vehicle.image_2_url,
@@ -62,7 +62,7 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
         vehicle.image_4_url,
         vehicle.image_5_url,
         vehicle.image_6_url,
-      ].filter((url) => url && url.trim() !== "");
+      ].map((url) => (url && url.trim() !== "" ? url : null));
 
       setCurrentImages(images);
       setSelectedImages([]);
@@ -86,8 +86,8 @@ function EditVehicleModal({ isOpen, onClose, onSubmit, vehicle }) {
     }
   };
 
-  const handleImagesSelect = (files) => {
-    setSelectedImages(files);
+  const handleImagesSelect = (filesWithSlots) => {
+    setSelectedImages(filesWithSlots);
   };
 
   const handleImageDelete = (imageIndex) => {

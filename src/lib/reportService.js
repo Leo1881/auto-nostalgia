@@ -90,6 +90,96 @@ class ReportService {
     );
     yPosition += 6;
     pdf.text(`Color: ${vehicle.color}`, margin, yPosition);
+    yPosition += 6;
+
+    // Add new vehicle information fields
+    if (assessment.chassis_number) {
+      pdf.text(
+        `Chassis Number: ${assessment.chassis_number}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.engine_number) {
+      pdf.text(`Engine Number: ${assessment.engine_number}`, margin, yPosition);
+      yPosition += 6;
+    }
+    if (assessment.mean_mcgregor_code) {
+      pdf.text(
+        `Mean & McGregor Code: ${assessment.mean_mcgregor_code}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.warranty) {
+      pdf.text(`Warranty: ${assessment.warranty}`, margin, yPosition);
+      yPosition += 6;
+    }
+    if (assessment.warranty_expiration) {
+      pdf.text(
+        `Warranty Expiration: ${new Date(
+          assessment.warranty_expiration
+        ).toLocaleDateString()}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.current_odometer) {
+      pdf.text(
+        `Current Odometer Reading: ${assessment.current_odometer.toLocaleString()} km`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.full_service_history) {
+      pdf.text(
+        `Full Service History: ${assessment.full_service_history}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.rebuilt_body_work) {
+      pdf.text(
+        `Rebuilt - Body Work: ${assessment.rebuilt_body_work}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.rebuilt_engine_work) {
+      pdf.text(
+        `Rebuilt - Engine Work: ${assessment.rebuilt_engine_work}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.accessories) {
+      pdf.text(`Accessories: ${assessment.accessories}`, margin, yPosition);
+      yPosition += 6;
+    }
+    if (assessment.current_damages) {
+      pdf.text(
+        `Current Damages: ${assessment.current_damages}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+    if (assessment.previous_body_work) {
+      pdf.text(
+        `Previous Body Work: ${assessment.previous_body_work}`,
+        margin,
+        yPosition
+      );
+      yPosition += 6;
+    }
+
     yPosition += 15;
 
     // Add customer information
