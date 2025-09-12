@@ -113,6 +113,7 @@ function SignUpForm({ onBack }) {
           // Send admin notification
           try {
             const adminEmails = await emailService.getAdminEmails();
+            console.log("🔍 Admin emails found:", adminEmails);
             if (adminEmails.length > 0) {
               await emailService.sendAdminAssessorNotificationEmail(
                 {

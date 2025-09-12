@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts";
 
 // Email templates
 const emailTemplates = {
@@ -41,7 +40,7 @@ const baseTemplate = `<!DOCTYPE html>
         .message { font-size: 16px; color: #4b5563; margin-bottom: 25px; line-height: 1.7; }
         .highlight-box { background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 20px; margin: 25px 0; border-radius: 4px; }
         .highlight-box h3 { color: #dc2626; margin-bottom: 10px; font-size: 18px; }
-        .button { display: inline-block; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 20px 0; text-align: center; transition: all 0.3s ease; }
+        .button { display: inline-block; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: #ffffff !important; text-decoration: none !important; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 20px 0; text-align: center; transition: all 0.3s ease; }
         .button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3); }
         .footer { background-color: #1f2937; color: #9ca3af; padding: 30px 20px; text-align: center; }
         .footer-content { max-width: 400px; margin: 0 auto; }
@@ -105,7 +104,7 @@ const contentTemplates = {
       </ul>
     </div>
     <div class="message">To get started, simply log in to your account and request your first vehicle assessment. Our team of certified assessors will provide you with comprehensive evaluations and detailed reports.</div>
-    <a href="{{login_url}}" class="button">Login to Your Account</a>
+    <a href="{{login_url}}" class="button" style="color: #ffffff !important; text-decoration: none !important;">Login to Your Account</a>
     <div class="message">If you have any questions or need assistance, don't hesitate to reach out to our support team. We're here to help you preserve and understand your automotive heritage.</div>
     <div class="message">Welcome aboard!<br><strong>The Auto Nostalgia Team</strong></div>
   `,
@@ -153,7 +152,7 @@ const contentTemplates = {
       </ol>
     </div>
     <div class="message"><strong>Important:</strong> Please review this application within 3-5 business days to maintain our high standards and provide timely responses to applicants.</div>
-    <a href="{{admin_panel_url}}" class="button">Review Application in Admin Panel</a>
+    <a href="{{admin_panel_url}}" class="button" style="color: #ffffff !important; text-decoration: none !important;">Review Application in Admin Panel</a>
     <div class="message">If you have any questions about this application or need additional information, please contact the applicant directly or reach out to the support team.</div>
     <div class="message">Best regards,<br><strong>Auto Nostalgia System</strong></div>
   `,
@@ -177,7 +176,7 @@ const contentTemplates = {
       </ul>
     </div>
     <div class="message"><strong>Getting Started:</strong><br>Log in to your account and explore the assessor dashboard. You'll find all the tools and information you need to start accepting assessment requests.</div>
-    <a href="{{login_url}}" class="button">Access Your Assessor Dashboard</a>
+    <a href="{{login_url}}" class="button" style="color: #ffffff !important; text-decoration: none !important;">Access Your Assessor Dashboard</a>
     <div class="highlight-box">
       <h3>Resources Available:</h3>
       <p>We've prepared comprehensive guides and training materials to help you get started quickly. Check your dashboard for:</p>
@@ -239,24 +238,96 @@ serve(async (req) => {
       .replace("{{content}}", content)
       .replace("{{recipient_email}}", recipient_email);
 
-    // For now, just return success (you'll need to set up actual email sending)
-    // In production, you'd integrate with a service like SendGrid, Mailgun, or your own SMTP server
+    // Send email using Resend
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
 
-    console.log("Email would be sent:", {
-      to: recipient_email,
-      subject: subject,
-      template: template,
-    });
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: "Email queued for sending",
-        recipient: recipient_email,
+    if (!resendApiKey) {
+      console.log("RESEND_API_KEY not found, logging email instead:", {
+        to: recipient_email,
+        subject: subject,
         template: template,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "Email logged (Resend not configured)",
+          recipient: recipient_email,
+          template: template,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    try {
+      // For testing: redirect all emails to your email address
+      const testEmail = Deno.env.get("TEST_EMAIL") || "your-email@example.com";
+
+      const emailData = {
+        from: "Auto Nostalgia <onboarding@resend.dev>",
+        to: [testEmail], // Send to your email instead of recipient
+        subject: `[TEST] ${subject} (Original: ${recipient_email})`,
+        html: html.replace(
+          /{{recipient_email}}/g,
+          `Original recipient: ${recipient_email}<br>Sent to: ${testEmail}`
+        ),
+      };
+
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(emailData),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Resend API error:", response.status, errorText);
+        throw new Error(`Resend API error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Email sent successfully via Resend:", {
+        to: recipient_email,
+        subject: subject,
+        template: template,
+        resendId: result.id,
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "Email sent successfully",
+          recipient: recipient_email,
+          template: template,
+          resendId: result.id,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    } catch (emailError) {
+      console.error("Error sending email via Resend:", emailError);
+
+      // Fallback: log the email
+      console.log("Email would be sent (Resend failed):", {
+        to: recipient_email,
+        subject: subject,
+        template: template,
+        error: emailError.message,
+      });
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Email sending failed",
+          recipient: recipient_email,
+          template: template,
+          error: emailError.message,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
   } catch (error) {
     console.error("Error processing email request:", error);
     return new Response(JSON.stringify({ error: "Internal server error" }), {

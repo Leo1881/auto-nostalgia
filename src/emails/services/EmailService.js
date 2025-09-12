@@ -38,6 +38,11 @@ class EmailService {
 
       const result = await response.json();
       console.log("Customer welcome email sent:", result);
+
+      if (!result.success) {
+        throw new Error(result.message || "Email sending failed");
+      }
+
       return result;
     } catch (error) {
       console.error("Error sending customer welcome email:", error);
@@ -76,6 +81,11 @@ class EmailService {
 
       const result = await response.json();
       console.log("Assessor application pending email sent:", result);
+
+      if (!result.success) {
+        throw new Error(result.message || "Email sending failed");
+      }
+
       return result;
     } catch (error) {
       console.error("Error sending assessor application pending email:", error);
@@ -126,7 +136,13 @@ class EmailService {
           throw new Error(`Email service error: ${response.status}`);
         }
 
-        return response.json();
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.message || "Email sending failed");
+        }
+
+        return result;
       });
 
       const results = await Promise.all(emailPromises);
@@ -170,6 +186,11 @@ class EmailService {
 
       const result = await response.json();
       console.log("Assessor approval email sent:", result);
+
+      if (!result.success) {
+        throw new Error(result.message || "Email sending failed");
+      }
+
       return result;
     } catch (error) {
       console.error("Error sending assessor approval email:", error);
